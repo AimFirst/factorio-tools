@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@layer base {
+  :root {
+    --bg-base: #0f1115;
+    --bg-surface: #181b20;
+    --bg-surface-elevated: #22262e;
+    --border-subtle: #2d333f;
+    --border-strong: #3f4756;
+    --accent-factorio: #ff9f1c;
+    --accent-factorio-hover: #ffa726;
+    --accent-factorio-dim: #995c0c;
+    --text-primary: #f1f5f9;
+    --text-secondary: #94a3b8;
+    --text-muted: #64748b;
+  }
+
+  body {
+    background-color: var(--bg-base);
+    color: var(--text-primary);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    min-height: 100vh;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  /* Custom scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #111317;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #2d333f;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #3f4756;
+  }
+}
+
+/* Factorio hazard stripes utility */
+.hazard-border {
+  background: repeating-linear-gradient(
+    -45deg,
+    #ff9f1c,
+    #ff9f1c 8px,
+    #181b20 8px,
+    #181b20 16px
+  );
+}
+
+.hazard-border-subtle {
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 159, 28, 0.4),
+    rgba(255, 159, 28, 0.4) 6px,
+    rgba(24, 27, 32, 0.8) 6px,
+    rgba(24, 27, 32, 0.8) 12px
+  );
+}
