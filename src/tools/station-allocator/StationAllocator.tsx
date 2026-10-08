@@ -4,12 +4,13 @@ import {
   Layers, 
   Sliders, 
   RotateCcw,
-  Sparkles
+  Sparkles,
+  ArrowRightLeft
 } from 'lucide-react';
 import type { ResourceDemandEntry, CityBlockConfig } from './types';
 import { allocateStations, type StationDemandInput } from '../../lib/apportionment';
 import { calculateTrainCapacity } from '../../lib/factorio';
-import { BELT_SPECS } from '../../types';
+import { getEffectiveBeltSpeed } from '../../types';
 import { ResourceSelector } from '../../components/factorio/ResourceSelector';
 import { ResourceDemandTable } from './ResourceDemandTable';
 import { StationBayVisualizer } from './StationBayVisualizer';
@@ -35,7 +36,7 @@ export const StationAllocator: React.FC = () => {
       if (entry.unit === 'per-min') {
         ratePerSec = entry.inputRate / 60;
       } else if (entry.unit === 'belts') {
-        const beltSpeed = BELT_SPECS[entry.beltType].speedItemsPerSec;
+        const beltSpeed = getEffectiveBeltSpeed(entry.beltType, config.beltStackLevel);
         ratePerSec = entry.inputRate * beltSpeed;
       }
 
@@ -136,17 +137,17 @@ export const StationAllocator: React.FC = () => {
       </div>
 
       {/* Global City Block Parameters */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
         {/* Total Stations */}
-        <div className="p-4 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2">
+        <div className="p-3.5 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2">
           <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
             <span className="flex items-center gap-1.5">
-              <Train className="w-4 h-4 text-amber-500" />
-              Total Unloading Stations
+              <Train className="w-3.5 h-3.5 text-amber-500" />
+              Unloading Stations
             </span>
             <span className="font-mono text-amber-400 font-bold">{config.totalStations}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {[4, 6, 8, 12, 16].map((num) => (
               <button
                 key={num}
@@ -164,15 +165,15 @@ export const StationAllocator: React.FC = () => {
         </div>
 
         {/* Blueprint Copies Multiplier */}
-        <div className="p-4 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2">
+        <div className="p-3.5 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2">
           <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
             <span className="flex items-center gap-1.5">
-              <Layers className="w-4 h-4 text-amber-500" />
-              Blueprint Copies in Block
+              <Layers className="w-3.5 h-3.5 text-amber-500" />
+              Blueprint Copies
             </span>
             <span className="font-mono text-amber-400 font-bold">{config.blueprintMultiplier}x</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {[1, 2, 4, 8, 16].map((mult) => (
               <button
                 key={mult}
@@ -190,15 +191,15 @@ export const StationAllocator: React.FC = () => {
         </div>
 
         {/* Train Composition (Wagons) */}
-        <div className="p-4 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2">
+        <div className="p-3.5 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2">
           <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
             <span className="flex items-center gap-1.5">
-              <Sliders className="w-4 h-4 text-amber-500" />
-              Train Configuration
+              <Sliders className="w-3.5 h-3.5 text-amber-500" />
+              Train Config
             </span>
-            <span className="font-mono text-slate-200">1-{config.trainWagons} train</span>
+            <span className="font-mono text-slate-200">1-{config.trainWagons}</span>
           </div>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-1.5">
             {[2, 3, 4, 8].map((w) => (
               <button
                 key={w}
@@ -215,12 +216,41 @@ export const StationAllocator: React.FC = () => {
           </div>
         </div>
 
-        {/* Quality & Allocation Engine Mode */}
-        <div className="p-4 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2 flex flex-col justify-between">
+        {/* Belt Stacking Level */}
+        <div className="p-3.5 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2">
           <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
             <span className="flex items-center gap-1.5">
-              <Sparkles className="w-4 h-4 text-amber-400" />
-              Legendary Quality
+              <ArrowRightLeft className="w-3.5 h-3.5 text-emerald-400" />
+              Belt Stacking
+            </span>
+            <span className="font-mono text-emerald-400 font-bold">
+              {config.beltStackLevel}x ({getEffectiveBeltSpeed('turbo', config.beltStackLevel)}/s)
+            </span>
+          </div>
+          <div className="flex items-center gap-1.5">
+            {([1, 2, 3, 4] as const).map((lvl) => (
+              <button
+                key={lvl}
+                onClick={() => setConfig({ ...config, beltStackLevel: lvl })}
+                className={`flex-1 py-1 text-xs rounded font-mono font-medium transition cursor-pointer ${
+                  config.beltStackLevel === lvl
+                    ? 'bg-emerald-500 text-slate-950 font-bold'
+                    : 'bg-[#1e222a] text-slate-300 hover:bg-[#282d38]'
+                }`}
+                title={`Level ${lvl} stacking (${getEffectiveBeltSpeed('turbo', lvl)} items/s on green belt)`}
+              >
+                {lvl}x
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Quality & Allocation Engine Mode */}
+        <div className="p-3.5 rounded-xl bg-[#14171d] border border-[#2d333f] space-y-2 flex flex-col justify-between">
+          <div className="flex items-center justify-between text-xs text-slate-400 font-medium">
+            <span className="flex items-center gap-1">
+              <Sparkles className="w-3.5 h-3.5 text-amber-400" />
+              Quality
             </span>
             <button
               onClick={() =>
@@ -232,12 +262,12 @@ export const StationAllocator: React.FC = () => {
                   : 'bg-slate-800 text-slate-400 border border-slate-700'
               }`}
             >
-              {config.isLegendaryQuality ? 'ACTIVE (2.5x)' : 'NORMAL (1.0x)'}
+              {config.isLegendaryQuality ? 'LEGENDARY (2.5x)' : 'NORMAL (1.0x)'}
             </button>
           </div>
 
           <div className="flex items-center justify-between text-xs text-slate-400 pt-1 border-t border-[#2d333f]/60">
-            <span>Apportionment Mode:</span>
+            <span>Mode:</span>
             <button
               onClick={() =>
                 setConfig({
@@ -260,6 +290,7 @@ export const StationAllocator: React.FC = () => {
       <StationBayVisualizer
         result={apportionment}
         blueprintMultiplier={config.blueprintMultiplier}
+        beltStackLevel={config.beltStackLevel}
       />
 
       {/* Resource Demand Table */}
@@ -268,6 +299,7 @@ export const StationAllocator: React.FC = () => {
         blueprintMultiplier={config.blueprintMultiplier}
         trainWagons={config.trainWagons}
         isLegendaryQuality={config.isLegendaryQuality}
+        beltStackLevel={config.beltStackLevel}
         apportionment={apportionment}
         onUpdateEntry={handleUpdateEntry}
         onRemoveEntry={handleRemoveEntry}

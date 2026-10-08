@@ -190,7 +190,7 @@ async function main() {
     },
     fluidWagon: {
       baseCapacity: rawData['fluid-wagon']?.['fluid-wagon']?.capacity ?? 50000,
-      legendaryCapacity: rawData['fluid-wagon']?.['fluid-wagon']?.capacity ?? 50000, // Fluid capacity is fixed in vanilla Space Age
+      legendaryCapacity: Math.floor((rawData['fluid-wagon']?.['fluid-wagon']?.capacity ?? 50000) * (quality.legendary?.cargoWagonInventoryMultiplier ?? 2.5)), // 125,000 at Legendary
     },
     locomotive: {
       basePowerKw: 600,

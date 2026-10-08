@@ -11,6 +11,7 @@ export const DEFAULT_PRESETS: CityBlockConfig[] = [
     totalStations: 8,
     trainWagons: 4,
     isLegendaryQuality: true,
+    beltStackLevel: 4,
     allocationMode: 'train-throughput',
     entries: [
       {
@@ -48,6 +49,7 @@ export const DEFAULT_PRESETS: CityBlockConfig[] = [
     totalStations: 8,
     trainWagons: 4,
     isLegendaryQuality: true,
+    beltStackLevel: 4,
     allocationMode: 'train-throughput',
     entries: [
       {
@@ -85,6 +87,7 @@ export const DEFAULT_PRESETS: CityBlockConfig[] = [
     totalStations: 8,
     trainWagons: 4,
     isLegendaryQuality: true,
+    beltStackLevel: 4,
     allocationMode: 'train-throughput',
     entries: [
       {

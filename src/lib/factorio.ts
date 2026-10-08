@@ -47,9 +47,11 @@ export function calculateTrainCapacity(params: {
 
   if (isFluid) {
     const baseWagonFluid = factorioData.rollingStock.fluidWagon.baseCapacity || 50000;
+    // Legendary quality increases fluid wagon capacity by 2.5x to 125,000 units
+    const capacityPerWagon = isLegendaryQuality ? Math.floor(baseWagonFluid * 2.5) : baseWagonFluid;
     return {
-      totalCapacity: wagonCount * baseWagonFluid,
-      capacityPerWagon: baseWagonFluid,
+      totalCapacity: wagonCount * capacityPerWagon,
+      capacityPerWagon,
       slotsPerWagon: 0,
       effectiveStackSize: 0,
     };

@@ -1,16 +1,44 @@
 import React from 'react';
-import { Droplet, Box, Clock, Gauge, Lock, AlertTriangle, CheckCircle2 } from 'lucide-react';
-import type { ApportionmentResult, AllocatedResourceResult } from '../../lib/apportionment';
-import { BELT_SPECS } from '../../types';
+import { Droplet, Box, Clock, Gauge, Lock, AlertTriangle, CheckCircle2, HelpCircle } from 'lucide-react';
+import type { ApportionmentResult, AllocatedResourceResult, CongestionLevel } from '../../lib/apportionment';
+import { getEffectiveBeltSpeed, type BeltStackLevel } from '../../types';
 
 interface StationBayVisualizerProps {
   result: ApportionmentResult;
   blueprintMultiplier: number;
+  beltStackLevel: BeltStackLevel;
 }
+
+const CONGESTION_DETAILS: Record<
+  CongestionLevel,
+  { label: string; desc: string; threshold: string }
+> = {
+  critical: {
+    label: 'Critical Bottleneck',
+    desc: 'Trains arrive every < 25s. Severe risk of rail junction deadlocks, signal stalling, and stacker overflow. Add dedicated bays or bypass tracks.',
+    threshold: '< 25s per train',
+  },
+  heavy: {
+    label: 'Heavy Rail Traffic',
+    desc: 'Trains arrive every 25s–50s. High traffic corridor. Ensure adequate train stacker queue bays and chain signaling.',
+    threshold: '25s – 50s per train',
+  },
+  optimal: {
+    label: 'Optimal Cadence',
+    desc: 'Trains arrive every 50s–300s (5m). Healthy, balanced throughput. Unloading buffers stay filled without stressing intersections.',
+    threshold: '50s – 300s per train',
+  },
+  light: {
+    label: 'Light / Infrequent',
+    desc: 'Trains arrive every > 5 minutes. Very low traffic impact; station remains idle most of the time.',
+    threshold: '> 300s per train',
+  },
+};
 
 export const StationBayVisualizer: React.FC<StationBayVisualizerProps> = ({
   result,
   blueprintMultiplier,
+  beltStackLevel,
 }) => {
   const { totalStations, allocations, warnings, isOverCapacity } = result;
 
@@ -70,11 +98,48 @@ export const StationBayVisualizer: React.FC<StationBayVisualizerProps> = ({
               </h3>
             </div>
             <p className="text-xs text-slate-400 mt-0.5">
-              Configured for <span className="text-amber-400 font-medium">{blueprintMultiplier}x</span> blueprint copies per block
+              Configured for <span className="text-amber-400 font-medium">{blueprintMultiplier}x</span> blueprint copies &bull; Belt stacking: <span className="text-emerald-400 font-medium">{beltStackLevel}x ({getEffectiveBeltSpeed('turbo', beltStackLevel)} it/s on Green)</span>
             </p>
           </div>
 
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-3">
+            {/* Traffic Guide Popover */}
+            <div className="relative group cursor-help">
+              <div className="flex items-center gap-1 text-xs text-slate-400 hover:text-slate-200">
+                <HelpCircle className="w-3.5 h-3.5 text-amber-500" />
+                <span>Traffic Guide</span>
+              </div>
+              <div className="absolute right-0 top-full mt-2 hidden group-hover:block z-50 w-72 p-3 rounded-xl bg-[#0e1015] border border-[#3f4756] shadow-2xl space-y-2 text-xs">
+                <div className="font-semibold text-slate-200 border-b border-[#2d333f] pb-1">
+                  Train Arrival Traffic Levels
+                </div>
+                {(['critical', 'heavy', 'optimal', 'light'] as const).map((key) => {
+                  const detail = CONGESTION_DETAILS[key];
+                  return (
+                    <div key={key} className="space-y-0.5">
+                      <div className="flex items-center justify-between font-mono text-[11px]">
+                        <span
+                          className={`font-semibold ${
+                            key === 'critical'
+                              ? 'text-rose-400'
+                              : key === 'heavy'
+                              ? 'text-amber-400'
+                              : key === 'optimal'
+                              ? 'text-emerald-400'
+                              : 'text-slate-400'
+                          }`}
+                        >
+                          {detail.label}
+                        </span>
+                        <span className="text-slate-400 text-[10px]">{detail.threshold}</span>
+                      </div>
+                      <p className="text-[11px] text-slate-400">{detail.desc}</p>
+                    </div>
+                  );
+                })}
+              </div>
+            </div>
+
             <span
               className={`px-3 py-1 rounded-md text-xs font-mono font-medium border ${
                 isOverCapacity
@@ -110,8 +175,9 @@ export const StationBayVisualizer: React.FC<StationBayVisualizerProps> = ({
               );
             }
 
+            const turboBeltSpeed = getEffectiveBeltSpeed('turbo', beltStackLevel);
             const turboBeltCount = !res.isFluid
-              ? (res.ratePerStation / BELT_SPECS.turbo.speedItemsPerSec).toFixed(1)
+              ? (res.ratePerStation / turboBeltSpeed).toFixed(2)
               : null;
 
             const cadenceFormatted =
@@ -124,7 +190,7 @@ export const StationBayVisualizer: React.FC<StationBayVisualizerProps> = ({
             return (
               <div
                 key={bay.stationNumber}
-                className={`p-3.5 rounded-lg border transition flex flex-col justify-between min-h-[140px] relative overflow-hidden ${
+                className={`p-3.5 rounded-lg border transition flex flex-col justify-between min-h-[140px] relative overflow-visible ${
                   res.isFluid
                     ? 'bg-[#121b22] border-cyan-800/40 hover:border-cyan-600/60'
                     : 'bg-[#181d24] border-amber-800/40 hover:border-amber-600/60'
@@ -135,23 +201,42 @@ export const StationBayVisualizer: React.FC<StationBayVisualizerProps> = ({
                   <span className="px-1.5 py-0.5 rounded bg-black/40 text-slate-300 font-semibold border border-white/5">
                     Bay #{bay.stationNumber}
                   </span>
-                  <div className="flex items-center gap-1">
+                  <div className="flex items-center gap-1.5">
                     {res.isLocked && (
                       <span title="Locked Station" className="text-amber-400">
                         <Lock className="w-3 h-3" />
                       </span>
                     )}
-                    <span
-                      className={`text-[10px] px-1.5 py-0.5 rounded font-mono ${
-                        res.congestion === 'critical'
-                          ? 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
-                          : res.congestion === 'heavy'
-                          ? 'bg-amber-500/20 text-amber-300 border border-amber-500/30'
-                          : 'bg-emerald-500/15 text-emerald-300 border border-emerald-500/30'
-                      }`}
-                    >
-                      {res.congestion}
-                    </span>
+
+                    {/* Interactive Congestion Tooltip */}
+                    <div className="relative group/tip cursor-help">
+                      <span
+                        className={`text-[10px] px-1.5 py-0.5 rounded font-mono border flex items-center gap-1 ${
+                          res.congestion === 'critical'
+                            ? 'bg-rose-500/20 text-rose-300 border-rose-500/30'
+                            : res.congestion === 'heavy'
+                            ? 'bg-amber-500/20 text-amber-300 border-amber-500/30'
+                            : res.congestion === 'optimal'
+                            ? 'bg-emerald-500/15 text-emerald-300 border-emerald-500/30'
+                            : 'bg-slate-700/30 text-slate-400 border-slate-600/30'
+                        }`}
+                      >
+                        {res.congestion}
+                      </span>
+
+                      {/* Tooltip Popup */}
+                      <div className="absolute right-0 top-full mt-1.5 hidden group-hover/tip:block z-50 w-64 p-2.5 rounded-lg bg-[#0d0f14] border border-[#3f4756] shadow-2xl text-left pointer-events-none">
+                        <div className="font-semibold text-xs text-slate-100 flex items-center justify-between mb-1">
+                          <span>{CONGESTION_DETAILS[res.congestion].label}</span>
+                          <span className="text-[10px] font-mono text-amber-400">
+                            {CONGESTION_DETAILS[res.congestion].threshold}
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-300 leading-relaxed font-sans">
+                          {CONGESTION_DETAILS[res.congestion].desc}
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
@@ -186,7 +271,7 @@ export const StationBayVisualizer: React.FC<StationBayVisualizerProps> = ({
                     <div className="flex items-center justify-between text-slate-400">
                       <span className="flex items-center gap-1">
                         <Gauge className="w-3 h-3 text-slate-500" />
-                        Green Belts:
+                        Green ({beltStackLevel}x stack):
                       </span>
                       <span className="text-emerald-400 font-medium">{turboBeltCount} belts</span>
                     </div>

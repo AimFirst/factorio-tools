@@ -1,4 +1,4 @@
-import type { BeltType } from '../../types';
+import type { BeltType, BeltStackLevel } from '../../types';
 
 export type RateUnit = 'per-sec' | 'per-min' | 'belts';
 
@@ -18,6 +18,8 @@ export interface CityBlockConfig {
   totalStations: number;
   trainWagons: number;
   isLegendaryQuality: boolean;
+  beltStackLevel: BeltStackLevel;
   allocationMode: 'train-throughput' | 'raw-rate';
   entries: ResourceDemandEntry[];
 }
+

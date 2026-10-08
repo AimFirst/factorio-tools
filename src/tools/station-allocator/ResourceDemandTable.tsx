@@ -3,13 +3,14 @@ import { Plus, Trash2, Droplet, Box, Lock, Unlock } from 'lucide-react';
 import type { ResourceDemandEntry, RateUnit } from './types';
 import type { ApportionmentResult } from '../../lib/apportionment';
 import { getItem, calculateTrainCapacity } from '../../lib/factorio';
-import { BELT_SPECS, type BeltType } from '../../types';
+import { getEffectiveBeltSpeed, type BeltType, type BeltStackLevel } from '../../types';
 
 interface ResourceDemandTableProps {
   entries: ResourceDemandEntry[];
   blueprintMultiplier: number;
   trainWagons: number;
   isLegendaryQuality: boolean;
+  beltStackLevel: BeltStackLevel;
   apportionment: ApportionmentResult;
   onUpdateEntry: (index: number, entry: Partial<ResourceDemandEntry>) => void;
   onRemoveEntry: (index: number) => void;
@@ -21,6 +22,7 @@ export const ResourceDemandTable: React.FC<ResourceDemandTableProps> = ({
   blueprintMultiplier,
   trainWagons,
   isLegendaryQuality,
+  beltStackLevel,
   apportionment,
   onUpdateEntry,
   onRemoveEntry,
@@ -88,7 +90,7 @@ export const ResourceDemandTable: React.FC<ResourceDemandTableProps> = ({
                 if (entry.unit === 'per-min') {
                   singleRatePerSec = entry.inputRate / 60;
                 } else if (entry.unit === 'belts') {
-                  const beltSpeed = BELT_SPECS[entry.beltType].speedItemsPerSec;
+                  const beltSpeed = getEffectiveBeltSpeed(entry.beltType, beltStackLevel);
                   singleRatePerSec = entry.inputRate * beltSpeed;
                 }
 
@@ -128,7 +130,16 @@ export const ResourceDemandTable: React.FC<ResourceDemandTableProps> = ({
                     {/* Stack / Capacity */}
                     <td className="py-3 px-4 font-mono text-slate-300">
                       {entry.isFluid ? (
-                        <span className="text-cyan-400">50k / wagon</span>
+                        <div>
+                          <span className="text-cyan-400">
+                            {(trainCap.capacityPerWagon / 1000).toLocaleString()}k / wagon
+                          </span>
+                          {isLegendaryQuality && (
+                            <span className="text-[10px] text-cyan-400/80 block">
+                              (base: 50k)
+                            </span>
+                          )}
+                        </div>
                       ) : (
                         <div>
                           <span>{trainCap.effectiveStackSize} / stack</span>
@@ -178,9 +189,18 @@ export const ResourceDemandTable: React.FC<ResourceDemandTableProps> = ({
                             }
                             className="px-1.5 py-1 bg-[#1a1e27] border border-[#2d333f] rounded text-emerald-400 text-xs font-mono focus:outline-none"
                           >
-                            <option value="turbo">Green (60/s)</option>
-                            <option value="express">Blue (45/s)</option>
-                            <option value="fast">Red (30/s)</option>
+                            <option value="turbo">
+                              Green ({getEffectiveBeltSpeed('turbo', beltStackLevel)}/s{beltStackLevel > 1 ? ` • ${beltStackLevel}x stack` : ''})
+                            </option>
+                            <option value="express">
+                              Blue ({getEffectiveBeltSpeed('express', beltStackLevel)}/s{beltStackLevel > 1 ? ` • ${beltStackLevel}x stack` : ''})
+                            </option>
+                            <option value="fast">
+                              Red ({getEffectiveBeltSpeed('fast', beltStackLevel)}/s{beltStackLevel > 1 ? ` • ${beltStackLevel}x stack` : ''})
+                            </option>
+                            <option value="transport">
+                              Yellow ({getEffectiveBeltSpeed('transport', beltStackLevel)}/s{beltStackLevel > 1 ? ` • ${beltStackLevel}x stack` : ''})
+                            </option>
                           </select>
                         )}
                       </div>

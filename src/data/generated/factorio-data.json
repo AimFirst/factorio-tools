@@ -83,7 +83,7 @@
     },
     "fluidWagon": {
       "baseCapacity": 50000,
-      "legendaryCapacity": 50000
+      "legendaryCapacity": 125000
     },
     "locomotive": {
       "basePowerKw": 600,

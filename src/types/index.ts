@@ -23,9 +23,16 @@ export interface BeltSpec {
   color: string;
 }
 
+export type BeltStackLevel = 1 | 2 | 3 | 4;
+
 export const BELT_SPECS: Record<BeltType, BeltSpec> = {
   transport: { name: 'Yellow (Transport)', speedItemsPerSec: 15, color: '#f59e0b' },
   fast: { name: 'Red (Fast)', speedItemsPerSec: 30, color: '#ef4444' },
   express: { name: 'Blue (Express)', speedItemsPerSec: 45, color: '#3b82f6' },
   turbo: { name: 'Green (Turbo - Space Age)', speedItemsPerSec: 60, color: '#10b981' },
 };
+
+export function getEffectiveBeltSpeed(type: BeltType, stackLevel: BeltStackLevel = 4): number {
+  return BELT_SPECS[type].speedItemsPerSec * stackLevel;
+}
+

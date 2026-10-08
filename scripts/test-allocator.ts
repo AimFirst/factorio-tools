@@ -1,6 +1,7 @@
 import assert from 'node:assert';
 import { allocateStations } from '../src/lib/apportionment.ts';
 import { calculateTrainCapacity } from '../src/lib/factorio.ts';
+import { getEffectiveBeltSpeed } from '../src/types/index.ts';
 
 console.log('🧪 Testing Factorio Station Allocator Engine...\n');
 
@@ -31,17 +32,28 @@ console.log('🧪 Testing Factorio Station Allocator Engine...\n');
   console.log('✅ Test 2: Legendary Train Capacity (2.5x wagon * 2.5x stack) passed.');
 }
 
-// Test 3: Fluid wagon capacity
+// Test 3: Fluid wagon capacity (Normal vs Legendary)
 {
-  const fluid = calculateTrainCapacity({
+  const normalFluid = calculateTrainCapacity({
+    resourceId: 'sulfuric-acid',
+    isFluid: true,
+    wagonCount: 4,
+    isLegendaryQuality: false,
+  });
+  // 4 fluid wagons * 50,000 = 200,000 fluid
+  assert.strictEqual(normalFluid.capacityPerWagon, 50000);
+  assert.strictEqual(normalFluid.totalCapacity, 200000);
+
+  const legendaryFluid = calculateTrainCapacity({
     resourceId: 'sulfuric-acid',
     isFluid: true,
     wagonCount: 4,
     isLegendaryQuality: true,
   });
-  // 4 fluid wagons * 50,000 = 200,000 fluid
-  assert.strictEqual(fluid.totalCapacity, 200000);
-  console.log('✅ Test 3: Fluid Wagon Capacity passed.');
+  // 4 legendary fluid wagons * 125,000 = 500,000 fluid
+  assert.strictEqual(legendaryFluid.capacityPerWagon, 125000);
+  assert.strictEqual(legendaryFluid.totalCapacity, 500000);
+  console.log('✅ Test 3: Fluid Wagon Capacity (Normal 50k, Legendary 125k) passed.');
 }
 
 // Test 4: 8-Station Discrete Apportionment
@@ -115,4 +127,15 @@ console.log('🧪 Testing Factorio Station Allocator Engine...\n');
   console.log('✅ Test 5: Manual station lock passed.');
 }
 
+// Test 6: Belt Stacking throughput
+{
+  assert.strictEqual(getEffectiveBeltSpeed('turbo', 1), 60);
+  assert.strictEqual(getEffectiveBeltSpeed('turbo', 4), 240);
+  assert.strictEqual(getEffectiveBeltSpeed('express', 4), 180);
+  assert.strictEqual(getEffectiveBeltSpeed('fast', 4), 120);
+  assert.strictEqual(getEffectiveBeltSpeed('transport', 4), 60);
+  console.log('✅ Test 6: Space Age Belt Stacking (Green belt 1x: 60/s, 4x: 240/s) passed.');
+}
+
 console.log('\n🎉 ALL ALLOCATOR TESTS PASSED SUCCESSFULLY!');
+
