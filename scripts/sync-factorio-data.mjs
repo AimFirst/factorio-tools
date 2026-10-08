@@ -2,6 +2,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { execFileSync } from 'node:child_process';
 import https from 'node:https';
+import sharp from 'sharp';
+
 
 const DEFAULT_FACTORIO_PATHS = [
   'C:\\Program Files (x86)\\Steam\\steamapps\\common\\Factorio',
@@ -125,7 +127,7 @@ async function main() {
   const publicIconsDir = path.resolve('public/icons');
   fs.mkdirSync(publicIconsDir, { recursive: true });
 
-  function resolveAndCopyIcon(rawIconPath, destId) {
+  async function resolveAndCopyIcon(rawIconPath, destId) {
     if (!rawIconPath) return null;
     const match = rawIconPath.match(/^__([a-zA-Z0-9_-]+)__[\/\\](.*)$/);
     if (!match) return null;
@@ -135,7 +137,18 @@ async function main() {
     if (fs.existsSync(sourcePath)) {
       const destPath = path.join(publicIconsDir, `${destId}.png`);
       try {
-        fs.copyFileSync(sourcePath, destPath);
+        const meta = await sharp(sourcePath).metadata();
+        if (meta.width && meta.height && meta.width > meta.height) {
+          // Factorio icon files contain 4 horizontal mipmaps (e.g. 64 + 32 + 16 + 8 = 120 wide).
+          // Extract strictly the first full-resolution square (level 0).
+          const size = meta.height;
+          await sharp(sourcePath)
+            .extract({ left: 0, top: 0, width: size, height: size })
+            .png()
+            .toFile(destPath);
+        } else {
+          fs.copyFileSync(sourcePath, destPath);
+        }
         return `/icons/${destId}.png`;
       } catch {
         return null;
@@ -159,7 +172,7 @@ async function main() {
       if (!item.stack_size) continue;
 
       const rawIcon = item.icon || (item.icons && item.icons[0]?.icon);
-      const iconUrl = resolveAndCopyIcon(rawIcon, id) || `/icons/${id}.png`;
+      const iconUrl = (await resolveAndCopyIcon(rawIcon, id)) || `/icons/${id}.png`;
 
       items[id] = {
         id,
@@ -181,7 +194,7 @@ async function main() {
   for (const [id, fluid] of Object.entries(rawFluids)) {
     if (!id) continue;
     const rawIcon = fluid.icon || (fluid.icons && fluid.icons[0]?.icon);
-    const iconUrl = resolveAndCopyIcon(rawIcon, id) || `/icons/${id}.png`;
+    const iconUrl = (await resolveAndCopyIcon(rawIcon, id)) || `/icons/${id}.png`;
 
     fluids[id] = {
       id,
