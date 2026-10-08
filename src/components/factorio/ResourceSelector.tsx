@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from 'react';
-import { Search, X, Droplet, Box, Sparkles } from 'lucide-react';
+import { Search, X, Sparkles } from 'lucide-react';
+import { FactorioIcon } from './FactorioIcon';
 import { getAllItems, getAllFluids } from '../../lib/factorio';
 import type { FactorioItem, FactorioFluid } from '../../data/generated/types';
 
@@ -165,15 +166,7 @@ export const ResourceSelector: React.FC<ResourceSelectorProps> = ({
                       : 'border-[#2d333f] bg-[#1a1d24] hover:bg-[#22262e] hover:border-amber-500/50 cursor-pointer'
                   }`}
                 >
-                  <div
-                    className={`w-9 h-9 rounded-md flex items-center justify-center shrink-0 border ${
-                      isFluid
-                        ? 'bg-cyan-950/40 border-cyan-800/40 text-cyan-400'
-                        : 'bg-amber-950/40 border-amber-800/40 text-amber-400'
-                    }`}
-                  >
-                    {isFluid ? <Droplet className="w-5 h-5" /> : <Box className="w-5 h-5" />}
-                  </div>
+                  <FactorioIcon id={resource.id} name={resource.name} isFluid={isFluid} size="md" />
 
                   <div className="min-w-0 flex-1">
                     <div className="font-medium text-sm text-slate-200 truncate">

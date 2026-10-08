@@ -19,6 +19,7 @@ export interface FactorioItem {
   subgroup: string;
   order: string;
   weight: number | null;
+  icon?: string;
 }
 
 export interface FactorioFluid {
@@ -31,6 +32,7 @@ export interface FactorioFluid {
   defaultTemperature: number;
   maxTemperature: number;
   fuelValue: string | null;
+  icon?: string;
 }
 
 export interface FactorioQuality {

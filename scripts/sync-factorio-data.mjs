@@ -121,6 +121,29 @@ async function main() {
     }
   }
 
+  // Setup public/icons directory
+  const publicIconsDir = path.resolve('public/icons');
+  fs.mkdirSync(publicIconsDir, { recursive: true });
+
+  function resolveAndCopyIcon(rawIconPath, destId) {
+    if (!rawIconPath) return null;
+    const match = rawIconPath.match(/^__([a-zA-Z0-9_-]+)__[\/\\](.*)$/);
+    if (!match) return null;
+    const pkg = match[1];
+    const sub = match[2];
+    const sourcePath = path.join(factorioDir, 'data', pkg, sub);
+    if (fs.existsSync(sourcePath)) {
+      const destPath = path.join(publicIconsDir, `${destId}.png`);
+      try {
+        fs.copyFileSync(sourcePath, destPath);
+        return `/icons/${destId}.png`;
+      } catch {
+        return null;
+      }
+    }
+    return null;
+  }
+
   // Extract items
   const itemProtoTypes = [
     'item', 'ammo', 'capsule', 'gun', 'armor', 'module', 
@@ -135,6 +158,9 @@ async function main() {
       // Filter out hidden or internal items without stack size
       if (!item.stack_size) continue;
 
+      const rawIcon = item.icon || (item.icons && item.icons[0]?.icon);
+      const iconUrl = resolveAndCopyIcon(rawIcon, id) || `/icons/${id}.png`;
+
       items[id] = {
         id,
         name: itemLocale[id] || formatName(id),
@@ -144,6 +170,7 @@ async function main() {
         subgroup: item.subgroup || 'other',
         order: item.order || '',
         weight: item.weight || null,
+        icon: iconUrl,
       };
     }
   }
@@ -153,6 +180,9 @@ async function main() {
   const rawFluids = rawData.fluid || {};
   for (const [id, fluid] of Object.entries(rawFluids)) {
     if (!id) continue;
+    const rawIcon = fluid.icon || (fluid.icons && fluid.icons[0]?.icon);
+    const iconUrl = resolveAndCopyIcon(rawIcon, id) || `/icons/${id}.png`;
+
     fluids[id] = {
       id,
       name: fluidLocale[id] || formatName(id),
@@ -163,6 +193,7 @@ async function main() {
       defaultTemperature: fluid.default_temperature ?? 15,
       maxTemperature: fluid.max_temperature ?? 100,
       fuelValue: fluid.fuel_value || null,
+      icon: iconUrl,
     };
   }
 
@@ -246,6 +277,7 @@ export interface FactorioItem {
   subgroup: string;
   order: string;
   weight: number | null;
+  icon?: string;
 }
 
 export interface FactorioFluid {
@@ -258,6 +290,7 @@ export interface FactorioFluid {
   defaultTemperature: number;
   maxTemperature: number;
   fuelValue: string | null;
+  icon?: string;
 }
 
 export interface FactorioQuality {

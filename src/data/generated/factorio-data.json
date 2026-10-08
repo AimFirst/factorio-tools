@@ -1,7 +1,7 @@
 {
   "metadata": {
     "gameVersion": "2.1.21",
-    "extractedAt": "2026-10-08T00:55:46.040Z",
+    "extractedAt": "2026-10-08T03:15:40.278Z",
     "latestOnlineStable": "2.0.77",
     "latestOnlineExperimental": "2.1.21",
     "isUpToDate": true,
@@ -99,7 +99,8 @@
       "stackSize": 1,
       "subgroup": "other",
       "order": "",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/item-unknown.png"
     },
     "parameter-0": {
       "id": "parameter-0",
@@ -109,7 +110,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-0.png"
     },
     "parameter-1": {
       "id": "parameter-1",
@@ -119,7 +121,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-1.png"
     },
     "parameter-2": {
       "id": "parameter-2",
@@ -129,7 +132,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-2.png"
     },
     "parameter-3": {
       "id": "parameter-3",
@@ -139,7 +143,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-3.png"
     },
     "parameter-4": {
       "id": "parameter-4",
@@ -149,7 +154,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-4.png"
     },
     "parameter-5": {
       "id": "parameter-5",
@@ -159,7 +165,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-5.png"
     },
     "parameter-6": {
       "id": "parameter-6",
@@ -169,7 +176,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-6.png"
     },
     "parameter-7": {
       "id": "parameter-7",
@@ -179,7 +187,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-7.png"
     },
     "parameter-8": {
       "id": "parameter-8",
@@ -189,7 +198,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-8.png"
     },
     "parameter-9": {
       "id": "parameter-9",
@@ -199,7 +209,8 @@
       "stackSize": 1,
       "subgroup": "parameters",
       "order": "a",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/parameter-9.png"
     },
     "stone-brick": {
       "id": "stone-brick",
@@ -209,7 +220,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "a[stone-brick]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/stone-brick.png"
     },
     "wood": {
       "id": "wood",
@@ -219,7 +231,8 @@
       "stackSize": 100,
       "subgroup": "raw-resource",
       "order": "a[wood]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/wood.png"
     },
     "coal": {
       "id": "coal",
@@ -229,7 +242,8 @@
       "stackSize": 50,
       "subgroup": "raw-resource",
       "order": "b[coal]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/coal.png"
     },
     "stone": {
       "id": "stone",
@@ -239,7 +253,8 @@
       "stackSize": 50,
       "subgroup": "raw-resource",
       "order": "d[stone]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/stone.png"
     },
     "iron-ore": {
       "id": "iron-ore",
@@ -249,7 +264,8 @@
       "stackSize": 50,
       "subgroup": "raw-resource",
       "order": "e[iron-ore]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/iron-ore.png"
     },
     "copper-ore": {
       "id": "copper-ore",
@@ -259,7 +275,8 @@
       "stackSize": 50,
       "subgroup": "raw-resource",
       "order": "f[copper-ore]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/copper-ore.png"
     },
     "iron-plate": {
       "id": "iron-plate",
@@ -269,7 +286,8 @@
       "stackSize": 100,
       "subgroup": "raw-material",
       "order": "a[smelting]-a[iron-plate]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/iron-plate.png"
     },
     "copper-plate": {
       "id": "copper-plate",
@@ -279,7 +297,8 @@
       "stackSize": 100,
       "subgroup": "raw-material",
       "order": "a[smelting]-b[copper-plate]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/copper-plate.png"
     },
     "copper-cable": {
       "id": "copper-cable",
@@ -289,7 +308,8 @@
       "stackSize": 200,
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-c[copper-cable]",
-      "weight": 250
+      "weight": 250,
+      "icon": "/icons/copper-cable.png"
     },
     "iron-stick": {
       "id": "iron-stick",
@@ -299,7 +319,8 @@
       "stackSize": 100,
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-b[iron-stick]",
-      "weight": 500
+      "weight": 500,
+      "icon": "/icons/iron-stick.png"
     },
     "iron-gear-wheel": {
       "id": "iron-gear-wheel",
@@ -309,7 +330,8 @@
       "stackSize": 100,
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-a[iron-gear-wheel]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/iron-gear-wheel.png"
     },
     "electronic-circuit": {
       "id": "electronic-circuit",
@@ -319,7 +341,8 @@
       "stackSize": 200,
       "subgroup": "intermediate-product",
       "order": "b[circuits]-a[electronic-circuit]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/electronic-circuit.png"
     },
     "wooden-chest": {
       "id": "wooden-chest",
@@ -329,7 +352,8 @@
       "stackSize": 50,
       "subgroup": "storage",
       "order": "a[items]-a[wooden-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/wooden-chest.png"
     },
     "stone-furnace": {
       "id": "stone-furnace",
@@ -339,7 +363,8 @@
       "stackSize": 50,
       "subgroup": "smelting-machine",
       "order": "a[stone-furnace]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/stone-furnace.png"
     },
     "burner-mining-drill": {
       "id": "burner-mining-drill",
@@ -349,7 +374,8 @@
       "stackSize": 50,
       "subgroup": "extraction-machine",
       "order": "a[items]-a[burner-mining-drill]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/burner-mining-drill.png"
     },
     "electric-mining-drill": {
       "id": "electric-mining-drill",
@@ -359,7 +385,8 @@
       "stackSize": 50,
       "subgroup": "extraction-machine",
       "order": "a[items]-b[electric-mining-drill]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/electric-mining-drill.png"
     },
     "burner-inserter": {
       "id": "burner-inserter",
@@ -369,7 +396,8 @@
       "stackSize": 50,
       "subgroup": "inserter",
       "order": "a[burner-inserter]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/burner-inserter.png"
     },
     "inserter": {
       "id": "inserter",
@@ -379,7 +407,8 @@
       "stackSize": 50,
       "subgroup": "inserter",
       "order": "b[inserter]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/inserter.png"
     },
     "fast-inserter": {
       "id": "fast-inserter",
@@ -389,7 +418,8 @@
       "stackSize": 50,
       "subgroup": "inserter",
       "order": "d[fast-inserter]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/fast-inserter.png"
     },
     "long-handed-inserter": {
       "id": "long-handed-inserter",
@@ -399,7 +429,8 @@
       "stackSize": 50,
       "subgroup": "inserter",
       "order": "c[long-handed-inserter]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/long-handed-inserter.png"
     },
     "offshore-pump": {
       "id": "offshore-pump",
@@ -409,7 +440,8 @@
       "stackSize": 20,
       "subgroup": "extraction-machine",
       "order": "b[fluids]-a[offshore-pump]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/offshore-pump.png"
     },
     "pipe": {
       "id": "pipe",
@@ -419,7 +451,8 @@
       "stackSize": 100,
       "subgroup": "energy-pipe-distribution",
       "order": "a[pipe]-a[pipe]",
-      "weight": 5000
+      "weight": 5000,
+      "icon": "/icons/pipe.png"
     },
     "boiler": {
       "id": "boiler",
@@ -429,7 +462,8 @@
       "stackSize": 50,
       "subgroup": "energy",
       "order": "b[steam-power]-a[boiler]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/boiler.png"
     },
     "steam-engine": {
       "id": "steam-engine",
@@ -439,7 +473,8 @@
       "stackSize": 10,
       "subgroup": "energy",
       "order": "b[steam-power]-b[steam-engine]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/steam-engine.png"
     },
     "small-electric-pole": {
       "id": "small-electric-pole",
@@ -449,7 +484,8 @@
       "stackSize": 50,
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-a[small-electric-pole]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/small-electric-pole.png"
     },
     "radar": {
       "id": "radar",
@@ -459,7 +495,8 @@
       "stackSize": 50,
       "subgroup": "defensive-structure",
       "order": "d[radar]-a[radar]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/radar.png"
     },
     "small-lamp": {
       "id": "small-lamp",
@@ -469,7 +506,8 @@
       "stackSize": 50,
       "subgroup": "circuit-network",
       "order": "a[light]-a[small-lamp]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/small-lamp.png"
     },
     "pipe-to-ground": {
       "id": "pipe-to-ground",
@@ -479,7 +517,8 @@
       "stackSize": 50,
       "subgroup": "energy-pipe-distribution",
       "order": "a[pipe]-b[pipe-to-ground]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/pipe-to-ground.png"
     },
     "assembling-machine-1": {
       "id": "assembling-machine-1",
@@ -489,7 +528,8 @@
       "stackSize": 50,
       "subgroup": "production-machine",
       "order": "a[assembling-machine-1]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/assembling-machine-1.png"
     },
     "assembling-machine-2": {
       "id": "assembling-machine-2",
@@ -499,7 +539,8 @@
       "stackSize": 50,
       "subgroup": "production-machine",
       "order": "b[assembling-machine-2]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/assembling-machine-2.png"
     },
     "red-wire": {
       "id": "red-wire",
@@ -509,7 +550,8 @@
       "stackSize": 1,
       "subgroup": "spawnables",
       "order": "",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/red-wire.png"
     },
     "green-wire": {
       "id": "green-wire",
@@ -519,7 +561,8 @@
       "stackSize": 1,
       "subgroup": "spawnables",
       "order": "",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/green-wire.png"
     },
     "copper-wire": {
       "id": "copper-wire",
@@ -529,7 +572,8 @@
       "stackSize": 1,
       "subgroup": "spawnables",
       "order": "",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/copper-wire.png"
     },
     "no-item": {
       "id": "no-item",
@@ -539,7 +583,8 @@
       "stackSize": 1,
       "subgroup": "other",
       "order": "",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/no-item.png"
     },
     "stone-wall": {
       "id": "stone-wall",
@@ -549,7 +594,8 @@
       "stackSize": 100,
       "subgroup": "defensive-structure",
       "order": "a[stone-wall]-a[stone-wall]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/stone-wall.png"
     },
     "lab": {
       "id": "lab",
@@ -559,7 +605,8 @@
       "stackSize": 10,
       "subgroup": "production-machine",
       "order": "z[lab]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/lab.png"
     },
     "automation-science-pack": {
       "id": "automation-science-pack",
@@ -569,7 +616,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "a[automation-science-pack]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/automation-science-pack.png"
     },
     "logistic-science-pack": {
       "id": "logistic-science-pack",
@@ -579,7 +627,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "b[logistic-science-pack]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/logistic-science-pack.png"
     },
     "steel-plate": {
       "id": "steel-plate",
@@ -589,7 +638,8 @@
       "stackSize": 100,
       "subgroup": "raw-material",
       "order": "a[smelting]-c[steel-plate]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/steel-plate.png"
     },
     "engine-unit": {
       "id": "engine-unit",
@@ -599,7 +649,8 @@
       "stackSize": 50,
       "subgroup": "intermediate-product",
       "order": "c[advanced-intermediates]-a[engine-unit]",
-      "weight": 2500
+      "weight": 2500,
+      "icon": "/icons/engine-unit.png"
     },
     "electric-furnace": {
       "id": "electric-furnace",
@@ -609,7 +660,8 @@
       "stackSize": 50,
       "subgroup": "smelting-machine",
       "order": "c[electric-furnace]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/electric-furnace.png"
     },
     "solid-fuel": {
       "id": "solid-fuel",
@@ -619,7 +671,8 @@
       "stackSize": 50,
       "subgroup": "raw-material",
       "order": "b[chemistry]-a[solid-fuel]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/solid-fuel.png"
     },
     "rocket-fuel": {
       "id": "rocket-fuel",
@@ -629,7 +682,8 @@
       "stackSize": 20,
       "subgroup": "intermediate-product",
       "order": "d[rocket-parts]-b[rocket-fuel]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/rocket-fuel.png"
     },
     "iron-chest": {
       "id": "iron-chest",
@@ -639,7 +693,8 @@
       "stackSize": 50,
       "subgroup": "storage",
       "order": "a[items]-b[iron-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/iron-chest.png"
     },
     "big-electric-pole": {
       "id": "big-electric-pole",
@@ -649,7 +704,8 @@
       "stackSize": 50,
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-c[big-electric-pole]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/big-electric-pole.png"
     },
     "medium-electric-pole": {
       "id": "medium-electric-pole",
@@ -659,7 +715,8 @@
       "stackSize": 50,
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-b[medium-electric-pole]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/medium-electric-pole.png"
     },
     "steel-furnace": {
       "id": "steel-furnace",
@@ -669,7 +726,8 @@
       "stackSize": 50,
       "subgroup": "smelting-machine",
       "order": "b[steel-furnace]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/steel-furnace.png"
     },
     "gate": {
       "id": "gate",
@@ -679,7 +737,8 @@
       "stackSize": 50,
       "subgroup": "defensive-structure",
       "order": "a[wall]-b[gate]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/gate.png"
     },
     "steel-chest": {
       "id": "steel-chest",
@@ -689,7 +748,8 @@
       "stackSize": 50,
       "subgroup": "storage",
       "order": "a[items]-c[steel-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/steel-chest.png"
     },
     "solar-panel": {
       "id": "solar-panel",
@@ -699,7 +759,8 @@
       "stackSize": 50,
       "subgroup": "energy",
       "order": "d[solar-panel]-a[solar-panel]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/solar-panel.png"
     },
     "train-stop": {
       "id": "train-stop",
@@ -709,7 +770,8 @@
       "stackSize": 10,
       "subgroup": "train-transport",
       "order": "b[train-automation]-a[train-stop]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/train-stop.png"
     },
     "rail-signal": {
       "id": "rail-signal",
@@ -719,7 +781,8 @@
       "stackSize": 50,
       "subgroup": "train-transport",
       "order": "b[train-automation]-b[rail-signal]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/rail-signal.png"
     },
     "rail-chain-signal": {
       "id": "rail-chain-signal",
@@ -729,7 +792,8 @@
       "stackSize": 50,
       "subgroup": "train-transport",
       "order": "b[train-automation]-c[rail-chain-signal]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/rail-chain-signal.png"
     },
     "concrete": {
       "id": "concrete",
@@ -739,7 +803,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "b[concrete]-a[plain]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/concrete.png"
     },
     "refined-concrete": {
       "id": "refined-concrete",
@@ -749,7 +814,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "b[concrete]-c[refined]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/refined-concrete.png"
     },
     "hazard-concrete": {
       "id": "hazard-concrete",
@@ -759,7 +825,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "b[concrete]-b[hazard]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/hazard-concrete.png"
     },
     "refined-hazard-concrete": {
       "id": "refined-hazard-concrete",
@@ -769,7 +836,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "b[concrete]-d[refined-hazard]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/refined-hazard-concrete.png"
     },
     "landfill": {
       "id": "landfill",
@@ -779,7 +847,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "c[landfill]-a[dirt]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/landfill.png"
     },
     "accumulator": {
       "id": "accumulator",
@@ -789,7 +858,8 @@
       "stackSize": 50,
       "subgroup": "energy",
       "order": "e[accumulator]-a[accumulator]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/accumulator.png"
     },
     "uranium-ore": {
       "id": "uranium-ore",
@@ -799,7 +869,8 @@
       "stackSize": 50,
       "subgroup": "raw-resource",
       "order": "g[uranium-ore]",
-      "weight": 5000
+      "weight": 5000,
+      "icon": "/icons/uranium-ore.png"
     },
     "transport-belt": {
       "id": "transport-belt",
@@ -809,7 +880,8 @@
       "stackSize": 100,
       "subgroup": "belt",
       "order": "a[transport-belt]-a[transport-belt]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/transport-belt.png"
     },
     "fast-transport-belt": {
       "id": "fast-transport-belt",
@@ -819,7 +891,8 @@
       "stackSize": 100,
       "subgroup": "belt",
       "order": "a[transport-belt]-b[fast-transport-belt]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/fast-transport-belt.png"
     },
     "express-transport-belt": {
       "id": "express-transport-belt",
@@ -829,7 +902,8 @@
       "stackSize": 100,
       "subgroup": "belt",
       "order": "a[transport-belt]-c[express-transport-belt]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/express-transport-belt.png"
     },
     "bulk-inserter": {
       "id": "bulk-inserter",
@@ -839,7 +913,8 @@
       "stackSize": 50,
       "subgroup": "inserter",
       "order": "f[bulk-inserter]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/bulk-inserter.png"
     },
     "assembling-machine-3": {
       "id": "assembling-machine-3",
@@ -849,7 +924,8 @@
       "stackSize": 50,
       "subgroup": "production-machine",
       "order": "c[assembling-machine-3]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/assembling-machine-3.png"
     },
     "chemical-science-pack": {
       "id": "chemical-science-pack",
@@ -859,7 +935,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "d[chemical-science-pack]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/chemical-science-pack.png"
     },
     "military-science-pack": {
       "id": "military-science-pack",
@@ -869,7 +946,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "c[military-science-pack]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/military-science-pack.png"
     },
     "production-science-pack": {
       "id": "production-science-pack",
@@ -879,7 +957,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "e[production-science-pack]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/production-science-pack.png"
     },
     "utility-science-pack": {
       "id": "utility-science-pack",
@@ -889,7 +968,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "f[utility-science-pack]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/utility-science-pack.png"
     },
     "space-science-pack": {
       "id": "space-science-pack",
@@ -899,7 +979,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "g[space-science-pack]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/space-science-pack.png"
     },
     "underground-belt": {
       "id": "underground-belt",
@@ -909,7 +990,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "b[underground-belt]-a[underground-belt]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/underground-belt.png"
     },
     "fast-underground-belt": {
       "id": "fast-underground-belt",
@@ -919,7 +1001,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "b[underground-belt]-b[fast-underground-belt]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/fast-underground-belt.png"
     },
     "express-underground-belt": {
       "id": "express-underground-belt",
@@ -929,7 +1012,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "b[underground-belt]-c[express-underground-belt]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/express-underground-belt.png"
     },
     "splitter": {
       "id": "splitter",
@@ -939,7 +1023,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "c[splitter]-a[splitter]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/splitter.png"
     },
     "lane-splitter": {
       "id": "lane-splitter",
@@ -949,7 +1034,8 @@
       "stackSize": 50,
       "subgroup": "other",
       "order": "b[items]-b[lane-splitter]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/lane-splitter.png"
     },
     "fast-splitter": {
       "id": "fast-splitter",
@@ -959,7 +1045,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "c[splitter]-b[fast-splitter]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/fast-splitter.png"
     },
     "express-splitter": {
       "id": "express-splitter",
@@ -969,7 +1056,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "c[splitter]-c[express-splitter]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/express-splitter.png"
     },
     "loader": {
       "id": "loader",
@@ -979,7 +1067,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "d[loader]-a[basic-loader]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/loader.png"
     },
     "fast-loader": {
       "id": "fast-loader",
@@ -989,7 +1078,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "d[loader]-b[fast-loader]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/fast-loader.png"
     },
     "express-loader": {
       "id": "express-loader",
@@ -999,7 +1089,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "d[loader]-c[express-loader]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/express-loader.png"
     },
     "advanced-circuit": {
       "id": "advanced-circuit",
@@ -1009,7 +1100,8 @@
       "stackSize": 200,
       "subgroup": "intermediate-product",
       "order": "b[circuits]-b[advanced-circuit]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/advanced-circuit.png"
     },
     "processing-unit": {
       "id": "processing-unit",
@@ -1019,7 +1111,8 @@
       "stackSize": 100,
       "subgroup": "intermediate-product",
       "order": "b[circuits]-c[processing-unit]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/processing-unit.png"
     },
     "logistic-robot": {
       "id": "logistic-robot",
@@ -1029,7 +1122,8 @@
       "stackSize": 50,
       "subgroup": "logistic-network",
       "order": "a[robot]-a[logistic-robot]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/logistic-robot.png"
     },
     "construction-robot": {
       "id": "construction-robot",
@@ -1039,7 +1133,8 @@
       "stackSize": 50,
       "subgroup": "logistic-network",
       "order": "a[robot]-b[construction-robot]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/construction-robot.png"
     },
     "passive-provider-chest": {
       "id": "passive-provider-chest",
@@ -1049,7 +1144,8 @@
       "stackSize": 50,
       "subgroup": "logistic-network",
       "order": "b[storage]-c[passive-provider-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/passive-provider-chest.png"
     },
     "active-provider-chest": {
       "id": "active-provider-chest",
@@ -1059,7 +1155,8 @@
       "stackSize": 50,
       "subgroup": "logistic-network",
       "order": "b[storage]-c[active-provider-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/active-provider-chest.png"
     },
     "storage-chest": {
       "id": "storage-chest",
@@ -1069,7 +1166,8 @@
       "stackSize": 50,
       "subgroup": "logistic-network",
       "order": "b[storage]-c[storage-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/storage-chest.png"
     },
     "buffer-chest": {
       "id": "buffer-chest",
@@ -1079,7 +1177,8 @@
       "stackSize": 50,
       "subgroup": "logistic-network",
       "order": "b[storage]-d[buffer-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/buffer-chest.png"
     },
     "requester-chest": {
       "id": "requester-chest",
@@ -1089,7 +1188,8 @@
       "stackSize": 50,
       "subgroup": "logistic-network",
       "order": "b[storage]-e[requester-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/requester-chest.png"
     },
     "rocket-silo": {
       "id": "rocket-silo",
@@ -1099,7 +1199,8 @@
       "stackSize": 1,
       "subgroup": "space-interactors",
       "order": "a[rocket-silo]",
-      "weight": 10000000
+      "weight": 10000000,
+      "icon": "/icons/rocket-silo.png"
     },
     "cargo-landing-pad": {
       "id": "cargo-landing-pad",
@@ -1109,7 +1210,8 @@
       "stackSize": 1,
       "subgroup": "space-interactors",
       "order": "c-a[cargo-landing-pad]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/cargo-landing-pad.png"
     },
     "roboport": {
       "id": "roboport",
@@ -1119,7 +1221,8 @@
       "stackSize": 10,
       "subgroup": "logistic-network",
       "order": "c[signal]-a[roboport]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/roboport.png"
     },
     "coin": {
       "id": "coin",
@@ -1129,7 +1232,8 @@
       "stackSize": 100000,
       "subgroup": "science-pack",
       "order": "y",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/coin.png"
     },
     "substation": {
       "id": "substation",
@@ -1139,7 +1243,8 @@
       "stackSize": 50,
       "subgroup": "energy-pipe-distribution",
       "order": "a[energy]-d[substation]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/substation.png"
     },
     "beacon": {
       "id": "beacon",
@@ -1149,7 +1254,8 @@
       "stackSize": 20,
       "subgroup": "module",
       "order": "a[beacon]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/beacon.png"
     },
     "storage-tank": {
       "id": "storage-tank",
@@ -1159,7 +1265,8 @@
       "stackSize": 50,
       "subgroup": "storage",
       "order": "b[fluid]-a[storage-tank]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/storage-tank.png"
     },
     "pump": {
       "id": "pump",
@@ -1169,7 +1276,8 @@
       "stackSize": 50,
       "subgroup": "energy-pipe-distribution",
       "order": "b[pipe]-c[pump]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/pump.png"
     },
     "pumpjack": {
       "id": "pumpjack",
@@ -1179,7 +1287,8 @@
       "stackSize": 20,
       "subgroup": "extraction-machine",
       "order": "b[fluids]-b[pumpjack]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/pumpjack.png"
     },
     "oil-refinery": {
       "id": "oil-refinery",
@@ -1189,7 +1298,8 @@
       "stackSize": 10,
       "subgroup": "production-machine",
       "order": "d[refinery]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/oil-refinery.png"
     },
     "chemical-plant": {
       "id": "chemical-plant",
@@ -1199,7 +1309,8 @@
       "stackSize": 10,
       "subgroup": "production-machine",
       "order": "e[chemical-plant]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/chemical-plant.png"
     },
     "sulfur": {
       "id": "sulfur",
@@ -1209,7 +1320,8 @@
       "stackSize": 50,
       "subgroup": "raw-material",
       "order": "b[chemistry]-c[sulfur]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/sulfur.png"
     },
     "barrel": {
       "id": "barrel",
@@ -1219,7 +1331,8 @@
       "stackSize": 10,
       "subgroup": "intermediate-product",
       "order": "a[basic-intermediates]-d[empty-barrel]",
-      "weight": 5000
+      "weight": 5000,
+      "icon": "/icons/barrel.png"
     },
     "plastic-bar": {
       "id": "plastic-bar",
@@ -1229,7 +1342,8 @@
       "stackSize": 100,
       "subgroup": "raw-material",
       "order": "b[chemistry]-b[plastic-bar]",
-      "weight": 500
+      "weight": 500,
+      "icon": "/icons/plastic-bar.png"
     },
     "electric-engine-unit": {
       "id": "electric-engine-unit",
@@ -1239,7 +1353,8 @@
       "stackSize": 50,
       "subgroup": "intermediate-product",
       "order": "c[advanced-intermediates]-b[electric-engine-unit]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/electric-engine-unit.png"
     },
     "explosives": {
       "id": "explosives",
@@ -1249,7 +1364,8 @@
       "stackSize": 50,
       "subgroup": "raw-material",
       "order": "b[chemistry]-e[explosives]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/explosives.png"
     },
     "battery": {
       "id": "battery",
@@ -1259,7 +1375,8 @@
       "stackSize": 200,
       "subgroup": "raw-material",
       "order": "b[chemistry]-d[battery]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/battery.png"
     },
     "flying-robot-frame": {
       "id": "flying-robot-frame",
@@ -1269,7 +1386,8 @@
       "stackSize": 50,
       "subgroup": "intermediate-product",
       "order": "c[advanced-intermediates]-c[flying-robot-frame]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/flying-robot-frame.png"
     },
     "low-density-structure": {
       "id": "low-density-structure",
@@ -1279,7 +1397,8 @@
       "stackSize": 50,
       "subgroup": "intermediate-product",
       "order": "d[rocket-parts]-a[low-density-structure]",
-      "weight": 5000
+      "weight": 5000,
+      "icon": "/icons/low-density-structure.png"
     },
     "nuclear-fuel": {
       "id": "nuclear-fuel",
@@ -1289,7 +1408,8 @@
       "stackSize": 1,
       "subgroup": "uranium-processing",
       "order": "r[uranium-processing]-e[nuclear-fuel]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/nuclear-fuel.png"
     },
     "rocket-part": {
       "id": "rocket-part",
@@ -1299,7 +1419,8 @@
       "stackSize": 5,
       "subgroup": "space-interactors",
       "order": "b[rocket-part]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/rocket-part.png"
     },
     "electric-energy-interface": {
       "id": "electric-energy-interface",
@@ -1309,7 +1430,8 @@
       "stackSize": 50,
       "subgroup": "other",
       "order": "a[electric-energy-interface]-b[electric-energy-interface]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/electric-energy-interface.png"
     },
     "heat-interface": {
       "id": "heat-interface",
@@ -1319,7 +1441,8 @@
       "stackSize": 20,
       "subgroup": "other",
       "order": "b[heat-interface]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/heat-interface.png"
     },
     "nuclear-reactor": {
       "id": "nuclear-reactor",
@@ -1329,7 +1452,8 @@
       "stackSize": 10,
       "subgroup": "energy",
       "order": "f[nuclear-energy]-a[reactor]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/nuclear-reactor.png"
     },
     "uranium-235": {
       "id": "uranium-235",
@@ -1339,7 +1463,8 @@
       "stackSize": 100,
       "subgroup": "uranium-processing",
       "order": "a[uranium-processing]-b[uranium-235]",
-      "weight": 50000
+      "weight": 50000,
+      "icon": "/icons/uranium-235.png"
     },
     "uranium-238": {
       "id": "uranium-238",
@@ -1349,7 +1474,8 @@
       "stackSize": 100,
       "subgroup": "uranium-processing",
       "order": "a[uranium-processing]-c[uranium-238]",
-      "weight": 50000
+      "weight": 50000,
+      "icon": "/icons/uranium-238.png"
     },
     "centrifuge": {
       "id": "centrifuge",
@@ -1359,7 +1485,8 @@
       "stackSize": 10,
       "subgroup": "production-machine",
       "order": "f[centrifuge]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/centrifuge.png"
     },
     "uranium-fuel-cell": {
       "id": "uranium-fuel-cell",
@@ -1369,7 +1496,8 @@
       "stackSize": 50,
       "subgroup": "uranium-processing",
       "order": "b[uranium-products]-a[uranium-fuel-cell]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/uranium-fuel-cell.png"
     },
     "depleted-uranium-fuel-cell": {
       "id": "depleted-uranium-fuel-cell",
@@ -1379,7 +1507,8 @@
       "stackSize": 50,
       "subgroup": "uranium-processing",
       "order": "b[uranium-products]-b[depleted-uranium-fuel-cell]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/depleted-uranium-fuel-cell.png"
     },
     "heat-exchanger": {
       "id": "heat-exchanger",
@@ -1389,7 +1518,8 @@
       "stackSize": 50,
       "subgroup": "energy",
       "order": "f[nuclear-energy]-c[heat-exchanger]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/heat-exchanger.png"
     },
     "steam-turbine": {
       "id": "steam-turbine",
@@ -1399,7 +1529,8 @@
       "stackSize": 10,
       "subgroup": "energy",
       "order": "f[nuclear-energy]-d[steam-turbine]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/steam-turbine.png"
     },
     "heat-pipe": {
       "id": "heat-pipe",
@@ -1409,7 +1540,8 @@
       "stackSize": 50,
       "subgroup": "energy",
       "order": "f[nuclear-energy]-b[heat-pipe]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/heat-pipe.png"
     },
     "simple-entity-with-force": {
       "id": "simple-entity-with-force",
@@ -1419,7 +1551,8 @@
       "stackSize": 50,
       "subgroup": "other",
       "order": "s[simple-entity-with-force]-f[simple-entity-with-force]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/simple-entity-with-force.png"
     },
     "simple-entity-with-owner": {
       "id": "simple-entity-with-owner",
@@ -1429,7 +1562,8 @@
       "stackSize": 50,
       "subgroup": "other",
       "order": "s[simple-entity-with-owner]-o[simple-entity-with-owner]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/simple-entity-with-owner.png"
     },
     "infinity-chest": {
       "id": "infinity-chest",
@@ -1439,7 +1573,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "c[item]-o[infinity-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/infinity-chest.png"
     },
     "infinity-cargo-wagon": {
       "id": "infinity-cargo-wagon",
@@ -1449,7 +1584,8 @@
       "stackSize": 5,
       "subgroup": "other",
       "order": "c[item]-o[infinity-cargo-wagon]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/infinity-cargo-wagon.png"
     },
     "infinity-pipe": {
       "id": "infinity-pipe",
@@ -1459,7 +1595,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "d[item]-o[infinity-pipe]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/infinity-pipe.png"
     },
     "burner-generator": {
       "id": "burner-generator",
@@ -1469,7 +1606,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "t[item]-o[burner-generator]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/burner-generator.png"
     },
     "linked-chest": {
       "id": "linked-chest",
@@ -1479,7 +1617,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "a[items]-a[linked-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/linked-chest.png"
     },
     "proxy-container": {
       "id": "proxy-container",
@@ -1489,7 +1628,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "a[items]-a[proxy-container]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/proxy-container.png"
     },
     "bottomless-chest": {
       "id": "bottomless-chest",
@@ -1499,7 +1639,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "a[items]-c[bottomless-chest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/bottomless-chest.png"
     },
     "linked-belt": {
       "id": "linked-belt",
@@ -1509,7 +1650,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "b[items]-b[linked-belt]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/linked-belt.png"
     },
     "one-way-valve": {
       "id": "one-way-valve",
@@ -1519,7 +1661,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "b[items]-o[one-way-valve]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/one-way-valve.png"
     },
     "overflow-valve": {
       "id": "overflow-valve",
@@ -1529,7 +1672,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "b[items]-o[overflow-valve]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/overflow-valve.png"
     },
     "top-up-valve": {
       "id": "top-up-valve",
@@ -1539,7 +1683,8 @@
       "stackSize": 10,
       "subgroup": "other",
       "order": "b[items]-o[top-up-valve]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/top-up-valve.png"
     },
     "empty-module-slot": {
       "id": "empty-module-slot",
@@ -1549,7 +1694,8 @@
       "stackSize": 1,
       "subgroup": "module",
       "order": "z[meta]-a[empty-module-slot]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/empty-module-slot.png"
     },
     "land-mine": {
       "id": "land-mine",
@@ -1559,7 +1705,8 @@
       "stackSize": 100,
       "subgroup": "defensive-structure",
       "order": "f[land-mine]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/land-mine.png"
     },
     "solar-panel-equipment": {
       "id": "solar-panel-equipment",
@@ -1569,7 +1716,8 @@
       "stackSize": 20,
       "subgroup": "equipment",
       "order": "a[energy-source]-a[solar-panel]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/solar-panel-equipment.png"
     },
     "fission-reactor-equipment": {
       "id": "fission-reactor-equipment",
@@ -1579,7 +1727,8 @@
       "stackSize": 20,
       "subgroup": "equipment",
       "order": "a[energy-source]-b[fission-reactor]",
-      "weight": 250000
+      "weight": 250000,
+      "icon": "/icons/fission-reactor-equipment.png"
     },
     "electric-energy-interface-equipment": {
       "id": "electric-energy-interface-equipment",
@@ -1589,7 +1738,8 @@
       "stackSize": 1,
       "subgroup": "other",
       "order": "a[electric-energy-interface]-b[electric-energy-interface-equipment]",
-      "weight": 250000
+      "weight": 250000,
+      "icon": "/icons/electric-energy-interface-equipment.png"
     },
     "battery-equipment": {
       "id": "battery-equipment",
@@ -1599,7 +1749,8 @@
       "stackSize": 20,
       "subgroup": "equipment",
       "order": "b[battery]-a[battery-equipment]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/battery-equipment.png"
     },
     "battery-mk2-equipment": {
       "id": "battery-mk2-equipment",
@@ -1609,7 +1760,8 @@
       "stackSize": 20,
       "subgroup": "equipment",
       "order": "b[battery]-b[battery-equipment-mk2]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/battery-mk2-equipment.png"
     },
     "belt-immunity-equipment": {
       "id": "belt-immunity-equipment",
@@ -1619,7 +1771,8 @@
       "stackSize": 20,
       "subgroup": "utility-equipment",
       "order": "c[belt-immunity]-a[belt-immunity]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/belt-immunity-equipment.png"
     },
     "exoskeleton-equipment": {
       "id": "exoskeleton-equipment",
@@ -1629,7 +1782,8 @@
       "stackSize": 20,
       "subgroup": "utility-equipment",
       "order": "d[exoskeleton]-a[exoskeleton-equipment]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/exoskeleton-equipment.png"
     },
     "personal-roboport-equipment": {
       "id": "personal-roboport-equipment",
@@ -1639,7 +1793,8 @@
       "stackSize": 20,
       "subgroup": "utility-equipment",
       "order": "e[robotics]-a[personal-roboport-equipment]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/personal-roboport-equipment.png"
     },
     "personal-roboport-mk2-equipment": {
       "id": "personal-roboport-mk2-equipment",
@@ -1649,7 +1804,8 @@
       "stackSize": 20,
       "subgroup": "utility-equipment",
       "order": "e[robotics]-b[personal-roboport-mk2-equipment]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/personal-roboport-mk2-equipment.png"
     },
     "night-vision-equipment": {
       "id": "night-vision-equipment",
@@ -1659,7 +1815,8 @@
       "stackSize": 20,
       "subgroup": "utility-equipment",
       "order": "f[night-vision]-a[night-vision-equipment]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/night-vision-equipment.png"
     },
     "energy-shield-equipment": {
       "id": "energy-shield-equipment",
@@ -1669,7 +1826,8 @@
       "stackSize": 20,
       "subgroup": "military-equipment",
       "order": "a[shield]-a[energy-shield-equipment]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/energy-shield-equipment.png"
     },
     "energy-shield-mk2-equipment": {
       "id": "energy-shield-mk2-equipment",
@@ -1679,7 +1837,8 @@
       "stackSize": 20,
       "subgroup": "military-equipment",
       "order": "a[shield]-b[energy-shield-equipment-mk2]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/energy-shield-mk2-equipment.png"
     },
     "personal-laser-defense-equipment": {
       "id": "personal-laser-defense-equipment",
@@ -1689,7 +1848,8 @@
       "stackSize": 20,
       "subgroup": "military-equipment",
       "order": "b[active-defense]-a[personal-laser-defense-equipment]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/personal-laser-defense-equipment.png"
     },
     "discharge-defense-equipment": {
       "id": "discharge-defense-equipment",
@@ -1699,7 +1859,8 @@
       "stackSize": 20,
       "subgroup": "military-equipment",
       "order": "b[active-defense]-b[discharge-defense-equipment]-a[equipment]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/discharge-defense-equipment.png"
     },
     "gun-turret": {
       "id": "gun-turret",
@@ -1709,7 +1870,8 @@
       "stackSize": 50,
       "subgroup": "turret",
       "order": "b[turret]-a[gun-turret]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/gun-turret.png"
     },
     "laser-turret": {
       "id": "laser-turret",
@@ -1719,7 +1881,8 @@
       "stackSize": 50,
       "subgroup": "turret",
       "order": "b[turret]-b[laser-turret]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/laser-turret.png"
     },
     "flamethrower-turret": {
       "id": "flamethrower-turret",
@@ -1729,7 +1892,8 @@
       "stackSize": 50,
       "subgroup": "turret",
       "order": "b[turret]-c[flamethrower-turret]",
-      "weight": 50000
+      "weight": 50000,
+      "icon": "/icons/flamethrower-turret.png"
     },
     "artillery-turret": {
       "id": "artillery-turret",
@@ -1739,7 +1903,8 @@
       "stackSize": 10,
       "subgroup": "turret",
       "order": "b[turret]-d[artillery-turret]-a[turret]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/artillery-turret.png"
     },
     "arithmetic-combinator": {
       "id": "arithmetic-combinator",
@@ -1749,7 +1914,8 @@
       "stackSize": 50,
       "subgroup": "circuit-network",
       "order": "c[combinators]-a[arithmetic-combinator]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/arithmetic-combinator.png"
     },
     "decider-combinator": {
       "id": "decider-combinator",
@@ -1759,7 +1925,8 @@
       "stackSize": 50,
       "subgroup": "circuit-network",
       "order": "c[combinators]-b[decider-combinator]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/decider-combinator.png"
     },
     "constant-combinator": {
       "id": "constant-combinator",
@@ -1769,7 +1936,8 @@
       "stackSize": 50,
       "subgroup": "circuit-network",
       "order": "c[combinators]-d[constant-combinator]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/constant-combinator.png"
     },
     "selector-combinator": {
       "id": "selector-combinator",
@@ -1779,7 +1947,8 @@
       "stackSize": 50,
       "subgroup": "circuit-network",
       "order": "c[combinators]-c[selector-combinator]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/selector-combinator.png"
     },
     "power-switch": {
       "id": "power-switch",
@@ -1789,7 +1958,8 @@
       "stackSize": 10,
       "subgroup": "circuit-network",
       "order": "d[other]-a[power-switch]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/power-switch.png"
     },
     "programmable-speaker": {
       "id": "programmable-speaker",
@@ -1799,7 +1969,8 @@
       "stackSize": 10,
       "subgroup": "circuit-network",
       "order": "d[other]-b[programmable-speaker]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/programmable-speaker.png"
     },
     "display-panel": {
       "id": "display-panel",
@@ -1809,7 +1980,8 @@
       "stackSize": 10,
       "subgroup": "circuit-network",
       "order": "s[display-panel]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/display-panel.png"
     },
     "science": {
       "id": "science",
@@ -1819,7 +1991,8 @@
       "stackSize": 1,
       "subgroup": "science-pack",
       "order": "zz[science]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/science.png"
     },
     "rail-support": {
       "id": "rail-support",
@@ -1829,7 +2002,8 @@
       "stackSize": 20,
       "subgroup": "train-transport",
       "order": "a[rail]-c[rail-support]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/rail-support.png"
     },
     "recycler": {
       "id": "recycler",
@@ -1839,7 +2013,8 @@
       "stackSize": 20,
       "subgroup": "smelting-machine",
       "order": "d[recycler]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/recycler.png"
     },
     "space-platform-foundation": {
       "id": "space-platform-foundation",
@@ -1849,7 +2024,8 @@
       "stackSize": 100,
       "subgroup": "space-platform",
       "order": "a[space-platform-foundation]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/space-platform-foundation.png"
     },
     "metallurgic-science-pack": {
       "id": "metallurgic-science-pack",
@@ -1859,7 +2035,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "h",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/metallurgic-science-pack.png"
     },
     "agricultural-science-pack": {
       "id": "agricultural-science-pack",
@@ -1869,7 +2046,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "i",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/agricultural-science-pack.png"
     },
     "electromagnetic-science-pack": {
       "id": "electromagnetic-science-pack",
@@ -1879,7 +2057,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "j",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/electromagnetic-science-pack.png"
     },
     "cryogenic-science-pack": {
       "id": "cryogenic-science-pack",
@@ -1889,7 +2068,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "k",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/cryogenic-science-pack.png"
     },
     "promethium-science-pack": {
       "id": "promethium-science-pack",
@@ -1899,7 +2079,8 @@
       "stackSize": 200,
       "subgroup": "science-pack",
       "order": "l",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/promethium-science-pack.png"
     },
     "turbo-transport-belt": {
       "id": "turbo-transport-belt",
@@ -1909,7 +2090,8 @@
       "stackSize": 100,
       "subgroup": "belt",
       "order": "a[transport-belt]-d[turbo-transport-belt]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/turbo-transport-belt.png"
     },
     "turbo-underground-belt": {
       "id": "turbo-underground-belt",
@@ -1919,7 +2101,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "b[underground-belt]-d[turbo-underground-belt]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/turbo-underground-belt.png"
     },
     "turbo-splitter": {
       "id": "turbo-splitter",
@@ -1929,7 +2112,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "c[splitter]-d[turbo-splitter]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/turbo-splitter.png"
     },
     "turbo-loader": {
       "id": "turbo-loader",
@@ -1939,7 +2123,8 @@
       "stackSize": 50,
       "subgroup": "belt",
       "order": "d[loader]-d[turbo-loader]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/turbo-loader.png"
     },
     "toolbelt-equipment": {
       "id": "toolbelt-equipment",
@@ -1949,7 +2134,8 @@
       "stackSize": 20,
       "subgroup": "utility-equipment",
       "order": "g[toolbelt]-a[night-vision-equipment]",
-      "weight": 50000
+      "weight": 50000,
+      "icon": "/icons/toolbelt-equipment.png"
     },
     "battery-mk3-equipment": {
       "id": "battery-mk3-equipment",
@@ -1959,7 +2145,8 @@
       "stackSize": 20,
       "subgroup": "equipment",
       "order": "b[battery]-c[battery-equipment-mk3]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/battery-mk3-equipment.png"
     },
     "cargo-bay": {
       "id": "cargo-bay",
@@ -1969,7 +2156,8 @@
       "stackSize": 10,
       "subgroup": "space-interactors",
       "order": "c-b[cargo-bay]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/cargo-bay.png"
     },
     "landing-pad-unloading-bay": {
       "id": "landing-pad-unloading-bay",
@@ -1979,7 +2167,8 @@
       "stackSize": 10,
       "subgroup": "space-interactors",
       "order": "c-c[landing-pad-unloading-bay]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/landing-pad-unloading-bay.png"
     },
     "metallic-asteroid-chunk": {
       "id": "metallic-asteroid-chunk",
@@ -1989,7 +2178,8 @@
       "stackSize": 1,
       "subgroup": "space-material",
       "order": "a[metallic]-e[chunk]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/metallic-asteroid-chunk.png"
     },
     "carbonic-asteroid-chunk": {
       "id": "carbonic-asteroid-chunk",
@@ -1999,7 +2189,8 @@
       "stackSize": 1,
       "subgroup": "space-material",
       "order": "b[carbonic]-e[chunk]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/carbonic-asteroid-chunk.png"
     },
     "oxide-asteroid-chunk": {
       "id": "oxide-asteroid-chunk",
@@ -2009,7 +2200,8 @@
       "stackSize": 1,
       "subgroup": "space-material",
       "order": "c[oxide]-e[chunk]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/oxide-asteroid-chunk.png"
     },
     "promethium-asteroid-chunk": {
       "id": "promethium-asteroid-chunk",
@@ -2019,7 +2211,8 @@
       "stackSize": 1,
       "subgroup": "space-material",
       "order": "d[promethium]-e[chunk]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/promethium-asteroid-chunk.png"
     },
     "asteroid-collector": {
       "id": "asteroid-collector",
@@ -2029,7 +2222,8 @@
       "stackSize": 10,
       "subgroup": "space-platform",
       "order": "d[asteroid-collector]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/asteroid-collector.png"
     },
     "crusher": {
       "id": "crusher",
@@ -2039,7 +2233,8 @@
       "stackSize": 10,
       "subgroup": "space-platform",
       "order": "e[crusher]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/crusher.png"
     },
     "thruster": {
       "id": "thruster",
@@ -2049,7 +2244,8 @@
       "stackSize": 10,
       "subgroup": "space-platform",
       "order": "f[thruster]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/thruster.png"
     },
     "ice": {
       "id": "ice",
@@ -2059,7 +2255,8 @@
       "stackSize": 50,
       "subgroup": "raw-resource",
       "order": "j[ice]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/ice.png"
     },
     "carbon": {
       "id": "carbon",
@@ -2069,7 +2266,8 @@
       "stackSize": 50,
       "subgroup": "raw-material",
       "order": "b[chemistry]-f[carbon]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/carbon.png"
     },
     "calcite": {
       "id": "calcite",
@@ -2079,7 +2277,8 @@
       "stackSize": 50,
       "subgroup": "vulcanus-processes",
       "order": "a[melting]-a[calcite]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/calcite.png"
     },
     "tungsten-ore": {
       "id": "tungsten-ore",
@@ -2089,7 +2288,8 @@
       "stackSize": 50,
       "subgroup": "vulcanus-processes",
       "order": "c[tungsten]-a[tungsten-ore]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/tungsten-ore.png"
     },
     "tungsten-plate": {
       "id": "tungsten-plate",
@@ -2099,7 +2299,8 @@
       "stackSize": 50,
       "subgroup": "vulcanus-processes",
       "order": "c[tungsten]-c[tungsten-plate]",
-      "weight": 4000
+      "weight": 4000,
+      "icon": "/icons/tungsten-plate.png"
     },
     "big-mining-drill": {
       "id": "big-mining-drill",
@@ -2109,7 +2310,8 @@
       "stackSize": 20,
       "subgroup": "extraction-machine",
       "order": "a[items]-c[big-mining-drill]",
-      "weight": 50000
+      "weight": 50000,
+      "icon": "/icons/big-mining-drill.png"
     },
     "tungsten-carbide": {
       "id": "tungsten-carbide",
@@ -2119,7 +2321,8 @@
       "stackSize": 50,
       "subgroup": "vulcanus-processes",
       "order": "c[tungsten]-b[tungsten-carbide]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/tungsten-carbide.png"
     },
     "foundry": {
       "id": "foundry",
@@ -2129,7 +2332,8 @@
       "stackSize": 20,
       "subgroup": "smelting-machine",
       "order": "d[foundry]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/foundry.png"
     },
     "railgun-turret": {
       "id": "railgun-turret",
@@ -2139,7 +2343,8 @@
       "stackSize": 10,
       "subgroup": "turret",
       "order": "b[turret]-g[railgun-turret]-a[turret]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/railgun-turret.png"
     },
     "copper-bacteria": {
       "id": "copper-bacteria",
@@ -2149,7 +2354,8 @@
       "stackSize": 50,
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-d[bacteria]-c[copper-bacteria]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/copper-bacteria.png"
     },
     "iron-bacteria": {
       "id": "iron-bacteria",
@@ -2159,7 +2365,8 @@
       "stackSize": 50,
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-d[bacteria]-a[iron-bacteria]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/iron-bacteria.png"
     },
     "yumako-seed": {
       "id": "yumako-seed",
@@ -2169,7 +2376,8 @@
       "stackSize": 10,
       "subgroup": "agriculture-processes",
       "order": "a[seeds]-a[yumako-seed]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/yumako-seed.png"
     },
     "jellynut-seed": {
       "id": "jellynut-seed",
@@ -2179,7 +2387,8 @@
       "stackSize": 10,
       "subgroup": "agriculture-processes",
       "order": "a[seeds]-b[jellynut-seed]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/jellynut-seed.png"
     },
     "nutrients": {
       "id": "nutrients",
@@ -2189,7 +2398,8 @@
       "stackSize": 100,
       "subgroup": "agriculture-processes",
       "order": "c[nutrients]-b[nutrients]",
-      "weight": 500
+      "weight": 500,
+      "icon": "/icons/nutrients.png"
     },
     "artificial-yumako-soil": {
       "id": "artificial-yumako-soil",
@@ -2199,7 +2409,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "c[landfill]-b[artificial-yumako-soil]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/artificial-yumako-soil.png"
     },
     "overgrowth-yumako-soil": {
       "id": "overgrowth-yumako-soil",
@@ -2209,7 +2420,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "c[landfill]-c[overgrowth-yumako-soil]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/overgrowth-yumako-soil.png"
     },
     "artificial-jellynut-soil": {
       "id": "artificial-jellynut-soil",
@@ -2219,7 +2431,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "c[landfill]-d[artificial-jellynut-soil]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/artificial-jellynut-soil.png"
     },
     "overgrowth-jellynut-soil": {
       "id": "overgrowth-jellynut-soil",
@@ -2229,7 +2442,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "c[landfill]-e[overgrowth-jellynut-soil]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/overgrowth-jellynut-soil.png"
     },
     "agricultural-tower": {
       "id": "agricultural-tower",
@@ -2239,7 +2453,8 @@
       "stackSize": 20,
       "subgroup": "agriculture",
       "order": "a[agricultural-tower]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/agricultural-tower.png"
     },
     "biochamber": {
       "id": "biochamber",
@@ -2249,7 +2464,8 @@
       "stackSize": 20,
       "subgroup": "agriculture",
       "order": "b[biochamber]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/biochamber.png"
     },
     "biolab": {
       "id": "biolab",
@@ -2259,7 +2475,8 @@
       "stackSize": 5,
       "subgroup": "production-machine",
       "order": "z[z-biolab]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/biolab.png"
     },
     "captive-biter-spawner": {
       "id": "captive-biter-spawner",
@@ -2269,7 +2486,8 @@
       "stackSize": 1,
       "subgroup": "agriculture",
       "order": "z[biter-nest]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/captive-biter-spawner.png"
     },
     "biter-egg": {
       "id": "biter-egg",
@@ -2279,7 +2497,8 @@
       "stackSize": 100,
       "subgroup": "agriculture-products",
       "order": "c[eggs]-a[biter-egg]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/biter-egg.png"
     },
     "pentapod-egg": {
       "id": "pentapod-egg",
@@ -2289,7 +2508,8 @@
       "stackSize": 20,
       "subgroup": "agriculture-products",
       "order": "c[eggs]-b[pentapod-egg]",
-      "weight": 5000
+      "weight": 5000,
+      "icon": "/icons/pentapod-egg.png"
     },
     "carbon-fiber": {
       "id": "carbon-fiber",
@@ -2299,7 +2519,8 @@
       "stackSize": 100,
       "subgroup": "agriculture-products",
       "order": "a[organic-products]-e[carbon-fiber]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/carbon-fiber.png"
     },
     "stack-inserter": {
       "id": "stack-inserter",
@@ -2309,7 +2530,8 @@
       "stackSize": 50,
       "subgroup": "inserter",
       "order": "h[stack-inserter]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/stack-inserter.png"
     },
     "rocket-turret": {
       "id": "rocket-turret",
@@ -2319,7 +2541,8 @@
       "stackSize": 10,
       "subgroup": "turret",
       "order": "b[turret]-e[rocket-turret]-a[turret]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/rocket-turret.png"
     },
     "holmium-ore": {
       "id": "holmium-ore",
@@ -2329,7 +2552,8 @@
       "stackSize": 50,
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-a[holmium-ore]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/holmium-ore.png"
     },
     "holmium-plate": {
       "id": "holmium-plate",
@@ -2339,7 +2563,8 @@
       "stackSize": 100,
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-c[holmium-plate]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/holmium-plate.png"
     },
     "lithium": {
       "id": "lithium",
@@ -2349,7 +2574,8 @@
       "stackSize": 50,
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-a[lithium]",
-      "weight": 4000
+      "weight": 4000,
+      "icon": "/icons/lithium.png"
     },
     "lithium-plate": {
       "id": "lithium-plate",
@@ -2359,7 +2585,8 @@
       "stackSize": 100,
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-b[lithium-plate]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/lithium-plate.png"
     },
     "scrap": {
       "id": "scrap",
@@ -2369,7 +2596,8 @@
       "stackSize": 50,
       "subgroup": "fulgora-processes",
       "order": "a[scrap]-a[scrap]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/scrap.png"
     },
     "lightning-rod": {
       "id": "lightning-rod",
@@ -2379,7 +2607,8 @@
       "stackSize": 50,
       "subgroup": "environmental-protection",
       "order": "a[lightning-rod]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/lightning-rod.png"
     },
     "lightning-collector": {
       "id": "lightning-collector",
@@ -2389,7 +2618,8 @@
       "stackSize": 20,
       "subgroup": "environmental-protection",
       "order": "b[lightning-collector]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/lightning-collector.png"
     },
     "heating-tower": {
       "id": "heating-tower",
@@ -2399,7 +2629,8 @@
       "stackSize": 20,
       "subgroup": "environmental-protection",
       "order": "c[heating-tower]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/heating-tower.png"
     },
     "electromagnetic-plant": {
       "id": "electromagnetic-plant",
@@ -2409,7 +2640,8 @@
       "stackSize": 20,
       "subgroup": "production-machine",
       "order": "g[electromagnetic-plant]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/electromagnetic-plant.png"
     },
     "superconductor": {
       "id": "superconductor",
@@ -2419,7 +2651,8 @@
       "stackSize": 200,
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-d[superconductor]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/superconductor.png"
     },
     "supercapacitor": {
       "id": "supercapacitor",
@@ -2429,7 +2662,8 @@
       "stackSize": 100,
       "subgroup": "fulgora-processes",
       "order": "b[holmium]-f[supercapacitor]",
-      "weight": 2000
+      "weight": 2000,
+      "icon": "/icons/supercapacitor.png"
     },
     "tesla-turret": {
       "id": "tesla-turret",
@@ -2439,7 +2673,8 @@
       "stackSize": 10,
       "subgroup": "turret",
       "order": "b[turret]-f[tesla-turret]-a[turret]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/tesla-turret.png"
     },
     "quantum-processor": {
       "id": "quantum-processor",
@@ -2449,7 +2684,8 @@
       "stackSize": 100,
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-c[quantum-processor]",
-      "weight": 5000
+      "weight": 5000,
+      "icon": "/icons/quantum-processor.png"
     },
     "fusion-reactor-equipment": {
       "id": "fusion-reactor-equipment",
@@ -2459,7 +2695,8 @@
       "stackSize": 20,
       "subgroup": "equipment",
       "order": "a[energy-source]-c[fusion-reactor]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/fusion-reactor-equipment.png"
     },
     "fusion-power-cell": {
       "id": "fusion-power-cell",
@@ -2469,7 +2706,8 @@
       "stackSize": 50,
       "subgroup": "aquilo-processes",
       "order": "c[lithium]-d[fusion-power-cell]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/fusion-power-cell.png"
     },
     "fusion-reactor": {
       "id": "fusion-reactor",
@@ -2479,7 +2717,8 @@
       "stackSize": 1,
       "subgroup": "energy",
       "order": "g[fusion-energy]-a[reactor]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/fusion-reactor.png"
     },
     "fusion-generator": {
       "id": "fusion-generator",
@@ -2489,7 +2728,8 @@
       "stackSize": 5,
       "subgroup": "energy",
       "order": "g[fusion-energy]-b[generator]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/fusion-generator.png"
     },
     "cryogenic-plant": {
       "id": "cryogenic-plant",
@@ -2499,7 +2739,8 @@
       "stackSize": 20,
       "subgroup": "production-machine",
       "order": "h[cryogenic-plant]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/cryogenic-plant.png"
     },
     "spoilage": {
       "id": "spoilage",
@@ -2509,7 +2750,8 @@
       "stackSize": 200,
       "subgroup": "agriculture-processes",
       "order": "c[nutrients]-a[spoilage]",
-      "weight": 500
+      "weight": 500,
+      "icon": "/icons/spoilage.png"
     },
     "ice-platform": {
       "id": "ice-platform",
@@ -2519,7 +2761,8 @@
       "stackSize": 100,
       "subgroup": "terrain",
       "order": "c[landfill]-f[ice-platform]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/ice-platform.png"
     },
     "foundation": {
       "id": "foundation",
@@ -2529,7 +2772,8 @@
       "stackSize": 50,
       "subgroup": "terrain",
       "order": "c[landfill]-g[foundation]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/foundation.png"
     },
     "space-platform-hub": {
       "id": "space-platform-hub",
@@ -2539,7 +2783,8 @@
       "stackSize": 1,
       "subgroup": "space-related",
       "order": "",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/space-platform-hub.png"
     },
     "tree-seed": {
       "id": "tree-seed",
@@ -2549,7 +2794,8 @@
       "stackSize": 10,
       "subgroup": "nauvis-agriculture",
       "order": "a[seeds]-b[tree-seed]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/tree-seed.png"
     },
     "water-barrel": {
       "id": "water-barrel",
@@ -2559,7 +2805,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "a[fluid]-a[water]-a[water]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/water-barrel.png"
     },
     "sulfuric-acid-barrel": {
       "id": "sulfuric-acid-barrel",
@@ -2569,7 +2816,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-f[sulfuric-acid]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/sulfuric-acid-barrel.png"
     },
     "crude-oil-barrel": {
       "id": "crude-oil-barrel",
@@ -2579,7 +2827,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-a[crude-oil]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/crude-oil-barrel.png"
     },
     "heavy-oil-barrel": {
       "id": "heavy-oil-barrel",
@@ -2589,7 +2838,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-d[heavy-oil]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/heavy-oil-barrel.png"
     },
     "light-oil-barrel": {
       "id": "light-oil-barrel",
@@ -2599,7 +2849,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-c[light-oil]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/light-oil-barrel.png"
     },
     "petroleum-gas-barrel": {
       "id": "petroleum-gas-barrel",
@@ -2609,7 +2860,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-b[petroleum-gas]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/petroleum-gas-barrel.png"
     },
     "lubricant-barrel": {
       "id": "lubricant-barrel",
@@ -2619,7 +2871,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "a[fluid]-b[oil]-e[lubricant]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/lubricant-barrel.png"
     },
     "fluoroketone-cold-barrel": {
       "id": "fluoroketone-cold-barrel",
@@ -2629,7 +2882,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "b[new-fluid]-e[aquilo]-e[fluoroketone-cold]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/fluoroketone-cold-barrel.png"
     },
     "fluoroketone-hot-barrel": {
       "id": "fluoroketone-hot-barrel",
@@ -2639,7 +2893,8 @@
       "stackSize": 10,
       "subgroup": "barrel",
       "order": "b[new-fluid]-e[aquilo]-d[fluoroketone-hot]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/fluoroketone-hot-barrel.png"
     },
     "uranium-rounds-magazine": {
       "id": "uranium-rounds-magazine",
@@ -2649,7 +2904,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "a[basic-clips]-c[uranium-rounds-magazine]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/uranium-rounds-magazine.png"
     },
     "flamethrower-ammo": {
       "id": "flamethrower-ammo",
@@ -2659,7 +2915,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "e[flamethrower]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/flamethrower-ammo.png"
     },
     "rocket": {
       "id": "rocket",
@@ -2669,7 +2926,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-a[basic]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/rocket.png"
     },
     "explosive-rocket": {
       "id": "explosive-rocket",
@@ -2679,7 +2937,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-b[explosive]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/explosive-rocket.png"
     },
     "atomic-bomb": {
       "id": "atomic-bomb",
@@ -2689,7 +2948,8 @@
       "stackSize": 10,
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-d[atomic-bomb]",
-      "weight": 1500000
+      "weight": 1500000,
+      "icon": "/icons/atomic-bomb.png"
     },
     "piercing-shotgun-shell": {
       "id": "piercing-shotgun-shell",
@@ -2699,7 +2959,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "b[shotgun]-b[piercing]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/piercing-shotgun-shell.png"
     },
     "cannon-shell": {
       "id": "cannon-shell",
@@ -2709,7 +2970,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "d[cannon-shell]-a[basic]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/cannon-shell.png"
     },
     "explosive-cannon-shell": {
       "id": "explosive-cannon-shell",
@@ -2719,7 +2981,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "d[cannon-shell]-c[explosive]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/explosive-cannon-shell.png"
     },
     "uranium-cannon-shell": {
       "id": "uranium-cannon-shell",
@@ -2729,7 +2992,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "d[cannon-shell]-c[uranium]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/uranium-cannon-shell.png"
     },
     "explosive-uranium-cannon-shell": {
       "id": "explosive-uranium-cannon-shell",
@@ -2739,7 +3003,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "d[explosive-cannon-shell]-c[uranium]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/explosive-uranium-cannon-shell.png"
     },
     "artillery-shell": {
       "id": "artillery-shell",
@@ -2749,7 +3014,8 @@
       "stackSize": 1,
       "subgroup": "ammo",
       "order": "d[explosive-cannon-shell]-d[artillery]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/artillery-shell.png"
     },
     "firearm-magazine": {
       "id": "firearm-magazine",
@@ -2759,7 +3025,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "a[basic-clips]-a[firearm-magazine]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/firearm-magazine.png"
     },
     "piercing-rounds-magazine": {
       "id": "piercing-rounds-magazine",
@@ -2769,7 +3036,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "a[basic-clips]-b[piercing-rounds-magazine]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/piercing-rounds-magazine.png"
     },
     "shotgun-shell": {
       "id": "shotgun-shell",
@@ -2779,7 +3047,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "b[shotgun]-a[basic]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/shotgun-shell.png"
     },
     "railgun-ammo": {
       "id": "railgun-ammo",
@@ -2789,7 +3058,8 @@
       "stackSize": 10,
       "subgroup": "ammo",
       "order": "e[railgun-ammo]-a[basic]",
-      "weight": 200000
+      "weight": 200000,
+      "icon": "/icons/railgun-ammo.png"
     },
     "capture-robot-rocket": {
       "id": "capture-robot-rocket",
@@ -2799,7 +3069,8 @@
       "stackSize": 10,
       "subgroup": "ammo",
       "order": "d[rocket-launcher]-d[capture]",
-      "weight": 100000
+      "weight": 100000,
+      "icon": "/icons/capture-robot-rocket.png"
     },
     "tesla-ammo": {
       "id": "tesla-ammo",
@@ -2809,7 +3080,8 @@
       "stackSize": 100,
       "subgroup": "ammo",
       "order": "e[railgun-ammo]-a[basic]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/tesla-ammo.png"
     },
     "raw-fish": {
       "id": "raw-fish",
@@ -2819,7 +3091,8 @@
       "stackSize": 100,
       "subgroup": "raw-resource",
       "order": "h[raw-fish]",
-      "weight": 3333.3333333333335
+      "weight": 3333.3333333333335,
+      "icon": "/icons/raw-fish.png"
     },
     "grenade": {
       "id": "grenade",
@@ -2829,7 +3102,8 @@
       "stackSize": 100,
       "subgroup": "capsule",
       "order": "a[grenade]-a[normal]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/grenade.png"
     },
     "defender-capsule": {
       "id": "defender-capsule",
@@ -2839,7 +3113,8 @@
       "stackSize": 100,
       "subgroup": "capsule",
       "order": "d[defender]-b[capsule]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/defender-capsule.png"
     },
     "cluster-grenade": {
       "id": "cluster-grenade",
@@ -2849,7 +3124,8 @@
       "stackSize": 100,
       "subgroup": "capsule",
       "order": "a[grenade]-b[cluster]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/cluster-grenade.png"
     },
     "poison-capsule": {
       "id": "poison-capsule",
@@ -2859,7 +3135,8 @@
       "stackSize": 100,
       "subgroup": "capsule",
       "order": "b[poison-capsule]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/poison-capsule.png"
     },
     "slowdown-capsule": {
       "id": "slowdown-capsule",
@@ -2869,7 +3146,8 @@
       "stackSize": 100,
       "subgroup": "capsule",
       "order": "c[slowdown-capsule]",
-      "weight": 10000
+      "weight": 10000,
+      "icon": "/icons/slowdown-capsule.png"
     },
     "distractor-capsule": {
       "id": "distractor-capsule",
@@ -2879,7 +3157,8 @@
       "stackSize": 100,
       "subgroup": "capsule",
       "order": "e[distractor]-b[capsule]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/distractor-capsule.png"
     },
     "destroyer-capsule": {
       "id": "destroyer-capsule",
@@ -2889,7 +3168,8 @@
       "stackSize": 100,
       "subgroup": "capsule",
       "order": "f[destroyer]-b[capsule]",
-      "weight": 40000
+      "weight": 40000,
+      "icon": "/icons/destroyer-capsule.png"
     },
     "cliff-explosives": {
       "id": "cliff-explosives",
@@ -2899,7 +3179,8 @@
       "stackSize": 20,
       "subgroup": "terrain",
       "order": "d[cliff-explosives]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/cliff-explosives.png"
     },
     "discharge-defense-remote": {
       "id": "discharge-defense-remote",
@@ -2909,7 +3190,8 @@
       "stackSize": 1,
       "subgroup": "spawnables",
       "order": "b[active-defense]-b[discharge-defense-equipment]-b[remote]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/discharge-defense-remote.png"
     },
     "artillery-targeting-remote": {
       "id": "artillery-targeting-remote",
@@ -2919,7 +3201,8 @@
       "stackSize": 1,
       "subgroup": "spawnables",
       "order": "b[turret]-d[artillery-turret]-b[remote]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/artillery-targeting-remote.png"
     },
     "yumako": {
       "id": "yumako",
@@ -2929,7 +3212,8 @@
       "stackSize": 50,
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-a[yumako]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/yumako.png"
     },
     "jellynut": {
       "id": "jellynut",
@@ -2939,7 +3223,8 @@
       "stackSize": 50,
       "subgroup": "agriculture-processes",
       "order": "b[agriculture]-b[jellynut]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/jellynut.png"
     },
     "yumako-mash": {
       "id": "yumako-mash",
@@ -2949,7 +3234,8 @@
       "stackSize": 100,
       "subgroup": "agriculture-products",
       "order": "a[organic-processing]-c[yumako-mash]",
-      "weight": 500
+      "weight": 500,
+      "icon": "/icons/yumako-mash.png"
     },
     "jelly": {
       "id": "jelly",
@@ -2959,7 +3245,8 @@
       "stackSize": 100,
       "subgroup": "agriculture-products",
       "order": "a[organic-processing]-d[jelly]",
-      "weight": 500
+      "weight": 500,
+      "icon": "/icons/jelly.png"
     },
     "bioflux": {
       "id": "bioflux",
@@ -2969,7 +3256,8 @@
       "stackSize": 100,
       "subgroup": "agriculture-products",
       "order": "a[organic-processing]-b[bioflux]",
-      "weight": 1000
+      "weight": 1000,
+      "icon": "/icons/bioflux.png"
     },
     "flamethrower": {
       "id": "flamethrower",
@@ -2979,7 +3267,8 @@
       "stackSize": 5,
       "subgroup": "gun",
       "order": "e[flamethrower]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/flamethrower.png"
     },
     "tank-machine-gun": {
       "id": "tank-machine-gun",
@@ -2989,7 +3278,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "a[basic-clips]-b[tank-machine-gun]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/tank-machine-gun.png"
     },
     "tank-flamethrower": {
       "id": "tank-flamethrower",
@@ -2999,7 +3289,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "b[flamethrower]-b[tank-flamethrower]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/tank-flamethrower.png"
     },
     "rocket-launcher": {
       "id": "rocket-launcher",
@@ -3009,7 +3300,8 @@
       "stackSize": 5,
       "subgroup": "gun",
       "order": "d[rocket-launcher]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/rocket-launcher.png"
     },
     "combat-shotgun": {
       "id": "combat-shotgun",
@@ -3019,7 +3311,8 @@
       "stackSize": 5,
       "subgroup": "gun",
       "order": "b[shotgun]-a[combat]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/combat-shotgun.png"
     },
     "tank-cannon": {
       "id": "tank-cannon",
@@ -3029,7 +3322,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "z[tank]-a[cannon]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/tank-cannon.png"
     },
     "artillery-wagon-cannon": {
       "id": "artillery-wagon-cannon",
@@ -3039,7 +3333,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "z[artillery]-a[cannon]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/artillery-wagon-cannon.png"
     },
     "spidertron-rocket-launcher-1": {
       "id": "spidertron-rocket-launcher-1",
@@ -3049,7 +3344,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/spidertron-rocket-launcher-1.png"
     },
     "spidertron-rocket-launcher-2": {
       "id": "spidertron-rocket-launcher-2",
@@ -3059,7 +3355,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/spidertron-rocket-launcher-2.png"
     },
     "spidertron-rocket-launcher-3": {
       "id": "spidertron-rocket-launcher-3",
@@ -3069,7 +3366,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/spidertron-rocket-launcher-3.png"
     },
     "spidertron-rocket-launcher-4": {
       "id": "spidertron-rocket-launcher-4",
@@ -3079,7 +3377,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "z[spider]-a[rocket-launcher]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/spidertron-rocket-launcher-4.png"
     },
     "pistol": {
       "id": "pistol",
@@ -3089,7 +3388,8 @@
       "stackSize": 5,
       "subgroup": "gun",
       "order": "a[basic-clips]-a[pistol]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/pistol.png"
     },
     "submachine-gun": {
       "id": "submachine-gun",
@@ -3099,7 +3399,8 @@
       "stackSize": 5,
       "subgroup": "gun",
       "order": "a[basic-clips]-b[submachine-gun]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/submachine-gun.png"
     },
     "vehicle-machine-gun": {
       "id": "vehicle-machine-gun",
@@ -3109,7 +3410,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "a[basic-clips]-b[vehicle-machine-gun]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/vehicle-machine-gun.png"
     },
     "shotgun": {
       "id": "shotgun",
@@ -3119,7 +3421,8 @@
       "stackSize": 5,
       "subgroup": "gun",
       "order": "b[shotgun]-a[basic]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/shotgun.png"
     },
     "railgun": {
       "id": "railgun",
@@ -3129,7 +3432,8 @@
       "stackSize": 1,
       "subgroup": "gun",
       "order": "a[basic-clips]-h[railgun]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/railgun.png"
     },
     "teslagun": {
       "id": "teslagun",
@@ -3139,7 +3443,8 @@
       "stackSize": 5,
       "subgroup": "gun",
       "order": "a[basic-clips]-h[teslagun]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/teslagun.png"
     },
     "modular-armor": {
       "id": "modular-armor",
@@ -3149,7 +3454,8 @@
       "stackSize": 1,
       "subgroup": "armor",
       "order": "c[modular-armor]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/modular-armor.png"
     },
     "power-armor": {
       "id": "power-armor",
@@ -3159,7 +3465,8 @@
       "stackSize": 1,
       "subgroup": "armor",
       "order": "d[power-armor]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/power-armor.png"
     },
     "power-armor-mk2": {
       "id": "power-armor-mk2",
@@ -3169,7 +3476,8 @@
       "stackSize": 1,
       "subgroup": "armor",
       "order": "e[power-armor-mk2]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/power-armor-mk2.png"
     },
     "light-armor": {
       "id": "light-armor",
@@ -3179,7 +3487,8 @@
       "stackSize": 1,
       "subgroup": "armor",
       "order": "a[light-armor]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/light-armor.png"
     },
     "heavy-armor": {
       "id": "heavy-armor",
@@ -3189,7 +3498,8 @@
       "stackSize": 1,
       "subgroup": "armor",
       "order": "b[heavy-armor]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/heavy-armor.png"
     },
     "mech-armor": {
       "id": "mech-armor",
@@ -3199,7 +3509,8 @@
       "stackSize": 1,
       "subgroup": "armor",
       "order": "f[mech-armor]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/mech-armor.png"
     },
     "speed-module": {
       "id": "speed-module",
@@ -3209,7 +3520,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "a[speed]-a[speed-module-1]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/speed-module.png"
     },
     "speed-module-2": {
       "id": "speed-module-2",
@@ -3219,7 +3531,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "a[speed]-b[speed-module-2]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/speed-module-2.png"
     },
     "speed-module-3": {
       "id": "speed-module-3",
@@ -3229,7 +3542,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "a[speed]-c[speed-module-3]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/speed-module-3.png"
     },
     "efficiency-module": {
       "id": "efficiency-module",
@@ -3239,7 +3553,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "c[efficiency]-a[efficiency-module-1]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/efficiency-module.png"
     },
     "efficiency-module-2": {
       "id": "efficiency-module-2",
@@ -3249,7 +3564,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "c[efficiency]-b[efficiency-module-2]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/efficiency-module-2.png"
     },
     "efficiency-module-3": {
       "id": "efficiency-module-3",
@@ -3259,7 +3575,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "c[efficiency]-c[efficiency-module-3]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/efficiency-module-3.png"
     },
     "productivity-module": {
       "id": "productivity-module",
@@ -3269,7 +3586,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "c[productivity]-a[productivity-module-1]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/productivity-module.png"
     },
     "productivity-module-2": {
       "id": "productivity-module-2",
@@ -3279,7 +3597,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "c[productivity]-b[productivity-module-2]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/productivity-module-2.png"
     },
     "productivity-module-3": {
       "id": "productivity-module-3",
@@ -3289,7 +3608,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "c[productivity]-c[productivity-module-3]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/productivity-module-3.png"
     },
     "quality-module": {
       "id": "quality-module",
@@ -3299,7 +3619,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "d[quality]-a[quality-module-1]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/quality-module.png"
     },
     "quality-module-2": {
       "id": "quality-module-2",
@@ -3309,7 +3630,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "d[quality]-b[quality-module-2]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/quality-module-2.png"
     },
     "quality-module-3": {
       "id": "quality-module-3",
@@ -3319,7 +3641,8 @@
       "stackSize": 50,
       "subgroup": "module",
       "order": "d[quality]-c[quality-module-3]",
-      "weight": 20000
+      "weight": 20000,
+      "icon": "/icons/quality-module-3.png"
     },
     "repair-pack": {
       "id": "repair-pack",
@@ -3329,7 +3652,8 @@
       "stackSize": 100,
       "subgroup": "tool",
       "order": "b[repair]-a[repair-pack]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/repair-pack.png"
     },
     "spidertron-remote": {
       "id": "spidertron-remote",
@@ -3339,7 +3663,8 @@
       "stackSize": 1,
       "subgroup": "spawnables",
       "order": "",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/spidertron-remote.png"
     },
     "car": {
       "id": "car",
@@ -3349,7 +3674,8 @@
       "stackSize": 1,
       "subgroup": "transport",
       "order": "b[personal-transport]-a[car]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/car.png"
     },
     "locomotive": {
       "id": "locomotive",
@@ -3359,7 +3685,8 @@
       "stackSize": 5,
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-a[locomotive]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/locomotive.png"
     },
     "cargo-wagon": {
       "id": "cargo-wagon",
@@ -3369,7 +3696,8 @@
       "stackSize": 5,
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-b[cargo-wagon]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/cargo-wagon.png"
     },
     "fluid-wagon": {
       "id": "fluid-wagon",
@@ -3379,7 +3707,8 @@
       "stackSize": 5,
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-c[fluid-wagon]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/fluid-wagon.png"
     },
     "artillery-wagon": {
       "id": "artillery-wagon",
@@ -3389,7 +3718,8 @@
       "stackSize": 5,
       "subgroup": "train-transport",
       "order": "c[rolling-stock]-d[artillery-wagon]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/artillery-wagon.png"
     },
     "tank": {
       "id": "tank",
@@ -3399,7 +3729,8 @@
       "stackSize": 1,
       "subgroup": "transport",
       "order": "b[personal-transport]-b[tank]",
-      "weight": null
+      "weight": null,
+      "icon": "/icons/tank.png"
     },
     "spidertron": {
       "id": "spidertron",
@@ -3409,7 +3740,8 @@
       "stackSize": 1,
       "subgroup": "transport",
       "order": "b[personal-transport]-c[spidertron]-a[spider]",
-      "weight": 1000000
+      "weight": 1000000,
+      "icon": "/icons/spidertron.png"
     }
   },
   "fluids": {
@@ -3422,7 +3754,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 0,
       "maxTemperature": 0,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/fluid-unknown.png"
     },
     "parameter-0": {
       "id": "parameter-0",
@@ -3433,7 +3766,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-0.png"
     },
     "parameter-1": {
       "id": "parameter-1",
@@ -3444,7 +3778,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-1.png"
     },
     "parameter-2": {
       "id": "parameter-2",
@@ -3455,7 +3790,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-2.png"
     },
     "parameter-3": {
       "id": "parameter-3",
@@ -3466,7 +3802,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-3.png"
     },
     "parameter-4": {
       "id": "parameter-4",
@@ -3477,7 +3814,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-4.png"
     },
     "parameter-5": {
       "id": "parameter-5",
@@ -3488,7 +3826,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-5.png"
     },
     "parameter-6": {
       "id": "parameter-6",
@@ -3499,7 +3838,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-6.png"
     },
     "parameter-7": {
       "id": "parameter-7",
@@ -3510,7 +3850,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-7.png"
     },
     "parameter-8": {
       "id": "parameter-8",
@@ -3521,7 +3862,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-8.png"
     },
     "parameter-9": {
       "id": "parameter-9",
@@ -3532,7 +3874,8 @@
       "subgroup": "parameters",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/parameter-9.png"
     },
     "water": {
       "id": "water",
@@ -3543,7 +3886,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 15,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/water.png"
     },
     "steam": {
       "id": "steam",
@@ -3554,7 +3898,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 15,
       "maxTemperature": 500,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/steam.png"
     },
     "sulfuric-acid": {
       "id": "sulfuric-acid",
@@ -3565,7 +3910,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/sulfuric-acid.png"
     },
     "crude-oil": {
       "id": "crude-oil",
@@ -3576,7 +3922,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/crude-oil.png"
     },
     "heavy-oil": {
       "id": "heavy-oil",
@@ -3587,7 +3934,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/heavy-oil.png"
     },
     "light-oil": {
       "id": "light-oil",
@@ -3598,7 +3946,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/light-oil.png"
     },
     "petroleum-gas": {
       "id": "petroleum-gas",
@@ -3609,7 +3958,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/petroleum-gas.png"
     },
     "lubricant": {
       "id": "lubricant",
@@ -3620,7 +3970,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/lubricant.png"
     },
     "ammoniacal-solution": {
       "id": "ammoniacal-solution",
@@ -3631,7 +3982,8 @@
       "subgroup": "fluid",
       "defaultTemperature": -50,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/ammoniacal-solution.png"
     },
     "ammonia": {
       "id": "ammonia",
@@ -3642,7 +3994,8 @@
       "subgroup": "fluid",
       "defaultTemperature": -35,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/ammonia.png"
     },
     "fluorine": {
       "id": "fluorine",
@@ -3653,7 +4006,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/fluorine.png"
     },
     "fluoroketone-cold": {
       "id": "fluoroketone-cold",
@@ -3664,7 +4018,8 @@
       "subgroup": "fluid",
       "defaultTemperature": -150,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/fluoroketone-cold.png"
     },
     "fluoroketone-hot": {
       "id": "fluoroketone-hot",
@@ -3675,7 +4030,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 180,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/fluoroketone-hot.png"
     },
     "holmium-solution": {
       "id": "holmium-solution",
@@ -3686,7 +4042,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 15,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/holmium-solution.png"
     },
     "electrolyte": {
       "id": "electrolyte",
@@ -3697,7 +4054,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 15,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/electrolyte.png"
     },
     "lithium-brine": {
       "id": "lithium-brine",
@@ -3708,7 +4066,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 15,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/lithium-brine.png"
     },
     "lava": {
       "id": "lava",
@@ -3719,7 +4078,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 1500,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/lava.png"
     },
     "molten-iron": {
       "id": "molten-iron",
@@ -3730,7 +4090,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 1500,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/molten-iron.png"
     },
     "molten-copper": {
       "id": "molten-copper",
@@ -3741,7 +4102,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 1100,
       "maxTemperature": 100,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/molten-copper.png"
     },
     "thruster-fuel": {
       "id": "thruster-fuel",
@@ -3752,7 +4114,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": "50kJ"
+      "fuelValue": "50kJ",
+      "icon": "/icons/thruster-fuel.png"
     },
     "thruster-oxidizer": {
       "id": "thruster-oxidizer",
@@ -3763,7 +4126,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 25,
       "maxTemperature": 100,
-      "fuelValue": "50kJ"
+      "fuelValue": "50kJ",
+      "icon": "/icons/thruster-oxidizer.png"
     },
     "fusion-plasma": {
       "id": "fusion-plasma",
@@ -3774,7 +4138,8 @@
       "subgroup": "fluid",
       "defaultTemperature": 1000000,
       "maxTemperature": 10000000,
-      "fuelValue": null
+      "fuelValue": null,
+      "icon": "/icons/fusion-plasma.png"
     }
   }
 }

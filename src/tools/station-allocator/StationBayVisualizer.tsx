@@ -1,5 +1,6 @@
 import React from 'react';
-import { Droplet, Box, Clock, Gauge, Lock, AlertTriangle, CheckCircle2, HelpCircle } from 'lucide-react';
+import { Clock, Gauge, Lock, AlertTriangle, CheckCircle2, HelpCircle } from 'lucide-react';
+import { FactorioIcon } from '../../components/factorio/FactorioIcon';
 import type { ApportionmentResult, AllocatedResourceResult, CongestionLevel } from '../../lib/apportionment';
 import { getEffectiveBeltSpeed, type BeltStackLevel } from '../../types';
 
@@ -242,12 +243,8 @@ export const StationBayVisualizer: React.FC<StationBayVisualizerProps> = ({
 
                 {/* Resource Info */}
                 <div className="space-y-1 my-1">
-                  <div className="flex items-center gap-1.5 font-semibold text-sm text-slate-100 truncate">
-                    {res.isFluid ? (
-                      <Droplet className="w-4 h-4 text-cyan-400 shrink-0" />
-                    ) : (
-                      <Box className="w-4 h-4 text-amber-400 shrink-0" />
-                    )}
+                  <div className="flex items-center gap-2 font-semibold text-sm text-slate-100 truncate">
+                    <FactorioIcon id={res.id} name={res.name} isFluid={res.isFluid} size="xs" />
                     <span className="truncate">{res.name}</span>
                   </div>
 

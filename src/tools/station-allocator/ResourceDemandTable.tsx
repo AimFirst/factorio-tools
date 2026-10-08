@@ -1,5 +1,6 @@
 import React from 'react';
-import { Plus, Trash2, Droplet, Box, Lock, Unlock } from 'lucide-react';
+import { Plus, Trash2, Lock, Unlock } from 'lucide-react';
+import { FactorioIcon } from '../../components/factorio/FactorioIcon';
 import type { ResourceDemandEntry, RateUnit } from './types';
 import type { ApportionmentResult } from '../../lib/apportionment';
 import { getItem, calculateTrainCapacity } from '../../lib/factorio';
@@ -105,19 +106,7 @@ export const ResourceDemandTable: React.FC<ResourceDemandTableProps> = ({
                     {/* Resource Name */}
                     <td className="py-3 px-4">
                       <div className="flex items-center gap-2.5">
-                        <div
-                          className={`w-7 h-7 rounded flex items-center justify-center shrink-0 border ${
-                            entry.isFluid
-                              ? 'bg-cyan-950/40 border-cyan-800/40 text-cyan-400'
-                              : 'bg-amber-950/40 border-amber-800/40 text-amber-400'
-                          }`}
-                        >
-                          {entry.isFluid ? (
-                            <Droplet className="w-3.5 h-3.5" />
-                          ) : (
-                            <Box className="w-3.5 h-3.5" />
-                          )}
-                        </div>
+                        <FactorioIcon id={entry.id} name={entry.name} isFluid={entry.isFluid} size="sm" />
                         <div>
                           <div className="font-semibold text-slate-100">{entry.name}</div>
                           <div className="text-[10px] text-slate-400 capitalize">
