@@ -25,3 +25,8 @@ dist-ssr
 
 # Factorio sync temp directories
 .temp_factorio*
+
+# Environment variables & secrets
+.env
+.env.*
+!.env.example

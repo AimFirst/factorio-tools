@@ -52,7 +52,7 @@ export const FactorioIcon: React.FC<FactorioIconProps> = ({
       title={name || id}
     >
       <img
-        src={`/icons/${id}.png`}
+        src={`${import.meta.env.BASE_URL}icons/${id}.png`}
         alt={name || id}
         className="w-full h-full object-contain [image-rendering:pixelated]"
         loading="lazy"
