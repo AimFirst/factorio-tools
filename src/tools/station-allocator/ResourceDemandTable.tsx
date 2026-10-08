@@ -71,6 +71,7 @@ export const ResourceDemandTable: React.FC<ResourceDemandTableProps> = ({
                 <th className="py-3 px-4">Stack / Capacity</th>
                 <th className="py-3 px-4">Single Blueprint Rate</th>
                 <th className="py-3 px-4">Total Demand ({blueprintMultiplier}x)</th>
+                <th className="py-3 px-4">Belts / Pipes ({blueprintMultiplier}x)</th>
                 <th className="py-3 px-4">Train Capacity</th>
                 <th className="py-3 px-4">Allocated Bays</th>
                 <th className="py-3 px-4 text-right">Actions</th>
@@ -206,6 +207,58 @@ export const ResourceDemandTable: React.FC<ResourceDemandTableProps> = ({
                       <div className="text-[10px] text-slate-400">
                         {Math.round(totalRatePerSec * 60).toLocaleString()} / min
                       </div>
+                    </td>
+
+                    {/* Belts / Pipes Required */}
+                    <td className="py-3 px-4 font-mono">
+                      {!entry.isFluid ? (
+                        (() => {
+                          const activeBeltType: BeltType = entry.beltType || 'turbo';
+                          const activeBeltSpeed = getEffectiveBeltSpeed(activeBeltType, beltStackLevel);
+                          const totalBelts = totalRatePerSec / activeBeltSpeed;
+                          const singleBelts = singleRatePerSec / activeBeltSpeed;
+                          const beltLabel =
+                            activeBeltType === 'turbo'
+                              ? 'Green'
+                              : activeBeltType === 'express'
+                              ? 'Blue'
+                              : activeBeltType === 'fast'
+                              ? 'Red'
+                              : 'Yellow';
+                          const textColor =
+                            activeBeltType === 'turbo'
+                              ? 'text-emerald-400'
+                              : activeBeltType === 'express'
+                              ? 'text-blue-400'
+                              : activeBeltType === 'fast'
+                              ? 'text-rose-400'
+                              : 'text-amber-400';
+
+                          return (
+                            <div>
+                              <div className={`font-semibold flex items-center gap-1 ${textColor}`}>
+                                <span>{totalBelts < 10 ? totalBelts.toFixed(2) : totalBelts.toFixed(1)}</span>
+                                <span className="text-[11px] opacity-80 font-normal">
+                                  {beltLabel} Belts
+                                </span>
+                              </div>
+                              <div className="text-[10px] text-slate-400">
+                                {singleBelts.toFixed(2)} / copy &bull; {beltStackLevel}x stack
+                              </div>
+                            </div>
+                          );
+                        })()
+                      ) : (
+                        <div>
+                          <div className="font-semibold text-cyan-400 flex items-center gap-1">
+                            <span>{(totalRatePerSec / 1200).toFixed(2)}</span>
+                            <span className="text-[11px] text-cyan-300/80 font-normal">Pipes</span>
+                          </div>
+                          <div className="text-[10px] text-slate-400">
+                            {(singleRatePerSec / 1200).toFixed(2)} / copy &bull; @ 1.2k/s
+                          </div>
+                        </div>
+                      )}
                     </td>
 
                     {/* Train Capacity */}
