@@ -137,5 +137,29 @@ console.log('🧪 Testing Factorio Station Allocator Engine...\n');
   console.log('✅ Test 6: Space Age Belt Stacking (Green belt 1x: 60/s, 4x: 240/s) passed.');
 }
 
+// Test 7: Processing Unit Block allocation (6 EC, 1 AC, 1 SA)
+{
+  const ecCap = calculateTrainCapacity({ resourceId: 'electronic-circuit', isFluid: false, wagonCount: 4, isLegendaryQuality: true }).totalCapacity;
+  const acCap = calculateTrainCapacity({ resourceId: 'advanced-circuit', isFluid: false, wagonCount: 4, isLegendaryQuality: true }).totalCapacity;
+  const saCap = calculateTrainCapacity({ resourceId: 'sulfuric-acid', isFluid: true, wagonCount: 4, isLegendaryQuality: true }).totalCapacity;
+
+  const inputs = [
+    { id: 'ec', name: 'Electronic circuit', isFluid: false, ratePerSec: 800, trainCapacity: ecCap },
+    { id: 'ac', name: 'Advanced circuit', isFluid: false, ratePerSec: 160, trainCapacity: acCap },
+    { id: 'sa', name: 'Sulfuric acid', isFluid: true, ratePerSec: 400, trainCapacity: saCap },
+  ];
+
+  const result = allocateStations(inputs, 8, 'train-throughput');
+  const ec = result.allocations.find(a => a.id === 'ec');
+  const ac = result.allocations.find(a => a.id === 'ac');
+  const sa = result.allocations.find(a => a.id === 'sa');
+
+  assert.strictEqual(ec?.allocatedStations, 6, 'Electronic circuits should receive 6 stations');
+  assert.strictEqual(ac?.allocatedStations, 1, 'Advanced circuits should receive 1 station');
+  assert.strictEqual(sa?.allocatedStations, 1, 'Sulfuric acid should receive 1 station');
+  assert.strictEqual(result.usedStations, 8);
+  console.log('✅ Test 7: Processing Unit Block correctly allocated (6 EC, 1 AC, 1 SA).');
+}
+
 console.log('\n🎉 ALL ALLOCATOR TESTS PASSED SUCCESSFULLY!');
 

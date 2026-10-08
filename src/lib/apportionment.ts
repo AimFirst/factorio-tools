@@ -92,7 +92,7 @@ export function allocateStations(
     );
   }
 
-  const remainingSlotsToDistribute = Math.max(0, totalStations - baseCommittedSlots);
+  const availableForUnlocked = Math.max(0, totalStations - lockedSlotsCount);
 
   // Calculate demand weights for unlocked resources
   const weights: Map<string, number> = new Map();
@@ -110,34 +110,48 @@ export function allocateStations(
     totalWeight += weight;
   }
 
-  // Calculate Largest Remainder (Hamilton-Hare) apportionment
+  // Each unlocked resource starts with its minStations (default 1)
   const preliminaryStations: Map<string, number> = new Map();
-  const remainders: { id: string; remainder: number }[] = [];
+  const ideals: Map<string, number> = new Map();
 
   for (const item of unlockedInputs) {
     const minS = item.minStations ?? defaultMinStations;
-    const w = weights.get(item.id) || 0;
-    const share = totalWeight > 0 ? w / totalWeight : 0;
-    const quota = share * remainingSlotsToDistribute;
-    const floorQuota = Math.floor(quota);
+    preliminaryStations.set(item.id, minS);
 
-    preliminaryStations.set(item.id, minS + floorQuota);
-    remainders.push({
-      id: item.id,
-      remainder: quota - floorQuota,
-    });
+    const w = weights.get(item.id) || 0;
+    const share = totalWeight > 0 ? w / totalWeight : 1 / unlockedInputs.length;
+    const idealQuota = share * availableForUnlocked;
+    ideals.set(item.id, idealQuota);
   }
 
-  // Distribute leftover slots from largest remainder down
-  const allocatedFloorSum = Array.from(preliminaryStations.values()).reduce((a, b) => a + b, 0);
-  let leftovers = totalStations - (lockedSlotsCount + allocatedFloorSum);
+  const baseCommittedUnlocked = unlockedInputs.reduce(
+    (sum, item) => sum + (preliminaryStations.get(item.id) || 1),
+    0
+  );
+  let leftovers = availableForUnlocked - baseCommittedUnlocked;
 
-  remainders.sort((a, b) => b.remainder - a.remainder);
+  // Distribute leftover slots iteratively to the resource with the greatest deficit (ideal - allocated)
+  while (leftovers > 0) {
+    let bestId: string | null = null;
+    let maxDeficit = -Infinity;
 
-  for (const { id } of remainders) {
-    if (leftovers <= 0) break;
-    preliminaryStations.set(id, (preliminaryStations.get(id) || 0) + 1);
-    leftovers -= 1;
+    for (const item of unlockedInputs) {
+      const ideal = ideals.get(item.id) || 0;
+      const current = preliminaryStations.get(item.id) || 0;
+      const deficit = ideal - current;
+
+      if (deficit > maxDeficit) {
+        maxDeficit = deficit;
+        bestId = item.id;
+      }
+    }
+
+    if (bestId && maxDeficit > -Infinity) {
+      preliminaryStations.set(bestId, (preliminaryStations.get(bestId) || 0) + 1);
+      leftovers -= 1;
+    } else {
+      break;
+    }
   }
 
   // Assemble final results and calculate per-station logistics metrics
