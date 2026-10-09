@@ -6,12 +6,16 @@ import {
   Mountain,
   Layers,
   Loader2,
+  Map as MapIcon,
+  LayoutGrid,
+  Columns2,
 } from 'lucide-react';
 import { useFactoryPlanner } from './hooks/useFactoryPlanner.ts';
-import { PLANETS_META, type HexBlock } from './types.ts';
+import { PLANETS_META, type HexBlock, type HexCoordinates } from './types.ts';
 import { PlanetSwitcher } from './components/PlanetSwitcher';
 import { ProjectActionsBar } from './components/ProjectActionsBar';
 import { BlockCard } from './components/BlockCard';
+import { HexGridCanvas } from './components/HexGridCanvas';
 import { BlockEditorModal } from './components/BlockEditorModal';
 import { RawIngressModal } from './components/RawIngressModal';
 import { SpaceHubModal } from './components/SpaceHubModal';
@@ -28,6 +32,7 @@ export const FactoryPlanner: React.FC = () => {
     isSaving,
     upsertBlock,
     removeBlock,
+    moveBlock,
     upsertRawIngress,
     upsertSpaceHub,
     exportProjectJson,
@@ -35,9 +40,11 @@ export const FactoryPlanner: React.FC = () => {
     updateProject,
   } = useFactoryPlanner();
 
-  // Modals state
+  // View & Modals state
+  const [viewMode, setViewMode] = useState<'map' | 'cards' | 'split'>('map');
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<HexBlock | null>(null);
+  const [newBlockCoords, setNewBlockCoords] = useState<HexCoordinates | null>(null);
   const [rawModalOpen, setRawModalOpen] = useState(false);
   const [spaceModalOpen, setSpaceModalOpen] = useState(false);
 
@@ -70,13 +77,15 @@ export const FactoryPlanner: React.FC = () => {
 
   const totalRocketLaunches = spaceHubs.reduce((sum, h) => sum + h.launchesPerMinute, 0);
 
-  const handleOpenNewBlock = () => {
+  const handleOpenNewBlock = (coords?: HexCoordinates) => {
     setEditingBlock(null);
+    setNewBlockCoords(coords || null);
     setEditorOpen(true);
   };
 
   const handleEditBlock = (block: HexBlock) => {
     setEditingBlock(block);
+    setNewBlockCoords(null);
     setEditorOpen(true);
   };
 
@@ -197,59 +206,145 @@ export const FactoryPlanner: React.FC = () => {
 
       {/* Main Blocks Section */}
       <div className="space-y-4">
-        <div className="flex items-center justify-between">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-zinc-100">
               {planetMeta.name} Manufacturing Blocks ({blocks.length})
             </h3>
-            <span className="text-xs text-zinc-500">
+            <span className="text-xs text-zinc-500 hidden sm:inline">
               Hexagonal Rail City Blocks
             </span>
           </div>
 
-          <button
-            type="button"
-            onClick={handleOpenNewBlock}
-            className="flex items-center gap-1.5 px-3 py-1.5 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer"
-          >
-            <Plus className="w-3.5 h-3.5" />
-            Add Block
-          </button>
-        </div>
+          <div className="flex items-center gap-3">
+            {/* View Mode Switcher */}
+            <div className="flex items-center bg-zinc-950 p-1 rounded-xl border border-zinc-800 text-xs">
+              <button
+                type="button"
+                onClick={() => setViewMode('map')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition cursor-pointer ${
+                  viewMode === 'map'
+                    ? 'bg-zinc-800 text-orange-400 font-semibold shadow-xs'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <MapIcon className="w-3.5 h-3.5" />
+                Hex Grid
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('cards')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition cursor-pointer ${
+                  viewMode === 'cards'
+                    ? 'bg-zinc-800 text-orange-400 font-semibold shadow-xs'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <LayoutGrid className="w-3.5 h-3.5" />
+                Block Cards
+              </button>
+              <button
+                type="button"
+                onClick={() => setViewMode('split')}
+                className={`flex items-center gap-1.5 px-3 py-1 rounded-lg font-medium transition cursor-pointer ${
+                  viewMode === 'split'
+                    ? 'bg-zinc-800 text-orange-400 font-semibold shadow-xs'
+                    : 'text-zinc-400 hover:text-zinc-200'
+                }`}
+              >
+                <Columns2 className="w-3.5 h-3.5" />
+                Split
+              </button>
+            </div>
 
-        {blocks.length === 0 ? (
-          <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-zinc-800/80 rounded-2xl bg-zinc-950/40 text-center gap-3">
-            <div className="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-zinc-500">
-              <Layers className="w-8 h-8" />
-            </div>
-            <div className="max-w-md">
-              <h4 className="text-base font-semibold text-zinc-200">
-                No factory blocks on {planetMeta.name} yet
-              </h4>
-              <p className="text-xs text-zinc-500 mt-1">
-                Start by creating your first hexagonal city block on {planetMeta.name} to plan
-                its inputs, outputs, and train traffic.
-              </p>
-            </div>
             <button
               type="button"
-              onClick={handleOpenNewBlock}
-              className="mt-2 flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-md transition cursor-pointer"
+              onClick={() => handleOpenNewBlock()}
+              className="flex items-center gap-1.5 px-3.5 py-1.5 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer"
             >
-              <Plus className="w-4 h-4" />
-              Create First Block
+              <Plus className="w-3.5 h-3.5" />
+              Add Block
             </button>
           </div>
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-            {blocks.map((block) => (
-              <BlockCard
-                key={block.id}
-                block={block}
-                onEdit={handleEditBlock}
-                onDelete={(id) => removeBlock(activePlanet, id)}
+        </div>
+
+        {/* View Content */}
+        {viewMode === 'map' && (
+          <HexGridCanvas
+            blocks={blocks}
+            rawIngressNodes={rawIngressNodes}
+            spaceHubs={spaceHubs}
+            onSelectBlock={handleEditBlock}
+            onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
+            onNewBlockAt={handleOpenNewBlock}
+          />
+        )}
+
+        {viewMode === 'cards' && (
+          <div>
+            {blocks.length === 0 ? (
+              <div className="flex flex-col items-center justify-center p-12 border-2 border-dashed border-zinc-800/80 rounded-2xl bg-zinc-950/40 text-center gap-3">
+                <div className="p-4 bg-zinc-900 rounded-2xl border border-zinc-800 text-zinc-500">
+                  <Layers className="w-8 h-8" />
+                </div>
+                <div className="max-w-md">
+                  <h4 className="text-base font-semibold text-zinc-200">
+                    No factory blocks on {planetMeta.name} yet
+                  </h4>
+                  <p className="text-xs text-zinc-500 mt-1">
+                    Start by creating your first hexagonal city block on {planetMeta.name} to plan
+                    its inputs, outputs, and train traffic.
+                  </p>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => handleOpenNewBlock()}
+                  className="mt-2 flex items-center gap-1.5 px-4 py-2 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-md transition cursor-pointer"
+                >
+                  <Plus className="w-4 h-4" />
+                  Create First Block
+                </button>
+              </div>
+            ) : (
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {blocks.map((block) => (
+                  <BlockCard
+                    key={block.id}
+                    block={block}
+                    onEdit={handleEditBlock}
+                    onDelete={(id) => removeBlock(activePlanet, id)}
+                  />
+                ))}
+              </div>
+            )}
+          </div>
+        )}
+
+        {viewMode === 'split' && (
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+            <div className="lg:col-span-8">
+              <HexGridCanvas
+                blocks={blocks}
+                rawIngressNodes={rawIngressNodes}
+                spaceHubs={spaceHubs}
+                onSelectBlock={handleEditBlock}
+                onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
+                onNewBlockAt={handleOpenNewBlock}
               />
-            ))}
+            </div>
+            <div className="lg:col-span-4 space-y-3 max-h-[680px] overflow-y-auto pr-1">
+              <div className="text-xs font-semibold text-zinc-400 uppercase tracking-wider px-1">
+                Planet Block Roster ({blocks.length})
+              </div>
+              {blocks.map((block) => (
+                <BlockCard
+                  key={block.id}
+                  block={block}
+                  onEdit={handleEditBlock}
+                  onDelete={(id) => removeBlock(activePlanet, id)}
+                />
+              ))}
+            </div>
           </div>
         )}
       </div>
@@ -365,6 +460,7 @@ export const FactoryPlanner: React.FC = () => {
         onSave={(block) => upsertBlock(activePlanet, block)}
         onDelete={(id) => removeBlock(activePlanet, id)}
         initialBlock={editingBlock}
+        initialCoordinates={newBlockCoords}
         planetId={activePlanet}
       />
 

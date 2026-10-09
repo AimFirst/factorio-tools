@@ -3,7 +3,7 @@ import { X, Train, Layers, Check, Trash2, ArrowDownRight, ArrowUpRight } from 'l
 import { FactorioIcon } from '../../../components/factorio/FactorioIcon';
 import { ResourceSelector } from '../../../components/factorio/ResourceSelector';
 import { ResourceFlowTable } from './ResourceFlowTable';
-import type { BlockResourceFlow, HexBlock, SolidPlanetId } from '../types';
+import type { BlockResourceFlow, HexBlock, HexCoordinates, SolidPlanetId } from '../types.ts';
 import type { FactorioItem, FactorioFluid } from '../../../data/generated/types';
 
 interface BlockEditorModalProps {
@@ -12,6 +12,7 @@ interface BlockEditorModalProps {
   onSave: (block: HexBlock) => void;
   onDelete?: (blockId: string) => void;
   initialBlock: HexBlock | null;
+  initialCoordinates?: HexCoordinates | null;
   planetId: SolidPlanetId;
 }
 
@@ -31,6 +32,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
   onSave,
   onDelete,
   initialBlock,
+  initialCoordinates,
   planetId,
 }) => {
   const [name, setName] = useState('');
@@ -76,7 +78,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
       planetId,
       name: name.trim() || 'Manufacturing Block',
       iconId,
-      coordinates: initialBlock?.coordinates || null,
+      coordinates: initialBlock?.coordinates || initialCoordinates || null,
       blueprintMultiplier: Math.max(1, blueprintMultiplier),
       color,
       inputs,
@@ -120,9 +122,9 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
               />
               <div className="flex items-center gap-3 mt-1 text-xs text-zinc-400">
                 <span className="capitalize text-zinc-300 font-medium">{planetId} World</span>
-                {initialBlock?.coordinates && (
+                {(initialBlock?.coordinates || initialCoordinates) && (
                   <span className="font-mono text-zinc-500">
-                    Hex ({initialBlock.coordinates.q}, {initialBlock.coordinates.r})
+                    Hex ({(initialBlock?.coordinates || initialCoordinates)?.q}, {(initialBlock?.coordinates || initialCoordinates)?.r})
                   </span>
                 )}
               </div>

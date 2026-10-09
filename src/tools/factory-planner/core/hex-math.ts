@@ -138,3 +138,56 @@ export function getHexPolygonPoints(
   }
   return points.map(([px, py]) => `${px.toFixed(2)},${py.toFixed(2)}`).join(' ');
 }
+
+/**
+ * Generates all hex coordinates within a radial distance R from the origin.
+ */
+export function generateHexGridRadius(radius: number): HexCoordinates[] {
+  const results: HexCoordinates[] = [];
+  for (let q = -radius; q <= radius; q++) {
+    const r1 = Math.max(-radius, -q - radius);
+    const r2 = Math.min(radius, -q + radius);
+    for (let r = r1; r <= r2; r++) {
+      results.push({ q, r });
+    }
+  }
+  return results;
+}
+
+/**
+ * Generates a padded bounding grid covering all placed coordinates.
+ */
+export function calculateBoundingHexGrid(
+  coords: HexCoordinates[],
+  padding: number = 2
+): HexCoordinates[] {
+  if (coords.length === 0) {
+    return generateHexGridRadius(padding);
+  }
+
+  let minQ = Infinity;
+  let maxQ = -Infinity;
+  let minR = Infinity;
+  let maxR = -Infinity;
+
+  for (const c of coords) {
+    if (c.q < minQ) minQ = c.q;
+    if (c.q > maxQ) maxQ = c.q;
+    if (c.r < minR) minR = c.r;
+    if (c.r > maxR) maxR = c.r;
+  }
+
+  minQ -= padding;
+  maxQ += padding;
+  minR -= padding;
+  maxR += padding;
+
+  const results: HexCoordinates[] = [];
+  for (let q = minQ; q <= maxQ; q++) {
+    for (let r = minR; r <= maxR; r++) {
+      results.push({ q, r });
+    }
+  }
+  return results;
+}
+
