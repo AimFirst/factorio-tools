@@ -8,9 +8,11 @@ import type {
   FactoryPlannerProject,
   HexBlock,
   HexCoordinates,
+  InterplanetaryRoute,
   RawIngressNode,
   SolidPlanetId,
   SpaceHubNode,
+  SpacePlatform,
 } from '../types.ts';
 import { defaultStorage } from '../storage/LocalStorageAdapter.ts';
 import { createDefaultProject } from '../storage/starterProject.ts';
@@ -176,6 +178,26 @@ export function useFactoryPlanner() {
     [updateProject]
   );
 
+  // Remove raw ingress node
+  const removeRawIngress = useCallback(
+    (planetId: SolidPlanetId, id: string) => {
+      updateProject((prev) => {
+        const planet = prev.planets[planetId];
+        return {
+          ...prev,
+          planets: {
+            ...prev.planets,
+            [planetId]: {
+              ...planet,
+              rawIngressNodes: planet.rawIngressNodes.filter((n) => n.id !== id),
+            },
+          },
+        };
+      });
+    },
+    [updateProject]
+  );
+
   // Space Hub nodes (Rocket Silos & Landing Pads)
   const upsertSpaceHub = useCallback(
     (planetId: SolidPlanetId, hub: SpaceHubNode) => {
@@ -197,6 +219,94 @@ export function useFactoryPlanner() {
               spaceHubs: newHubs,
             },
           },
+        };
+      });
+    },
+    [updateProject]
+  );
+
+  // Remove space hub node
+  const removeSpaceHub = useCallback(
+    (planetId: SolidPlanetId, id: string) => {
+      updateProject((prev) => {
+        const planet = prev.planets[planetId];
+        return {
+          ...prev,
+          planets: {
+            ...prev.planets,
+            [planetId]: {
+              ...planet,
+              spaceHubs: planet.spaceHubs.filter((h) => h.id !== id),
+            },
+          },
+        };
+      });
+    },
+    [updateProject]
+  );
+
+  // Interplanetary Trade Routes
+  const upsertInterplanetaryRoute = useCallback(
+    (route: InterplanetaryRoute) => {
+      updateProject((prev) => {
+        const routes = prev.interplanetaryRoutes || [];
+        const existingIdx = routes.findIndex((r) => r.id === route.id);
+        const newRoutes = [...routes];
+        if (existingIdx >= 0) {
+          newRoutes[existingIdx] = route;
+        } else {
+          newRoutes.push(route);
+        }
+        return {
+          ...prev,
+          interplanetaryRoutes: newRoutes,
+        };
+      });
+    },
+    [updateProject]
+  );
+
+  const removeInterplanetaryRoute = useCallback(
+    (routeId: string) => {
+      updateProject((prev) => {
+        const routes = prev.interplanetaryRoutes || [];
+        return {
+          ...prev,
+          interplanetaryRoutes: routes.filter((r) => r.id !== routeId),
+        };
+      });
+    },
+    [updateProject]
+  );
+
+  // Space Platforms
+  const upsertSpacePlatform = useCallback(
+    (platform: SpacePlatform) => {
+      updateProject((prev) => {
+        const platforms = prev.spacePlatforms || [];
+        const existingIdx = platforms.findIndex((p) => p.id === platform.id);
+        const newPlatforms = [...platforms];
+        if (existingIdx >= 0) {
+          newPlatforms[existingIdx] = platform;
+        } else {
+          newPlatforms.push(platform);
+        }
+        return {
+          ...prev,
+          spacePlatforms: newPlatforms,
+        };
+      });
+    },
+    [updateProject]
+  );
+
+  const removeSpacePlatform = useCallback(
+    (platformId: string) => {
+      updateProject((prev) => {
+        const platforms = prev.spacePlatforms || [];
+        return {
+          ...prev,
+          spacePlatforms: platforms.filter((p) => p.id !== platformId),
         };
       });
     },
@@ -244,7 +354,13 @@ export function useFactoryPlanner() {
     removeBlock,
     moveBlock,
     upsertRawIngress,
+    removeRawIngress,
     upsertSpaceHub,
+    removeSpaceHub,
+    upsertInterplanetaryRoute,
+    removeInterplanetaryRoute,
+    upsertSpacePlatform,
+    removeSpacePlatform,
     createNewProject,
     exportProjectJson,
     importProjectJson,

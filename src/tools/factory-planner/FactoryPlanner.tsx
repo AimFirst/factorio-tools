@@ -19,6 +19,7 @@ import { HexGridCanvas } from './components/HexGridCanvas';
 import { BlockEditorModal } from './components/BlockEditorModal';
 import { RawIngressModal } from './components/RawIngressModal';
 import { SpaceHubModal } from './components/SpaceHubModal';
+import { InterplanetaryManager } from './components/InterplanetaryManager';
 import { FactorioIcon } from '../../components/factorio/FactorioIcon';
 import { createDefaultProject } from './storage/starterProject';
 
@@ -35,12 +36,17 @@ export const FactoryPlanner: React.FC = () => {
     moveBlock,
     upsertRawIngress,
     upsertSpaceHub,
+    upsertInterplanetaryRoute,
+    removeInterplanetaryRoute,
+    upsertSpacePlatform,
+    removeSpacePlatform,
     exportProjectJson,
     importProjectJson,
     updateProject,
   } = useFactoryPlanner();
 
   // View & Modals state
+  const [isSpaceView, setIsSpaceView] = useState(false);
   const [viewMode, setViewMode] = useState<'map' | 'cards' | 'split'>('map');
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<HexBlock | null>(null);
@@ -124,22 +130,40 @@ export const FactoryPlanner: React.FC = () => {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <PlanetSwitcher
           activePlanet={activePlanet}
-          onSelectPlanet={setActivePlanet}
+          onSelectPlanet={(id) => {
+            setIsSpaceView(false);
+            setActivePlanet(id);
+          }}
           planets={project.planets}
+          isSpaceActive={isSpaceView}
+          onSelectSpace={() => setIsSpaceView(true)}
+          routeCount={project.interplanetaryRoutes?.length || 0}
         />
 
         {/* Planet Quick Tag */}
-        <div className="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-950/60 px-3 py-1.5 rounded-lg border border-zinc-800">
-          <span
-            className="w-2 h-2 rounded-full"
-            style={{ backgroundColor: planetMeta.accentColor }}
-          />
-          <span className="font-semibold text-zinc-200">{planetMeta.name}:</span>
-          <span>{planetMeta.tagline}</span>
-        </div>
+        {!isSpaceView && (
+          <div className="flex items-center gap-2 text-xs text-zinc-400 bg-zinc-950/60 px-3 py-1.5 rounded-lg border border-zinc-800">
+            <span
+              className="w-2 h-2 rounded-full"
+              style={{ backgroundColor: planetMeta.accentColor }}
+            />
+            <span className="font-semibold text-zinc-200">{planetMeta.name}:</span>
+            <span>{planetMeta.tagline}</span>
+          </div>
+        )}
       </div>
 
-      {/* Planetary Overview Stats Banner */}
+      {isSpaceView ? (
+        <InterplanetaryManager
+          project={project}
+          onUpsertRoute={upsertInterplanetaryRoute}
+          onRemoveRoute={removeInterplanetaryRoute}
+          onUpsertPlatform={upsertSpacePlatform}
+          onRemovePlatform={removeSpacePlatform}
+        />
+      ) : (
+        <>
+          {/* Planetary Overview Stats Banner */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
         {/* Total Blocks */}
         <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3.5 flex items-center justify-between">
@@ -452,6 +476,8 @@ export const FactoryPlanner: React.FC = () => {
           )}
         </div>
       </div>
+      </>
+      )}
 
       {/* Modals */}
       <BlockEditorModal

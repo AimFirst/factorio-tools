@@ -166,6 +166,21 @@ export interface PlanetFactoryState {
   spaceHubs: SpaceHubNode[];
 }
 
+export interface InterplanetaryRoute {
+  id: string;
+  sourcePlanet: SolidPlanetId | 'platform';
+  targetPlanet: SolidPlanetId | 'platform';
+  sourceHubName?: string;
+  targetHubName?: string;
+  resourceId: string;
+  ratePerMinute: number;
+  weightPerItemKg: number;
+  capacityPerRocket: number;
+  launchesPerMinute: number;
+  silosRequired: number;
+  notes?: string;
+}
+
 /**
  * Complete project state encompassing all 5 solid planets and space platforms.
  */
@@ -180,6 +195,7 @@ export interface FactoryPlannerProject {
   defaultLegendaryQuality: boolean;
   planets: Record<SolidPlanetId, PlanetFactoryState>;
   spacePlatforms: SpacePlatform[];
+  interplanetaryRoutes: InterplanetaryRoute[];
 }
 
 export interface ProjectMetadata {

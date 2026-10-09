@@ -98,7 +98,14 @@ export class LocalStorageAdapter implements StorageAdapter {
       return null;
     }
     try {
-      return JSON.parse(data) as FactoryPlannerProject;
+      const parsed = JSON.parse(data) as FactoryPlannerProject;
+      if (!parsed.interplanetaryRoutes) {
+        parsed.interplanetaryRoutes = [];
+      }
+      if (!parsed.spacePlatforms) {
+        parsed.spacePlatforms = [];
+      }
+      return parsed;
     } catch (e) {
       console.error(`Failed to parse project ${id}`, e);
       return null;
@@ -154,6 +161,12 @@ export class LocalStorageAdapter implements StorageAdapter {
     const parsed = JSON.parse(json) as FactoryPlannerProject;
     if (!parsed.schemaVersion || !parsed.planets) {
       throw new Error('Invalid Factorio Planner Project JSON format.');
+    }
+    if (!parsed.interplanetaryRoutes) {
+      parsed.interplanetaryRoutes = [];
+    }
+    if (!parsed.spacePlatforms) {
+      parsed.spacePlatforms = [];
     }
     return parsed;
   }

@@ -66,6 +66,41 @@ export function calculateSiloLaunches(params: {
 }
 
 /**
+ * Sustained launch rate of a Legendary Rocket Silo in Factorio 2.1 (approx. 1 launch/min).
+ */
+export const LEGENDARY_SILO_MAX_LAUNCHES_PER_MIN = 1.0;
+
+/**
+ * Calculates rocket logistics for an interplanetary trade route in Factorio 2.1.
+ */
+export function calculateInterplanetaryRoute(params: {
+  cargoResourceId: string;
+  ratePerMinute: number;
+}): {
+  weightPerItemKg: number;
+  capacityPerRocket: number;
+  launchesPerMinute: number;
+  silosRequired: number;
+} {
+  const siloCalc = calculateSiloLaunches({
+    cargoResourceId: params.cargoResourceId,
+    ratePerMinute: params.ratePerMinute,
+  });
+
+  const silosRequired = Math.max(
+    1,
+    Math.ceil(siloCalc.launchesPerMinute / LEGENDARY_SILO_MAX_LAUNCHES_PER_MIN)
+  );
+
+  return {
+    weightPerItemKg: siloCalc.weightPerItemKg,
+    capacityPerRocket: siloCalc.capacityPerRocket,
+    launchesPerMinute: siloCalc.launchesPerMinute,
+    silosRequired,
+  };
+}
+
+/**
  * Creates a normalized BlockResourceFlow entry with calculations applied.
  */
 export function createResourceFlow(params: {

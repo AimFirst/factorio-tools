@@ -5,12 +5,18 @@ interface PlanetSwitcherProps {
   activePlanet: SolidPlanetId;
   onSelectPlanet: (planetId: SolidPlanetId) => void;
   planets: Record<SolidPlanetId, PlanetFactoryState>;
+  isSpaceActive?: boolean;
+  onSelectSpace?: () => void;
+  routeCount?: number;
 }
 
 export const PlanetSwitcher: React.FC<PlanetSwitcherProps> = ({
   activePlanet,
   onSelectPlanet,
   planets,
+  isSpaceActive = false,
+  onSelectSpace,
+  routeCount = 0,
 }) => {
   const planetList: SolidPlanetId[] = ['nauvis', 'vulcanus', 'gleba', 'fulgora', 'aquilo'];
 
@@ -19,7 +25,7 @@ export const PlanetSwitcher: React.FC<PlanetSwitcherProps> = ({
       {planetList.map((id) => {
         const meta = PLANETS_META[id];
         const state = planets[id];
-        const isActive = activePlanet === id;
+        const isActive = !isSpaceActive && activePlanet === id;
         const blockCount = state?.blocks.length || 0;
 
         return (
@@ -53,6 +59,34 @@ export const PlanetSwitcher: React.FC<PlanetSwitcherProps> = ({
           </button>
         );
       })}
+
+      {/* Divider */}
+      <div className="w-px h-6 bg-zinc-800 mx-1 shrink-0" />
+
+      {/* Space & Interplanetary Logistics Button */}
+      {onSelectSpace && (
+        <button
+          type="button"
+          onClick={onSelectSpace}
+          className={`flex items-center gap-2 px-3.5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer shrink-0 border ${
+            isSpaceActive
+              ? 'bg-purple-950/80 text-purple-200 border-purple-600 shadow-md'
+              : 'bg-transparent text-purple-400/80 hover:text-purple-300 hover:bg-purple-950/30 border-transparent'
+          }`}
+        >
+          <span className="text-sm">🛰️</span>
+          <span>Space Logistics</span>
+          <span
+            className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+              isSpaceActive
+                ? 'bg-purple-900 text-purple-200 border border-purple-700'
+                : 'bg-zinc-900/60 text-purple-400/70'
+            }`}
+          >
+            {routeCount} {routeCount === 1 ? 'route' : 'routes'}
+          </span>
+        </button>
+      )}
     </div>
   );
 };

@@ -9,6 +9,7 @@ import {
 } from '../src/tools/factory-planner/core/hex-math.ts';
 import {
   calculateSiloLaunches,
+  calculateInterplanetaryRoute,
   createResourceFlow,
 } from '../src/tools/factory-planner/core/calculations.ts';
 import { createDefaultProject } from '../src/tools/factory-planner/storage/starterProject.ts';
@@ -237,6 +238,47 @@ async function runStorageTest() {
 
   console.log(
     `✅ Test 8: Layout Optimizer passed (${opt.improvementPercent.toFixed(1)}% reduction, initial: ${opt.initialTransitCost.toFixed(1)} -> optimized: ${opt.optimizedTransitCost.toFixed(1)}).`
+  );
+}
+
+// -------------------------------------------------------------
+// Test 9: Space Age Interplanetary Logistics & Platforms
+// -------------------------------------------------------------
+{
+  // 1. Standard science route calculation
+  const sciRoute = calculateInterplanetaryRoute({
+    cargoResourceId: 'metallurgic-science-pack',
+    ratePerMinute: 1000,
+  });
+  assert.strictEqual(sciRoute.weightPerItemKg, 1.0);
+  assert.strictEqual(sciRoute.capacityPerRocket, 1000);
+  assert.strictEqual(sciRoute.launchesPerMinute, 1.0);
+  assert.strictEqual(sciRoute.silosRequired, 1);
+
+  // 2. Heavy raw resource route calculation (Iron Ore: 2.0 kg per item)
+  const heavyRoute = calculateInterplanetaryRoute({
+    cargoResourceId: 'iron-ore',
+    ratePerMinute: 2000,
+  });
+  assert.strictEqual(heavyRoute.weightPerItemKg, 2.0);
+  assert.strictEqual(heavyRoute.capacityPerRocket, 500); // 1,000 kg / 2.0 kg = 500 items/rocket
+  assert.strictEqual(heavyRoute.launchesPerMinute, 4.0); // 2000 / 500 = 4 launches/min
+  assert.strictEqual(heavyRoute.silosRequired, 4); // 4 launches / 1.0 per silo = 4 silos
+
+  // 3. Default Project Interplanetary Routes check
+  const project = createDefaultProject();
+  assert(project.interplanetaryRoutes && project.interplanetaryRoutes.length >= 5);
+  const nauvisRoutes = project.interplanetaryRoutes.filter(r => r.targetPlanet === 'nauvis');
+  assert(nauvisRoutes.length >= 5, 'Must contain standard 5 science pack routes targeting Nauvis');
+
+  // 4. Default Space Platform check
+  assert(project.spacePlatforms && project.spacePlatforms.length >= 1);
+  const platform = project.spacePlatforms[0];
+  assert.strictEqual(platform.currentOrbit, 'nauvis');
+  assert(platform.producedScience.some(s => s.resourceId === 'space-science-pack'));
+
+  console.log(
+    `✅ Test 9: Interplanetary Routes & Space Platforms passed (${project.interplanetaryRoutes.length} trade routes, ${project.spacePlatforms.length} space platform).`
   );
 }
 
