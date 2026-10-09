@@ -238,7 +238,7 @@ The implementation is broken down into structured phases:
 | **Phase 1** | **Data Models & Storage Engine** | Factorio 2.1 schemas (`types.ts`), `StorageAdapter` interface, `LocalStorageAdapter`, JSON import/export, starter Nauvis factory. | Completed |
 | **Phase 2** | **Enhanced Block Editor & Calculator** | Input & Output resource table, train trips/min calculation, bay requirements, legendary quality toggles, Station Allocator linking. | Completed |
 | **Phase 3** | **Interactive Hex Grid Canvas** | SVG/Canvas renderer for horizontal-topped hexagons, pan/zoom controls, block placement/removal, coordinate tooltip. | Completed |
-| **Phase 4** | **Traffic Flow Graph & Distance Optimizer** | Flow reconciliation engine, inter-block train frequency matrices, visual flow arcs/heatmaps, Simulated Annealing placement solver. | Pending |
+| **Phase 4** | **Traffic Flow Graph & Distance Optimizer** | Flow reconciliation engine, inter-block train frequency matrices, visual flow arcs/heatmaps, Simulated Annealing placement solver. | Completed |
 | **Phase 5** | **Space Age Multi-Planet & Legendary Silo System** | 5 Solid Planets switcher, Space Platforms orbital hub, Legendary Rocket Silo math (2.5x speed, 1000kg payloads), interplanetary routes. | Pending |
 | **Phase 6** | **Polish, Tool Registry & Integration** | Register `factory-planner` in `registry.ts`, project manager UI, URL permalink sharing, responsive design polish. | Pending |
 | **Phase 7** | **Cloud Cross-Device Sync (Future)** | Supabase / GitHub Gist / Firebase adapter implementation of `StorageAdapter`. | Planned |

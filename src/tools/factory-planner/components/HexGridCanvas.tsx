@@ -10,6 +10,9 @@ import {
   PackageOpen,
   ArrowRight,
   Move,
+  Sparkles,
+  Eye,
+  EyeOff,
 } from 'lucide-react';
 import { FactorioIcon } from '../../../components/factorio/FactorioIcon';
 import type { HexBlock, HexCoordinates, RawIngressNode, SpaceHubNode } from '../types.ts';
@@ -19,6 +22,8 @@ import {
   getHexPolygonPoints,
   calculateBoundingHexGrid,
 } from '../core/hex-math.ts';
+import { calculatePlanetTraffic, type TrafficRoute } from '../core/traffic-engine.ts';
+import { OptimizationModal } from './OptimizationModal.tsx';
 
 interface HexGridCanvasProps {
   blocks: HexBlock[];
@@ -52,6 +57,14 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
   const [selectedBlockId, setSelectedBlockId] = useState<string | null>(null);
   const [movingBlockId, setMovingBlockId] = useState<string | null>(null);
   const [unplacedDrawerOpen, setUnplacedDrawerOpen] = useState(false);
+  const [showTrafficLines, setShowTrafficLines] = useState(true);
+  const [optimizationOpen, setOptimizationOpen] = useState(false);
+  const [hoveredRoute, setHoveredRoute] = useState<TrafficRoute | null>(null);
+
+  // Material Flow & Train Traffic calculations
+  const trafficReport = useMemo(() => {
+    return calculatePlanetTraffic({ blocks, rawIngressNodes, spaceHubs });
+  }, [blocks, rawIngressNodes, spaceHubs]);
 
 
 
@@ -385,45 +398,145 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
               </g>
             );
           })}
+
+          {/* Traffic Flow Routes Layer (Curved Dashed Lines) */}
+          {showTrafficLines && (
+            <g className="traffic-routes-layer">
+              {trafficReport.routes.map((route) => {
+                if (!route.sourceCoords || !route.targetCoords) return null;
+                const p1 = hexToPixel(route.sourceCoords, HEX_RADIUS);
+                const p2 = hexToPixel(route.targetCoords, HEX_RADIUS);
+
+                const dx = p2.x - p1.x;
+                const dy = p2.y - p1.y;
+                const dist = Math.hypot(dx, dy) || 1;
+                const curvature = 28;
+                const cx = (p1.x + p2.x) / 2 - (dy / dist) * curvature;
+                const cy = (p1.y + p2.y) / 2 + (dx / dist) * curvature;
+
+                const strokeWidth = Math.min(5.5, Math.max(2, route.trainsPerMinute * 1.6));
+                const strokeColor = route.isFluid
+                  ? '#06b6d4'
+                  : route.resourceId.includes('science')
+                  ? '#c084fc'
+                  : route.resourceId.includes('circuit')
+                  ? '#38bdf8'
+                  : '#f59e0b';
+
+                const isHovered = hoveredRoute?.id === route.id;
+
+                return (
+                  <g key={route.id} className="cursor-pointer">
+                    {/* Background glow path */}
+                    <path
+                      d={`M ${p1.x} ${p1.y} Q ${cx} ${cy} ${p2.x} ${p2.y}`}
+                      fill="none"
+                      stroke={strokeColor}
+                      strokeWidth={isHovered ? strokeWidth + 4 : strokeWidth + 2}
+                      strokeOpacity={isHovered ? 0.6 : 0.25}
+                    />
+                    {/* Animated dashed main path */}
+                    <path
+                      d={`M ${p1.x} ${p1.y} Q ${cx} ${cy} ${p2.x} ${p2.y}`}
+                      fill="none"
+                      stroke={isHovered ? '#ffffff' : strokeColor}
+                      strokeWidth={strokeWidth}
+                      strokeDasharray="8,5"
+                      strokeLinecap="round"
+                      strokeOpacity={0.9}
+                      onMouseEnter={() => setHoveredRoute(route)}
+                      onMouseLeave={() => setHoveredRoute(null)}
+                      className="transition-colors"
+                    />
+                  </g>
+                );
+              })}
+            </g>
+          )}
         </g>
       </svg>
 
       {/* Floating Canvas Controls (Top-Right) */}
-      <div className="absolute top-4 right-4 flex items-center gap-1.5 bg-zinc-950/90 border border-zinc-800 rounded-xl p-1.5 shadow-xl backdrop-blur-md">
+      <div className="absolute top-4 right-4 flex items-center gap-2">
+        {/* Optimize Layout Button */}
         <button
           type="button"
-          onClick={() => setZoom((z) => Math.min(2.5, z * 1.2))}
-          className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-lg transition cursor-pointer"
-          title="Zoom In"
+          onClick={() => setOptimizationOpen(true)}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-gradient-to-r from-orange-600 to-amber-600 hover:from-orange-500 hover:to-amber-500 text-white rounded-xl text-xs font-semibold shadow-xl shadow-orange-600/20 transition cursor-pointer"
+          title="Run Simulated Annealing optimizer to minimize train travel distance"
         >
-          <ZoomIn className="w-4 h-4" />
+          <Sparkles className="w-3.5 h-3.5" />
+          <span>Optimize Layout</span>
         </button>
-        <button
-          type="button"
-          onClick={() => setZoom((z) => Math.max(0.4, z * 0.8))}
-          className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-lg transition cursor-pointer"
-          title="Zoom Out"
-        >
-          <ZoomOut className="w-4 h-4" />
-        </button>
-        <button
-          type="button"
-          onClick={handleResetView}
-          className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-lg transition cursor-pointer"
-          title="Reset View"
-        >
-          <Crosshair className="w-4 h-4" />
-        </button>
+
+        {/* Floating Tools Toolbar */}
+        <div className="flex items-center gap-1.5 bg-zinc-950/90 border border-zinc-800 rounded-xl p-1.5 shadow-xl backdrop-blur-md">
+          {/* Toggle Traffic Lines */}
+          <button
+            type="button"
+            onClick={() => setShowTrafficLines((v) => !v)}
+            className={`p-1.5 rounded-lg transition cursor-pointer ${
+              showTrafficLines
+                ? 'text-orange-400 bg-orange-950/50'
+                : 'text-zinc-500 hover:text-zinc-300'
+            }`}
+            title={showTrafficLines ? 'Hide Traffic Lines' : 'Show Traffic Lines'}
+          >
+            {showTrafficLines ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
+          </button>
+
+          <div className="h-4 w-px bg-zinc-800" />
+
+          <button
+            type="button"
+            onClick={() => setZoom((z) => Math.min(2.5, z * 1.2))}
+            className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-lg transition cursor-pointer"
+            title="Zoom In"
+          >
+            <ZoomIn className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={() => setZoom((z) => Math.max(0.4, z * 0.8))}
+            className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-lg transition cursor-pointer"
+            title="Zoom Out"
+          >
+            <ZoomOut className="w-4 h-4" />
+          </button>
+          <button
+            type="button"
+            onClick={handleResetView}
+            className="p-1.5 text-zinc-400 hover:text-zinc-100 hover:bg-zinc-800 rounded-lg transition cursor-pointer"
+            title="Reset View"
+          >
+            <Crosshair className="w-4 h-4" />
+          </button>
+        </div>
       </div>
 
-      {/* Top-Left Banner: Network Layout Summary */}
+      {/* Top-Left Banner: Network Layout & Transit Cost Summary */}
       <div className="absolute top-4 left-4 flex items-center gap-3 bg-zinc-950/90 border border-zinc-800 rounded-xl px-3.5 py-2 shadow-xl backdrop-blur-md text-xs">
         <div className="flex items-center gap-1.5">
           <Layers className="w-4 h-4 text-orange-400" />
           <span className="text-zinc-300 font-semibold">
-            {allPlacedCoords.length} Placed on Grid
+            {allPlacedCoords.length} Placed
           </span>
         </div>
+
+        <div className="flex items-center gap-1.5 pl-3 border-l border-zinc-800 font-mono">
+          <Train className="w-3.5 h-3.5 text-orange-400" />
+          <span className="text-zinc-500">Transit:</span>
+          <span className="text-orange-400 font-bold">
+            {trafficReport.totalTransitCost.toFixed(1)}
+          </span>
+          <span className="text-zinc-500 text-[10px]">tr·hops/m</span>
+        </div>
+
+        {trafficReport.routes.length > 0 && (
+          <div className="flex items-center gap-1 text-[11px] text-zinc-400 pl-2">
+            <span>({trafficReport.routes.length} corridors)</span>
+          </div>
+        )}
 
         {unplacedBlocks.length > 0 && (
           <button
@@ -594,6 +707,43 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
           </div>
         </div>
       )}
+
+      {/* Route Hover Tooltip */}
+      {hoveredRoute && (
+        <div className="absolute bottom-4 right-4 bg-zinc-950/95 border border-zinc-700 rounded-xl px-3.5 py-2 text-xs shadow-2xl backdrop-blur-md pointer-events-none animate-fade-in flex items-center gap-2.5">
+          <FactorioIcon id={hoveredRoute.resourceId} size={20} />
+          <div>
+            <div className="font-semibold text-zinc-100 flex items-center gap-1.5">
+              <span>{hoveredRoute.resourceName}</span>
+              <span className="text-[10px] text-zinc-400 font-mono">
+                ({hoveredRoute.trainsPerMinute.toFixed(2)} tr/m)
+              </span>
+            </div>
+            <div className="text-[11px] text-zinc-400 flex items-center gap-1">
+              <span>{hoveredRoute.sourceName}</span>
+              <span>→</span>
+              <span>{hoveredRoute.targetName}</span>
+              <span className="text-orange-400 font-mono ml-1 font-bold">
+                ({hoveredRoute.hexDistance} hex {hoveredRoute.hexDistance === 1 ? 'hop' : 'hops'})
+              </span>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* Optimization Modal */}
+      <OptimizationModal
+        isOpen={optimizationOpen}
+        onClose={() => setOptimizationOpen(false)}
+        onApply={(newPlacements) => {
+          for (const [id, coords] of newPlacements.entries()) {
+            onMoveBlock(id, coords);
+          }
+        }}
+        blocks={blocks}
+        rawIngressNodes={rawIngressNodes}
+        spaceHubs={spaceHubs}
+      />
     </div>
   );
 };

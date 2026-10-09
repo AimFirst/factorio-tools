@@ -13,6 +13,8 @@ import {
 } from '../src/tools/factory-planner/core/calculations.ts';
 import { createDefaultProject } from '../src/tools/factory-planner/storage/starterProject.ts';
 import { LocalStorageAdapter } from '../src/tools/factory-planner/storage/LocalStorageAdapter.ts';
+import { calculatePlanetTraffic } from '../src/tools/factory-planner/core/traffic-engine.ts';
+import { optimizeBlockLayout } from '../src/tools/factory-planner/core/optimizer.ts';
 
 console.log('🧪 Testing Factorio 2.1 Hexagonal Factory Planner Engine...\n');
 
@@ -168,8 +170,78 @@ async function runStorageTest() {
   console.log('✅ Test 6: StorageAdapter Save/Load/Export/Import Roundtrip passed.');
 }
 
+// -------------------------------------------------------------
+// Test 7: Traffic Flow Reconciliation & Route Generation
+// -------------------------------------------------------------
+{
+  const starter = createDefaultProject();
+  const nauvis = starter.planets.nauvis;
+
+  const traffic = calculatePlanetTraffic({
+    blocks: nauvis.blocks,
+    rawIngressNodes: nauvis.rawIngressNodes,
+    spaceHubs: nauvis.spaceHubs,
+  });
+
+  assert(traffic.routes.length >= 4, `Expected >= 4 routes, got ${traffic.routes.length}`);
+  assert(traffic.totalTrainTripsPerMin > 0, 'Total train trips per min should be > 0');
+  assert(traffic.totalTransitCost > 0, 'Total transit cost should be > 0');
+
+  // Verify an iron flow route exists
+  const ironRoute = traffic.routes.find((r) => r.resourceId === 'iron-plate');
+  assert(ironRoute, 'Expected iron-plate traffic route to exist');
+  assert(ironRoute.trainsPerMinute > 0, 'Iron plate train trips should be > 0');
+
+  console.log(
+    `✅ Test 7: Traffic Engine passed (${traffic.routes.length} corridors, ${traffic.totalTrainTripsPerMin.toFixed(2)} trains/m, cost: ${traffic.totalTransitCost.toFixed(2)}).`
+  );
+}
+
+// -------------------------------------------------------------
+// Test 8: Simulated Annealing Layout Optimizer
+// -------------------------------------------------------------
+{
+  const starter = createDefaultProject();
+  const nauvis = starter.planets.nauvis;
+
+  // Deliberately scatter blocks far away
+  const scatteredBlocks = nauvis.blocks.map((b, i) => ({
+    ...b,
+    coordinates: { q: i * 8, r: i * 8 },
+  }));
+
+  const opt = optimizeBlockLayout({
+    blocks: scatteredBlocks,
+    rawIngressNodes: nauvis.rawIngressNodes,
+    spaceHubs: nauvis.spaceHubs,
+    options: {
+      iterations: 3000,
+      temperature: 50,
+      coolingRate: 0.998,
+    },
+  });
+
+  assert(opt.optimizedPlacements.size === scatteredBlocks.length, 'All blocks must be placed');
+  assert(
+    opt.optimizedTransitCost <= opt.initialTransitCost,
+    `Optimized cost (${opt.optimizedTransitCost}) should be <= initial cost (${opt.initialTransitCost})`
+  );
+
+  // Check no overlapping coordinates
+  const placedCoords = new Set<string>();
+  for (const coords of opt.optimizedPlacements.values()) {
+    const k = `${coords.q},${coords.r}`;
+    assert(!placedCoords.has(k), `Duplicate hex coordinate found: ${k}`);
+    placedCoords.add(k);
+  }
+
+  console.log(
+    `✅ Test 8: Layout Optimizer passed (${opt.improvementPercent.toFixed(1)}% reduction, initial: ${opt.initialTransitCost.toFixed(1)} -> optimized: ${opt.optimizedTransitCost.toFixed(1)}).`
+  );
+}
+
 runStorageTest().then(() => {
-  console.log('\n🎉 ALL FACTORY PLANNER PHASE 1 TESTS PASSED SUCCESSFULLY!');
+  console.log('\n🎉 ALL FACTORY PLANNER TESTS PASSED SUCCESSFULLY!');
 }).catch((err) => {
   console.error('❌ Test failed:', err);
   process.exit(1);
