@@ -1,8 +1,18 @@
-import { Train, Gauge, Globe2 } from 'lucide-react';
+import { Train, Gauge, Globe2, Layers } from 'lucide-react';
 import type { ToolDefinition } from '../types';
 import { StationAllocator } from './station-allocator/StationAllocator';
+import { FactoryPlanner } from './factory-planner/FactoryPlanner';
 
 export const TOOLS: ToolDefinition[] = [
+  {
+    id: 'factory-planner',
+    name: 'Multi-World Factory Planner',
+    category: 'production',
+    description: 'Plan hexagonal rail blocks across Nauvis, Vulcanus, Gleba, Fulgora, and Aquilo with train traffic and rocket logistics.',
+    icon: Layers,
+    badge: 'Factorio 2.1',
+    component: FactoryPlanner,
+  },
   {
     id: 'station-allocator',
     name: 'Train Station Allocator',

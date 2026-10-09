@@ -1,0 +1,58 @@
+import React from 'react';
+import { PLANETS_META, type SolidPlanetId, type PlanetFactoryState } from '../types';
+
+interface PlanetSwitcherProps {
+  activePlanet: SolidPlanetId;
+  onSelectPlanet: (planetId: SolidPlanetId) => void;
+  planets: Record<SolidPlanetId, PlanetFactoryState>;
+}
+
+export const PlanetSwitcher: React.FC<PlanetSwitcherProps> = ({
+  activePlanet,
+  onSelectPlanet,
+  planets,
+}) => {
+  const planetList: SolidPlanetId[] = ['nauvis', 'vulcanus', 'gleba', 'fulgora', 'aquilo'];
+
+  return (
+    <div className="flex items-center gap-2 p-1.5 bg-zinc-950/80 border border-zinc-800 rounded-xl overflow-x-auto">
+      {planetList.map((id) => {
+        const meta = PLANETS_META[id];
+        const state = planets[id];
+        const isActive = activePlanet === id;
+        const blockCount = state?.blocks.length || 0;
+
+        return (
+          <button
+            key={id}
+            type="button"
+            onClick={() => onSelectPlanet(id)}
+            className={`flex items-center gap-2.5 px-3.5 py-2 rounded-lg text-xs font-semibold transition cursor-pointer shrink-0 border ${
+              isActive
+                ? 'bg-zinc-800 text-white shadow-md'
+                : 'bg-transparent text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border-transparent'
+            }`}
+            style={{
+              borderColor: isActive ? meta.accentColor : 'transparent',
+            }}
+          >
+            <span
+              className="w-2.5 h-2.5 rounded-full shadow-xs"
+              style={{ backgroundColor: meta.accentColor }}
+            />
+            <span className="capitalize">{meta.name}</span>
+            <span
+              className={`px-1.5 py-0.2 rounded-full text-[10px] font-mono ${
+                isActive
+                  ? 'bg-zinc-900 text-zinc-200 border border-zinc-700'
+                  : 'bg-zinc-900/60 text-zinc-500'
+              }`}
+            >
+              {blockCount} {blockCount === 1 ? 'block' : 'blocks'}
+            </span>
+          </button>
+        );
+      })}
+    </div>
+  );
+};

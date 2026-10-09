@@ -9,7 +9,7 @@
     "lint": "oxlint",
     "preview": "vite preview",
     "sync-data": "node scripts/sync-factorio-data.mjs",
-    "test": "node --experimental-strip-types scripts/test-allocator.ts"
+    "test": "node --experimental-strip-types scripts/test-allocator.ts && node --experimental-strip-types scripts/test-factory-planner.ts"
   },
   "dependencies": {
     "clsx": "^2.1.1",

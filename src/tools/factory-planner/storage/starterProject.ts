@@ -1,0 +1,319 @@
+/**
+ * Starter Factory Project for Factorio 2.1 (Space Age)
+ * Pre-populates realistic Nauvis blocks and planetary scaffolding.
+ */
+
+import type { FactoryPlannerProject, SolidPlanetId } from '../types.ts';
+import { createResourceFlow } from '../core/calculations.ts';
+
+export function createDefaultProject(name: string = 'Space Age 1000 SPM Megabase'): FactoryPlannerProject {
+  const now = new Date().toISOString();
+
+  // Pre-configured Nauvis Blocks
+  const ironSmelting = {
+    id: 'block-nauvis-iron-smelting',
+    planetId: 'nauvis' as SolidPlanetId,
+    name: 'Iron Plate Smelting',
+    iconId: 'iron-plate',
+    coordinates: { q: 0, r: 0 },
+    blueprintMultiplier: 1,
+    inputs: [
+      createResourceFlow({
+        id: 'iron-ore',
+        name: 'Iron Ore',
+        isFluid: false,
+        ratePerMinute: 24000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 2,
+      }),
+    ],
+    outputs: [
+      createResourceFlow({
+        id: 'iron-plate',
+        name: 'Iron Plate',
+        isFluid: false,
+        ratePerMinute: 24000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 2,
+      }),
+    ],
+    notes: 'Direct electric furnace foundry array',
+  };
+
+  const copperSmelting = {
+    id: 'block-nauvis-copper-smelting',
+    planetId: 'nauvis' as SolidPlanetId,
+    name: 'Copper Plate Smelting',
+    iconId: 'copper-plate',
+    coordinates: { q: 1, r: -1 }, // North-East neighbor of (0,0)
+    blueprintMultiplier: 1,
+    inputs: [
+      createResourceFlow({
+        id: 'copper-ore',
+        name: 'Copper Ore',
+        isFluid: false,
+        ratePerMinute: 24000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 2,
+      }),
+    ],
+    outputs: [
+      createResourceFlow({
+        id: 'copper-plate',
+        name: 'Copper Plate',
+        isFluid: false,
+        ratePerMinute: 24000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 2,
+      }),
+    ],
+    notes: 'Smelting block dedicated to circuit and mall supply',
+  };
+
+  const electronicCircuits = {
+    id: 'block-nauvis-green-circuits',
+    planetId: 'nauvis' as SolidPlanetId,
+    name: 'Electronic Circuits (Green)',
+    iconId: 'electronic-circuit',
+    coordinates: { q: 1, r: 0 }, // South-East neighbor of (0,0)
+    blueprintMultiplier: 1,
+    inputs: [
+      createResourceFlow({
+        id: 'iron-plate',
+        name: 'Iron Plate',
+        isFluid: false,
+        ratePerMinute: 12000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+      createResourceFlow({
+        id: 'copper-plate',
+        name: 'Copper Plate',
+        isFluid: false,
+        ratePerMinute: 18000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 2,
+      }),
+    ],
+    outputs: [
+      createResourceFlow({
+        id: 'electronic-circuit',
+        name: 'Electronic Circuit',
+        isFluid: false,
+        ratePerMinute: 12000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 2,
+      }),
+    ],
+    notes: 'Direct-insertion wire to green circuit layout',
+  };
+
+  const advancedCircuits = {
+    id: 'block-nauvis-red-circuits',
+    planetId: 'nauvis' as SolidPlanetId,
+    name: 'Advanced Circuits (Red)',
+    iconId: 'advanced-circuit',
+    coordinates: { q: 2, r: 0 }, // Adjacent to green circuits
+    blueprintMultiplier: 1,
+    inputs: [
+      createResourceFlow({
+        id: 'electronic-circuit',
+        name: 'Electronic Circuit',
+        isFluid: false,
+        ratePerMinute: 4000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+      createResourceFlow({
+        id: 'copper-plate',
+        name: 'Copper Plate',
+        isFluid: false,
+        ratePerMinute: 8000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+      createResourceFlow({
+        id: 'plastic-bar',
+        name: 'Plastic Bar',
+        isFluid: false,
+        ratePerMinute: 4000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+    ],
+    outputs: [
+      createResourceFlow({
+        id: 'advanced-circuit',
+        name: 'Advanced Circuit',
+        isFluid: false,
+        ratePerMinute: 2000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+    ],
+    notes: 'Plastic delivered via rail from chemical refining',
+  };
+
+  const scienceLab = {
+    id: 'block-nauvis-science-nexus',
+    planetId: 'nauvis' as SolidPlanetId,
+    name: 'Central Lab Complex',
+    iconId: 'automation-science-pack',
+    coordinates: { q: 0, r: 1 }, // South of (0,0)
+    blueprintMultiplier: 1,
+    inputs: [
+      createResourceFlow({
+        id: 'automation-science-pack',
+        name: 'Automation Science Pack',
+        isFluid: false,
+        ratePerMinute: 1000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+      createResourceFlow({
+        id: 'logistic-science-pack',
+        name: 'Logistic Science Pack',
+        isFluid: false,
+        ratePerMinute: 1000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+      createResourceFlow({
+        id: 'space-science-pack',
+        name: 'Space Science Pack',
+        isFluid: false,
+        ratePerMinute: 1000,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+    ],
+    outputs: [],
+    notes: 'Central beaconed laboratory facility consuming all science packs',
+  };
+
+  return {
+    schemaVersion: '2.1.0',
+    id: 'default-space-age-project',
+    name,
+    createdAt: now,
+    updatedAt: now,
+    gameVersion: '2.1',
+    defaultTrainWagons: 2,
+    defaultLegendaryQuality: false,
+    planets: {
+      nauvis: {
+        planetId: 'nauvis',
+        name: 'Nauvis',
+        blocks: [ironSmelting, copperSmelting, electronicCircuits, advancedCircuits, scienceLab],
+        rawIngressNodes: [
+          {
+            id: 'raw-iron-outpost',
+            resourceId: 'iron-ore',
+            planetId: 'nauvis',
+            name: 'North Iron Patch Depots',
+            ratePerMinute: 24000,
+            coordinates: { q: -1, r: 0 },
+          },
+          {
+            id: 'raw-copper-outpost',
+            resourceId: 'copper-ore',
+            planetId: 'nauvis',
+            name: 'East Copper Patch Depots',
+            ratePerMinute: 24000,
+            coordinates: { q: 2, r: -2 },
+          },
+          {
+            id: 'raw-oil-outpost',
+            resourceId: 'crude-oil',
+            planetId: 'nauvis',
+            name: 'Deep Oil Wells',
+            ratePerMinute: 15000,
+            coordinates: { q: 1, r: 2 },
+          },
+        ],
+        spaceHubs: [
+          {
+            id: 'hub-nauvis-silo-main',
+            type: 'rocket-silo',
+            planetId: 'nauvis',
+            name: 'Legendary Rocket Silo Alpha',
+            coordinates: { q: -1, r: 2 },
+            isLegendarySilo: true,
+            targetPlatformOrPlanet: 'Nauvis Orbital Hub',
+            cargoResourceId: 'space-science-pack',
+            ratePerMinute: 1000,
+            launchesPerMinute: 1.0,
+          },
+          {
+            id: 'hub-nauvis-landing-pad',
+            type: 'cargo-landing-pad',
+            planetId: 'nauvis',
+            name: 'Orbital Cargo Landing Pad',
+            coordinates: { q: 0, r: 2 },
+            isLegendarySilo: true,
+            targetPlatformOrPlanet: 'Nauvis Orbital Hub',
+            cargoResourceId: 'space-science-pack',
+            ratePerMinute: 1000,
+            launchesPerMinute: 1.0,
+          },
+        ],
+      },
+      vulcanus: {
+        planetId: 'vulcanus',
+        name: 'Vulcanus',
+        blocks: [],
+        rawIngressNodes: [],
+        spaceHubs: [],
+      },
+      gleba: {
+        planetId: 'gleba',
+        name: 'Gleba',
+        blocks: [],
+        rawIngressNodes: [],
+        spaceHubs: [],
+      },
+      fulgora: {
+        planetId: 'fulgora',
+        name: 'Fulgora',
+        blocks: [],
+        rawIngressNodes: [],
+        spaceHubs: [],
+      },
+      aquilo: {
+        planetId: 'aquilo',
+        name: 'Aquilo',
+        blocks: [],
+        rawIngressNodes: [],
+        spaceHubs: [],
+      },
+    },
+    spacePlatforms: [
+      {
+        id: 'platform-nauvis-orbital-1',
+        name: 'Nauvis Orbital Staging Platform',
+        currentOrbit: 'nauvis',
+        producedScience: [
+          {
+            resourceId: 'space-science-pack',
+            ratePerMinute: 1000,
+          },
+        ],
+        notes: 'Processes space asteroids in orbit and drops space science packs down to Nauvis Cargo Landing Pad.',
+      },
+    ],
+  };
+}
