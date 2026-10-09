@@ -1,5 +1,16 @@
 import React, { useRef } from 'react';
-import { Plus, Download, Upload, RotateCcw, Check, Loader2, Rocket, Mountain } from 'lucide-react';
+import {
+  Plus,
+  Download,
+  Upload,
+  RotateCcw,
+  Check,
+  Loader2,
+  Rocket,
+  Mountain,
+  FolderKanban,
+  Share2,
+} from 'lucide-react';
 import type { FactoryPlannerProject, SolidPlanetId } from '../types';
 
 interface ProjectActionsBarProps {
@@ -12,6 +23,8 @@ interface ProjectActionsBarProps {
   onExportJson: () => void;
   onImportJson: (json: string) => void;
   onResetStarter: () => void;
+  onOpenProjectManager: () => void;
+  onShareUrl: () => void;
 }
 
 export const ProjectActionsBar: React.FC<ProjectActionsBarProps> = ({
@@ -24,6 +37,8 @@ export const ProjectActionsBar: React.FC<ProjectActionsBarProps> = ({
   onExportJson,
   onImportJson,
   onResetStarter,
+  onOpenProjectManager,
+  onShareUrl,
 }) => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -115,6 +130,28 @@ export const ProjectActionsBar: React.FC<ProjectActionsBarProps> = ({
         </button>
 
         <div className="h-5 w-px bg-zinc-800 mx-1" />
+
+        {/* Projects & Presets */}
+        <button
+          type="button"
+          onClick={onOpenProjectManager}
+          className="flex items-center gap-1.5 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-orange-400 border border-orange-900/50 rounded-lg text-xs font-semibold transition cursor-pointer"
+          title="Open Project Manager and Factory Presets"
+        >
+          <FolderKanban className="w-3.5 h-3.5" />
+          Projects & Presets
+        </button>
+
+        {/* Share Permalink */}
+        <button
+          type="button"
+          onClick={onShareUrl}
+          className="flex items-center gap-1 px-2.5 py-1.5 bg-purple-950/40 hover:bg-purple-900/50 text-purple-300 border border-purple-800/50 rounded-lg text-xs font-medium transition cursor-pointer"
+          title="Share Project Permalink URL"
+        >
+          <Share2 className="w-3.5 h-3.5" />
+          Share
+        </button>
 
         {/* Export JSON */}
         <button

@@ -24,6 +24,35 @@ export const BlockCard: React.FC<BlockCardProps> = ({
 
   const borderColor = block.color || '#f97316';
 
+  const handleOpenInAllocator = () => {
+    const totalBays =
+      block.inputs.reduce((sum, f) => sum + f.allocatedBays, 0) || Math.max(4, block.inputs.length);
+    const cfg = {
+      name: `${block.name} (City Block)`,
+      blueprintMultiplier: block.blueprintMultiplier || 1,
+      totalStations: totalBays,
+      trainWagons: block.inputs[0]?.wagonCount || 2,
+      isLegendaryQuality: block.inputs[0]?.isLegendary || false,
+      beltStackLevel: 4,
+      allocationMode: 'train-throughput' as const,
+      entries: block.inputs.map((inp) => ({
+        id: inp.id,
+        name: inp.name,
+        isFluid: inp.isFluid,
+        inputRate: inp.ratePerMinute,
+        unit: 'per-min' as const,
+        beltType: 'turbo' as const,
+        lockStations: null,
+      })),
+    };
+    try {
+      window.localStorage.setItem('factorio_shared_block_for_allocator', JSON.stringify(cfg));
+      window.dispatchEvent(new CustomEvent('switch-tool', { detail: { toolId: 'station-allocator' } }));
+    } catch (e) {
+      console.error('Failed to link to station allocator', e);
+    }
+  };
+
   return (
     <div
       className="bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 rounded-xl p-4 flex flex-col justify-between transition-all shadow-md group relative overflow-hidden"
@@ -64,6 +93,14 @@ export const BlockCard: React.FC<BlockCardProps> = ({
 
           {/* Quick Actions */}
           <div className="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition">
+            <button
+              type="button"
+              onClick={handleOpenInAllocator}
+              className="p-1.5 rounded-lg text-zinc-400 hover:text-cyan-400 hover:bg-zinc-800 transition cursor-pointer"
+              title="Analyze Station Bays in Train Allocator"
+            >
+              <Train className="w-4 h-4" />
+            </button>
             <button
               type="button"
               onClick={() => onEdit(block)}

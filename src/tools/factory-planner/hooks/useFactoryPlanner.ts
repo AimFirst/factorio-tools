@@ -30,6 +30,28 @@ export function useFactoryPlanner() {
     async function init() {
       setIsLoading(true);
       try {
+        // Check for shareable URL permalink in hash: #project=<base64>
+        if (typeof window !== 'undefined' && window.location.hash.startsWith('#project=')) {
+          const encoded = window.location.hash.substring(9);
+          try {
+            const json = decodeURIComponent(
+              Array.prototype.map
+                .call(atob(encoded), (c: string) => '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2))
+                .join('')
+            );
+            const parsed = defaultStorage.importJson(json);
+            parsed.id = `factory-shared-${Date.now()}`;
+            await defaultStorage.saveProject(parsed);
+            if (isMounted) {
+              setProject(parsed);
+            }
+            window.history.replaceState(null, '', window.location.pathname);
+            return;
+          } catch (e) {
+            console.error('Failed to parse project from URL hash', e);
+          }
+        }
+
         const loaded = await defaultStorage.getOrCreateInitialProject();
         if (isMounted) {
           setProject(loaded);
@@ -325,6 +347,57 @@ export function useFactoryPlanner() {
     []
   );
 
+  // Project Lifecycle Operations
+  const selectProject = useCallback(
+    async (projectId: string) => {
+      const loaded = await defaultStorage.loadProject(projectId);
+      if (loaded) {
+        setProject(loaded);
+        setActivePlanet('nauvis');
+      }
+    },
+    []
+  );
+
+  const deleteProject = useCallback(
+    async (projectId: string) => {
+      await defaultStorage.deleteProject(projectId);
+      if (project?.id === projectId) {
+        const next = await defaultStorage.getOrCreateInitialProject();
+        setProject(next);
+        setActivePlanet('nauvis');
+      }
+    },
+    [project]
+  );
+
+  const duplicateProject = useCallback(
+    async () => {
+      if (!project) return;
+      const clone: FactoryPlannerProject = {
+        ...JSON.parse(JSON.stringify(project)),
+        id: `factory-clone-${Date.now()}`,
+        name: `${project.name} (Copy)`,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+      await defaultStorage.saveProject(clone);
+      setProject(clone);
+    },
+    [project]
+  );
+
+  const renameProject = useCallback(
+    (newName: string) => {
+      updateProject((prev) => ({
+        ...prev,
+        name: newName,
+      }));
+    },
+    [updateProject]
+  );
+
+
   // Export JSON
   const exportProjectJson = useCallback(() => {
     if (!project) return '';
@@ -362,6 +435,10 @@ export function useFactoryPlanner() {
     upsertSpacePlatform,
     removeSpacePlatform,
     createNewProject,
+    selectProject,
+    deleteProject,
+    duplicateProject,
+    renameProject,
     exportProjectJson,
     importProjectJson,
     updateProject,

@@ -16,6 +16,7 @@ import { createDefaultProject } from '../src/tools/factory-planner/storage/start
 import { LocalStorageAdapter } from '../src/tools/factory-planner/storage/LocalStorageAdapter.ts';
 import { calculatePlanetTraffic } from '../src/tools/factory-planner/core/traffic-engine.ts';
 import { optimizeBlockLayout } from '../src/tools/factory-planner/core/optimizer.ts';
+import { FACTORY_PRESETS } from '../src/tools/factory-planner/presets/presetLibraries.ts';
 
 console.log('🧪 Testing Factorio 2.1 Hexagonal Factory Planner Engine...\n');
 
@@ -279,6 +280,36 @@ async function runStorageTest() {
 
   console.log(
     `✅ Test 9: Interplanetary Routes & Space Platforms passed (${project.interplanetaryRoutes.length} trade routes, ${project.spacePlatforms.length} space platform).`
+  );
+}
+
+// -------------------------------------------------------------
+// Test 10: Factory Presets Library & URL Hash Serialization
+// -------------------------------------------------------------
+{
+  assert(FACTORY_PRESETS.length >= 3, 'Must contain at least 3 curated factory presets');
+
+  for (const preset of FACTORY_PRESETS) {
+    const p = preset.createProject();
+    assert(p.name, `Preset ${preset.id} must have a name`);
+    assert(p.planets, `Preset ${preset.id} must have planets`);
+    assert(p.gameVersion === '2.1', `Preset ${preset.id} must target Factorio 2.1`);
+  }
+
+  // Test URL Permalink Base64 encode and decode
+  const original = createDefaultProject('Permalink Test');
+  const jsonStr = JSON.stringify(original);
+  const base64Encoded = Buffer.from(jsonStr).toString('base64');
+
+  // Decode back
+  const decodedJsonStr = Buffer.from(base64Encoded, 'base64').toString('utf8');
+  const parsed = JSON.parse(decodedJsonStr);
+
+  assert.strictEqual(parsed.name, 'Permalink Test');
+  assert.strictEqual(parsed.planets.nauvis.blocks.length, original.planets.nauvis.blocks.length);
+
+  console.log(
+    `✅ Test 10: Factory Presets & URL Permalink Roundtrip passed (${FACTORY_PRESETS.length} presets verified).`
   );
 }
 

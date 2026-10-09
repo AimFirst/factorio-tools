@@ -89,6 +89,36 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
     onClose();
   };
 
+  const handleAnalyzeInAllocator = () => {
+    const totalBays =
+      inputs.reduce((sum, f) => sum + f.allocatedBays, 0) || Math.max(4, inputs.length);
+    const cfg = {
+      name: `${name.trim() || 'Custom Block'} (City Block)`,
+      blueprintMultiplier: Math.max(1, blueprintMultiplier),
+      totalStations: totalBays,
+      trainWagons: inputs[0]?.wagonCount || 2,
+      isLegendaryQuality: inputs[0]?.isLegendary || false,
+      beltStackLevel: 4,
+      allocationMode: 'train-throughput' as const,
+      entries: inputs.map((inp) => ({
+        id: inp.id,
+        name: inp.name,
+        isFluid: inp.isFluid,
+        inputRate: inp.ratePerMinute,
+        unit: 'per-min' as const,
+        beltType: 'turbo' as const,
+        lockStations: null,
+      })),
+    };
+    try {
+      window.localStorage.setItem('factorio_shared_block_for_allocator', JSON.stringify(cfg));
+      window.dispatchEvent(new CustomEvent('switch-tool', { detail: { toolId: 'station-allocator' } }));
+      onClose();
+    } catch (e) {
+      console.error('Failed to link to station allocator', e);
+    }
+  };
+
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm animate-fade-in">
       <div
@@ -259,6 +289,18 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
               >
                 <Trash2 className="w-3.5 h-3.5" />
                 Delete Block
+              </button>
+            )}
+
+            {inputs.length > 0 && (
+              <button
+                type="button"
+                onClick={handleAnalyzeInAllocator}
+                className="flex items-center gap-1.5 px-3 py-2 bg-zinc-900 hover:bg-zinc-800 text-cyan-400 border border-cyan-800/50 rounded-lg text-xs font-semibold transition cursor-pointer"
+                title="Open this block's input resources directly in the Train Station Allocator"
+              >
+                <Train className="w-3.5 h-3.5" />
+                Analyze in Allocator
               </button>
             )}
 

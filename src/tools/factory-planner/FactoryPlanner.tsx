@@ -20,6 +20,7 @@ import { BlockEditorModal } from './components/BlockEditorModal';
 import { RawIngressModal } from './components/RawIngressModal';
 import { SpaceHubModal } from './components/SpaceHubModal';
 import { InterplanetaryManager } from './components/InterplanetaryManager';
+import { ProjectManagerModal } from './components/ProjectManagerModal';
 import { FactorioIcon } from '../../components/factorio/FactorioIcon';
 import { createDefaultProject } from './storage/starterProject';
 
@@ -40,6 +41,11 @@ export const FactoryPlanner: React.FC = () => {
     removeInterplanetaryRoute,
     upsertSpacePlatform,
     removeSpacePlatform,
+    createNewProject,
+    selectProject,
+    deleteProject,
+    duplicateProject,
+    renameProject,
     exportProjectJson,
     importProjectJson,
     updateProject,
@@ -47,6 +53,7 @@ export const FactoryPlanner: React.FC = () => {
 
   // View & Modals state
   const [isSpaceView, setIsSpaceView] = useState(false);
+  const [projectManagerOpen, setProjectManagerOpen] = useState(false);
   const [viewMode, setViewMode] = useState<'map' | 'cards' | 'split'>('map');
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<HexBlock | null>(null);
@@ -124,6 +131,8 @@ export const FactoryPlanner: React.FC = () => {
         onExportJson={handleExport}
         onImportJson={importProjectJson}
         onResetStarter={handleResetStarter}
+        onOpenProjectManager={() => setProjectManagerOpen(true)}
+        onShareUrl={() => setProjectManagerOpen(true)}
       />
 
       {/* Planet Switcher Navigation */}
@@ -502,6 +511,23 @@ export const FactoryPlanner: React.FC = () => {
         onClose={() => setSpaceModalOpen(false)}
         onSave={(hub) => upsertSpaceHub(activePlanet, hub)}
         planetId={activePlanet}
+      />
+
+      <ProjectManagerModal
+        isOpen={projectManagerOpen}
+        onClose={() => setProjectManagerOpen(false)}
+        currentProject={project}
+        onSelectProject={selectProject}
+        onCreateNewProject={createNewProject}
+        onLoadPreset={(preset) => {
+          const newProj = preset.createProject();
+          updateProject(() => newProj);
+        }}
+        onDeleteProject={deleteProject}
+        onRenameProject={renameProject}
+        onDuplicateProject={duplicateProject}
+        onExportJson={handleExport}
+        onImportJson={importProjectJson}
       />
     </div>
   );

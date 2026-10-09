@@ -104,6 +104,7 @@ export interface HexBlock {
   coordinates: HexCoordinates | null; // null if unassigned in inventory
   blueprintMultiplier: number; // Multiplier for repeated blueprint stamps inside block
   color?: string; // Optional custom border / accent color
+  category?: string; // Optional block category tag
   inputs: BlockResourceFlow[];
   outputs: BlockResourceFlow[];
   notes?: string;
@@ -120,6 +121,7 @@ export interface RawIngressNode {
   name: string;
   ratePerMinute: number;
   coordinates: HexCoordinates | null;
+  notes?: string;
 }
 
 /**

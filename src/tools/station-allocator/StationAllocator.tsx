@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import { 
   Train, 
   Layers, 
@@ -21,6 +21,20 @@ export const StationAllocator: React.FC = () => {
   // Config state initialized with default Electronic Circuit / Processing unit setup
   const [config, setConfig] = useState<CityBlockConfig>(DEFAULT_PRESETS[0]);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+
+  // Check for block dispatched from Multi-World Factory Planner
+  useEffect(() => {
+    try {
+      const shared = window.localStorage.getItem('factorio_shared_block_for_allocator');
+      if (shared) {
+        const parsed = JSON.parse(shared) as CityBlockConfig;
+        setConfig(parsed);
+        window.localStorage.removeItem('factorio_shared_block_for_allocator');
+      }
+    } catch (e) {
+      console.error('Failed to parse shared block in allocator', e);
+    }
+  }, []);
 
   // Compute station demands
   const demandInputs: StationDemandInput[] = useMemo(() => {
