@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo } from 'react';
 import {
   Train,
   Plus,
@@ -9,9 +9,12 @@ import {
   Map as MapIcon,
   LayoutGrid,
   Columns2,
+  Scale,
+  AlertTriangle,
 } from 'lucide-react';
 import { useFactoryPlanner } from './hooks/useFactoryPlanner.ts';
 import { PLANETS_META, type HexBlock, type HexCoordinates } from './types.ts';
+import { calculatePlanetaryResourceBalance } from './core/resource-balance.ts';
 import { PlanetSwitcher } from './components/PlanetSwitcher';
 import { ProjectActionsBar } from './components/ProjectActionsBar';
 import { BlockCard } from './components/BlockCard';
@@ -19,6 +22,7 @@ import { HexGridCanvas } from './components/HexGridCanvas';
 import { BlockEditorModal } from './components/BlockEditorModal';
 import { RawIngressModal } from './components/RawIngressModal';
 import { SpaceHubModal } from './components/SpaceHubModal';
+import { ResourceBalanceDrawer } from './components/ResourceBalanceDrawer';
 import { InterplanetaryManager } from './components/InterplanetaryManager';
 import { ProjectManagerModal } from './components/ProjectManagerModal';
 import { FactorioIcon } from '../../components/factorio/FactorioIcon';
@@ -59,9 +63,20 @@ export const FactoryPlanner: React.FC = () => {
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<HexBlock | null>(null);
   const [initialBlockType, setInitialBlockType] = useState<'manufacturing' | 'rocket-silo' | 'cargo-landing-pad'>('manufacturing');
+  const [initialOutputResource, setInitialOutputResource] = useState<{ id: string; name: string; ratePerSecond?: number } | null>(null);
+  const [resourceBalanceOpen, setResourceBalanceOpen] = useState(false);
   const [newBlockCoords, setNewBlockCoords] = useState<HexCoordinates | null>(null);
   const [rawModalOpen, setRawModalOpen] = useState(false);
   const [spaceModalOpen, setSpaceModalOpen] = useState(false);
+
+  // Planetary Supply vs Demand & Deficits (accounting for blueprintMultiplier on all blocks)
+  const balanceReport = useMemo(() => {
+    return calculatePlanetaryResourceBalance({
+      blocks: activePlanetState ? activePlanetState.blocks : [],
+      rawIngressNodes: activePlanetState ? activePlanetState.rawIngressNodes : [],
+      spaceHubs: activePlanetState ? activePlanetState.spaceHubs : [],
+    });
+  }, [activePlanetState]);
 
   if (isLoading || !project || !activePlanetState) {
     return (
@@ -94,11 +109,13 @@ export const FactoryPlanner: React.FC = () => {
 
   const handleOpenNewBlock = (
     coords?: HexCoordinates,
-    bType: 'manufacturing' | 'rocket-silo' | 'cargo-landing-pad' = 'manufacturing'
+    bType: 'manufacturing' | 'rocket-silo' | 'cargo-landing-pad' = 'manufacturing',
+    outputRes?: { id: string; name: string; ratePerSecond?: number } | null
   ) => {
     setEditingBlock(null);
     setNewBlockCoords(coords || null);
     setInitialBlockType(bType);
+    setInitialOutputResource(outputRes || null);
     setEditorOpen(true);
   };
 
@@ -106,6 +123,7 @@ export const FactoryPlanner: React.FC = () => {
     setEditingBlock(block);
     setNewBlockCoords(null);
     setInitialBlockType(block.blockType || 'manufacturing');
+    setInitialOutputResource(null);
     setEditorOpen(true);
   };
 
@@ -180,7 +198,7 @@ export const FactoryPlanner: React.FC = () => {
       ) : (
         <>
           {/* Planetary Overview Stats Banner */}
-      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3">
         {/* Total Blocks */}
         <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3.5 flex items-center justify-between">
           <div>
@@ -216,7 +234,7 @@ export const FactoryPlanner: React.FC = () => {
         <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3.5 flex items-center justify-between">
           <div>
             <div className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
-              Loading/Unloading Bays
+              Loading Bays
             </div>
             <div className="text-2xl font-bold font-mono text-cyan-400 mt-0.5">
               {totalStationBays}
@@ -231,7 +249,7 @@ export const FactoryPlanner: React.FC = () => {
         <div className="bg-zinc-900/60 border border-zinc-800/80 rounded-xl p-3.5 flex items-center justify-between">
           <div>
             <div className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
-              Rocket Silo Launches
+              Rocket Silo
             </div>
             <div className="text-2xl font-bold font-mono text-purple-400 mt-0.5">
               {totalRocketLaunches.toFixed(2)}
@@ -242,10 +260,85 @@ export const FactoryPlanner: React.FC = () => {
             <Rocket className="w-5 h-5" />
           </div>
         </div>
+
+        {/* Planetary Resource Balance & Shortfalls */}
+        <div
+          onClick={() => setResourceBalanceOpen(true)}
+          className={`border rounded-xl p-3.5 flex items-center justify-between cursor-pointer transition hover:scale-[1.02] shadow-sm select-none ${
+            balanceReport.hasDeficits
+              ? 'bg-red-950/30 border-red-800/80 hover:border-red-600'
+              : 'bg-zinc-900/60 border-zinc-800/80 hover:border-zinc-700'
+          }`}
+          title="Click to view full resource balance breakdown and deficits"
+        >
+          <div>
+            <div className="text-zinc-500 text-xs font-medium uppercase tracking-wider">
+              Resource Balance
+            </div>
+            <div
+              className={`text-2xl font-bold font-mono mt-0.5 flex items-center gap-1.5 ${
+                balanceReport.hasDeficits ? 'text-red-400' : 'text-emerald-400'
+              }`}
+            >
+              {balanceReport.hasDeficits ? (
+                <>
+                  <span>{balanceReport.totalDeficitCount}</span>
+                  <span className="text-xs font-sans font-semibold text-red-300">Deficits</span>
+                </>
+              ) : (
+                <>
+                  <span>100%</span>
+                  <span className="text-xs font-sans font-normal text-emerald-400/80">Satisfied</span>
+                </>
+              )}
+            </div>
+          </div>
+          <div
+            className={`p-2.5 rounded-lg border ${
+              balanceReport.hasDeficits
+                ? 'bg-red-950/80 border-red-800 text-red-400 animate-pulse'
+                : 'bg-zinc-950 border-zinc-800 text-emerald-400'
+            }`}
+          >
+            {balanceReport.hasDeficits ? (
+              <AlertTriangle className="w-5 h-5 text-amber-400" />
+            ) : (
+              <Scale className="w-5 h-5 text-emerald-400" />
+            )}
+          </div>
+        </div>
       </div>
 
       {/* Main Blocks Section */}
       <div className="space-y-4">
+        {/* Planetary Deficit Alert Callout */}
+        {balanceReport.hasDeficits && (
+          <div className="bg-red-950/30 border border-red-900/70 rounded-xl p-3.5 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 text-xs shadow-md">
+            <div className="flex items-center gap-2.5 text-red-200">
+              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+              <div>
+                <span className="font-bold text-red-100">
+                  Production Deficit Warning on {planetMeta.name}:
+                </span>{' '}
+                <span className="text-zinc-300">
+                  {balanceReport.deficits
+                    .map((d) => `${d.resourceName} (-${d.deficitRate}/s)`)
+                    .join(' • ')}
+                  . Supply does not cover aggregate demand across your city blocks.
+                </span>
+              </div>
+            </div>
+            <button
+              type="button"
+              onClick={() => setResourceBalanceOpen(true)}
+              className="shrink-0 flex items-center gap-1.5 px-3 py-1.5 bg-red-900 hover:bg-red-800 text-white rounded-lg font-semibold text-xs transition cursor-pointer shadow-sm"
+            >
+              <Scale className="w-3.5 h-3.5" />
+              Resolve Shortfalls →
+            </button>
+          </div>
+        )}
+
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <div className="flex items-center gap-2">
             <h3 className="text-lg font-bold text-zinc-100">
@@ -257,6 +350,30 @@ export const FactoryPlanner: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-3">
+            {/* Resource Balance Quick Button */}
+            <button
+              type="button"
+              onClick={() => setResourceBalanceOpen(true)}
+              className={`flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer border ${
+                balanceReport.hasDeficits
+                  ? 'bg-red-950/60 text-red-300 border-red-800/80 hover:bg-red-900/60 shadow-md'
+                  : 'bg-zinc-950 text-zinc-300 border-zinc-800 hover:border-zinc-700'
+              }`}
+              title="View aggregate supply and demand across all factory blocks"
+            >
+              {balanceReport.hasDeficits ? (
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400" />
+              ) : (
+                <Scale className="w-3.5 h-3.5 text-emerald-400" />
+              )}
+              <span>Balance</span>
+              {balanceReport.hasDeficits && (
+                <span className="px-1.5 py-0.2 rounded bg-red-900 text-[10px] text-white font-mono">
+                  {balanceReport.totalDeficitCount} shortfalls
+                </span>
+              )}
+            </button>
+
             {/* View Mode Switcher */}
             <div className="flex items-center bg-zinc-950 p-1 rounded-xl border border-zinc-800 text-xs">
               <button
@@ -328,6 +445,8 @@ export const FactoryPlanner: React.FC = () => {
             onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
             onNewBlockAt={handleOpenNewBlock}
             onDuplicateBlock={(id) => duplicateBlock(activePlanet, id)}
+            deficitMap={balanceReport.deficitMap}
+            onOpenResourceBalance={() => setResourceBalanceOpen(true)}
           />
         )}
 
@@ -365,6 +484,7 @@ export const FactoryPlanner: React.FC = () => {
                     onEdit={handleEditBlock}
                     onDelete={(id) => removeBlock(activePlanet, id)}
                     onDuplicate={(id) => duplicateBlock(activePlanet, id)}
+                    deficitMap={balanceReport.deficitMap}
                   />
                 ))}
               </div>
@@ -383,6 +503,8 @@ export const FactoryPlanner: React.FC = () => {
                 onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
                 onNewBlockAt={handleOpenNewBlock}
                 onDuplicateBlock={(id) => duplicateBlock(activePlanet, id)}
+                deficitMap={balanceReport.deficitMap}
+                onOpenResourceBalance={() => setResourceBalanceOpen(true)}
               />
             </div>
             <div className="lg:col-span-4 space-y-3 max-h-[680px] overflow-y-auto pr-1">
@@ -396,6 +518,7 @@ export const FactoryPlanner: React.FC = () => {
                   onEdit={handleEditBlock}
                   onDelete={(id) => removeBlock(activePlanet, id)}
                   onDuplicate={(id) => duplicateBlock(activePlanet, id)}
+                  deficitMap={balanceReport.deficitMap}
                 />
               ))}
             </div>
@@ -510,7 +633,20 @@ export const FactoryPlanner: React.FC = () => {
       </>
       )}
 
-      {/* Modals */}
+      {/* Modals & Slide-out Drawers */}
+      <ResourceBalanceDrawer
+        isOpen={resourceBalanceOpen}
+        onClose={() => setResourceBalanceOpen(false)}
+        report={balanceReport}
+        planetId={activePlanet}
+        blocks={blocks}
+        onSelectBlock={handleEditBlock}
+        onAddNewBlockWithOutput={(resId, resName) => {
+          setResourceBalanceOpen(false);
+          handleOpenNewBlock(undefined, 'manufacturing', { id: resId, name: resName });
+        }}
+      />
+
       <BlockEditorModal
         isOpen={editorOpen}
         onClose={() => setEditorOpen(false)}
@@ -520,6 +656,8 @@ export const FactoryPlanner: React.FC = () => {
         initialBlock={editingBlock}
         initialCoordinates={newBlockCoords}
         initialBlockType={initialBlockType}
+        initialOutputResource={initialOutputResource}
+        deficitMap={balanceReport.deficitMap}
         sharedInstancesCount={
           editingBlock?.sharedGroupId
             ? blocks.filter((b) => b.sharedGroupId === editingBlock.sharedGroupId).length

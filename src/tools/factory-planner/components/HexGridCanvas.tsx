@@ -17,9 +17,11 @@ import {
   Link2,
   Rocket,
   Box,
+  AlertTriangle,
 } from 'lucide-react';
 import { FactorioIcon } from '../../../components/factorio/FactorioIcon';
 import type { HexBlock, HexCoordinates, RawIngressNode, SpaceHubNode } from '../types.ts';
+import type { ResourceBalanceItem } from '../core/resource-balance.ts';
 import {
   hexToPixel,
   hexKey,
@@ -37,6 +39,8 @@ interface HexGridCanvasProps {
   onMoveBlock: (blockId: string, coordinates: HexCoordinates | null) => void;
   onNewBlockAt?: (coordinates: HexCoordinates) => void;
   onDuplicateBlock?: (blockId: string) => void;
+  deficitMap?: Map<string, ResourceBalanceItem>;
+  onOpenResourceBalance?: () => void;
 }
 
 const HEX_RADIUS = 76; // Base size of hexagon
@@ -49,6 +53,8 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
   onMoveBlock,
   onNewBlockAt,
   onDuplicateBlock,
+  deficitMap,
+  onOpenResourceBalance,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -312,9 +318,17 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
                     className="pointer-events-none"
                   >
                     <div className="w-full h-full flex flex-col items-center justify-between p-1 text-center select-none">
-                      {/* Top: Multiplier badge & Icon */}
+                      {/* Top: Multiplier badge, Deficit warning & Icon */}
                       <div className="flex items-center gap-1">
                         <FactorioIcon id={block.iconId} size={28} />
+                        {block.inputs.some((inp) => deficitMap?.has(inp.id)) && (
+                          <span
+                            className="text-[9px] font-mono px-1 py-0.5 bg-red-950/90 border border-red-700/80 text-amber-300 rounded flex items-center shadow-xs"
+                            title="Block consumes resources with active planetary shortfalls"
+                          >
+                            <AlertTriangle className="w-2.5 h-2.5 text-amber-400" />
+                          </span>
+                        )}
                         {block.sharedGroupId && (
                           <span
                             className="text-[9px] font-mono px-1 py-0.5 bg-purple-950/90 border border-purple-700/80 text-purple-300 rounded flex items-center shadow-xs"
@@ -648,6 +662,26 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
               </span>
             </div>
           </div>
+
+          {selectedBlock.inputs.some((inp) => deficitMap?.has(inp.id)) && (
+            <div className="bg-red-950/40 border border-red-900/60 rounded-xl p-2.5 text-xs text-red-200 flex items-center justify-between mb-3">
+              <div className="flex items-center gap-1.5">
+                <AlertTriangle className="w-3.5 h-3.5 text-amber-400 shrink-0" />
+                <span>
+                  {selectedBlock.inputs.filter((inp) => deficitMap?.has(inp.id)).length} input shortfall(s)
+                </span>
+              </div>
+              {onOpenResourceBalance && (
+                <button
+                  type="button"
+                  onClick={onOpenResourceBalance}
+                  className="text-amber-300 hover:text-amber-200 underline text-[11px] font-medium cursor-pointer"
+                >
+                  View Balance →
+                </button>
+              )}
+            </div>
+          )}
 
           {/* Actions */}
           <div className="flex items-center gap-2 pt-2 border-t border-zinc-800">

@@ -17,6 +17,7 @@ import { LocalStorageAdapter } from '../src/tools/factory-planner/storage/LocalS
 import { calculatePlanetTraffic } from '../src/tools/factory-planner/core/traffic-engine.ts';
 import { optimizeBlockLayout } from '../src/tools/factory-planner/core/optimizer.ts';
 import { FACTORY_PRESETS } from '../src/tools/factory-planner/presets/presetLibraries.ts';
+import { calculatePlanetaryResourceBalance } from '../src/tools/factory-planner/core/resource-balance.ts';
 
 console.log('🧪 Testing Factorio 2.1 Hexagonal Factory Planner Engine...\n');
 
@@ -445,6 +446,115 @@ async function runStorageTest() {
   assert.strictEqual(blocks[1].rate, 800);
 
   console.log('✅ Test 12: Block Duplication & Shared Blueprint Synchronization passed.');
+}
+
+// -------------------------------------------------------------
+// Test 13: Planetary Resource Balance & Deficit Shortfall Detection
+// -------------------------------------------------------------
+{
+  // User scenario:
+  // Need a total of 720 Low Density Structure per second across multiple blocks.
+  // Output from blocks is currently 480/s (e.g. 240/s with blueprintMultiplier = 2).
+  // Total deficit must be 240/s, indicated with status 'deficit' and 66.7% satisfaction.
+
+  const blockA = {
+    id: 'block-consumer-1',
+    planetId: 'nauvis' as const,
+    name: 'Rocket Part Sub-Assembly',
+    iconId: 'rocket-part',
+    coordinates: { q: 0, r: 0 },
+    blueprintMultiplier: 1, // 1x copies
+    inputs: [
+      createResourceFlow({
+        id: 'low-density-structure',
+        name: 'Low Density Structure',
+        isFluid: false,
+        ratePerSecond: 300, // 300/s demand
+      }),
+    ],
+    outputs: [],
+  };
+
+  const blockB = {
+    id: 'block-consumer-2',
+    planetId: 'nauvis' as const,
+    name: 'Satellite Assembly Complex',
+    iconId: 'satellite',
+    coordinates: { q: 1, r: 0 },
+    blueprintMultiplier: 2, // 2x copies: 210/s * 2 = 420/s demand!
+    inputs: [
+      createResourceFlow({
+        id: 'low-density-structure',
+        name: 'Low Density Structure',
+        isFluid: false,
+        ratePerSecond: 210, // 210 * 2 = 420/s demand
+      }),
+    ],
+    outputs: [],
+  };
+
+  // Producing block: 240/s base rate with blueprintMultiplier = 2 -> 480/s total supply
+  const blockC = {
+    id: 'block-producer-1',
+    planetId: 'nauvis' as const,
+    name: 'LDS Foundry Block',
+    iconId: 'low-density-structure',
+    coordinates: { q: 2, r: 0 },
+    blueprintMultiplier: 2, // 2x copies: 240 * 2 = 480/s supply
+    inputs: [],
+    outputs: [
+      createResourceFlow({
+        id: 'low-density-structure',
+        name: 'Low Density Structure',
+        isFluid: false,
+        ratePerSecond: 240,
+      }),
+    ],
+  };
+
+  // Run balance calculation
+  const report1 = calculatePlanetaryResourceBalance({
+    blocks: [blockA, blockB, blockC],
+  });
+
+  assert.strictEqual(report1.hasDeficits, true);
+  assert.strictEqual(report1.totalDeficitCount, 1);
+
+  const ldsItem = report1.deficitMap.get('low-density-structure');
+  assert(ldsItem, 'LDS must be present in deficit map');
+  assert.strictEqual(ldsItem.totalSupply, 480);
+  assert.strictEqual(ldsItem.totalDemand, 720); // 300 + 420 = 720
+  assert.strictEqual(ldsItem.deficitRate, 240); // 720 - 480 = 240 shortfall
+  assert.strictEqual(ldsItem.netBalance, -240);
+  assert.strictEqual(ldsItem.status, 'deficit');
+  assert.strictEqual(ldsItem.satisfactionPercent, 66.7);
+  assert.strictEqual(ldsItem.producers.length, 1);
+  assert.strictEqual(ldsItem.consumers.length, 2);
+  assert.strictEqual(ldsItem.estimatedAdditionalMultiplier, 1); // 240 deficit / 240 base rate = 1 more copy
+
+  // Test resolution: Bump blockC blueprintMultiplier from 2 to 3 (adds +240/s -> 720/s)
+  const resolvedBlockC = {
+    ...blockC,
+    blueprintMultiplier: 3, // 3x copies = 720/s supply
+  };
+
+  const report2 = calculatePlanetaryResourceBalance({
+    blocks: [blockA, blockB, resolvedBlockC],
+  });
+
+  assert.strictEqual(report2.hasDeficits, false);
+  assert.strictEqual(report2.totalDeficitCount, 0);
+  const ldsResolved = report2.items.find(i => i.resourceId === 'low-density-structure');
+  assert(ldsResolved);
+  assert.strictEqual(ldsResolved.totalSupply, 720);
+  assert.strictEqual(ldsResolved.totalDemand, 720);
+  assert.strictEqual(ldsResolved.netBalance, 0);
+  assert.strictEqual(ldsResolved.status, 'balanced');
+  assert.strictEqual(ldsResolved.satisfactionPercent, 100);
+
+  console.log(
+    '✅ Test 13: Planetary Resource Balance & Blueprint Multiplier Deficit Analysis passed (720 demand vs 480 supply correctly detected as 240 deficit).'
+  );
 }
 
 runStorageTest().then(() => {

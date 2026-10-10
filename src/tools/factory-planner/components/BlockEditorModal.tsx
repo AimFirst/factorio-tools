@@ -12,12 +12,14 @@ import {
   Unlink, 
   Rocket, 
   Box, 
-  Factory 
+  Factory,
+  AlertTriangle,
 } from 'lucide-react';
 import { FactorioIcon } from '../../../components/factorio/FactorioIcon';
 import { ResourceSelector } from '../../../components/factorio/ResourceSelector';
 import { ResourceFlowTable } from './ResourceFlowTable';
 import type { BlockResourceFlow, HexBlock, HexCoordinates, SolidPlanetId } from '../types.ts';
+import type { ResourceBalanceItem } from '../core/resource-balance.ts';
 import { createResourceFlow } from '../core/calculations';
 import type { FactorioItem, FactorioFluid } from '../../../data/generated/types';
 
@@ -30,6 +32,8 @@ interface BlockEditorModalProps {
   initialBlock: HexBlock | null;
   initialCoordinates?: HexCoordinates | null;
   initialBlockType?: 'manufacturing' | 'rocket-silo' | 'cargo-landing-pad';
+  initialOutputResource?: { id: string; name: string; ratePerSecond?: number } | null;
+  deficitMap?: Map<string, ResourceBalanceItem>;
   planetId: SolidPlanetId;
   sharedInstancesCount?: number;
 }
@@ -53,6 +57,8 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
   initialBlock,
   initialCoordinates,
   initialBlockType,
+  initialOutputResource,
+  deficitMap,
   planetId,
   sharedInstancesCount = 1,
 }) => {
@@ -140,6 +146,24 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
         ]);
         setIsNameManuallyEdited(true);
         setIsIconManuallyEdited(true);
+      } else if (initialOutputResource) {
+        setName(initialOutputResource.name);
+        setIconId(initialOutputResource.id);
+        setColor('#f97316');
+        setInputs([]);
+        setOutputs([
+          createResourceFlow({
+            id: initialOutputResource.id,
+            name: initialOutputResource.name,
+            isFluid: false,
+            ratePerSecond: initialOutputResource.ratePerSecond ?? 100,
+            wagonCount: 2,
+            isLegendary: false,
+            allocatedBays: 1,
+          }),
+        ]);
+        setIsNameManuallyEdited(true);
+        setIsIconManuallyEdited(true);
       } else {
         setName('');
         setIconId('electronic-circuit');
@@ -152,7 +176,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
       setBlueprintMultiplier(1);
       setNotes('');
     }
-  }, [initialBlock, initialBlockType, isOpen]);
+  }, [initialBlock, initialBlockType, initialOutputResource, isOpen]);
 
   const handleOutputsChange = (newOutputs: BlockResourceFlow[]) => {
     setOutputs(newOutputs);
@@ -504,8 +528,20 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
           />
 
           {/* Inputs (Consumption) Table */}
+          {inputs.some((inp) => deficitMap?.has(inp.id)) && (
+            <div className="bg-red-950/30 border border-red-900/60 rounded-xl p-3 text-xs text-red-200 flex items-center gap-2.5">
+              <AlertTriangle className="w-4 h-4 text-amber-400 shrink-0" />
+              <div>
+                <strong className="text-red-100">Planetary Deficit Alert:</strong> One or more inputs for this block (
+                {inputs
+                  .filter((inp) => deficitMap?.has(inp.id))
+                  .map((inp) => `${inp.name} (-${deficitMap?.get(inp.id)?.deficitRate}/s)`)
+                  .join(', ')}
+                ) currently have a production shortfall across {planetId}.
+              </div>
+            </div>
+          )}
 
-          {/* Inputs (Consumption) Table */}
           <ResourceFlowTable
             title="Consumed Inputs"
             type="input"

@@ -1,13 +1,28 @@
 import React from 'react';
-import { Train, Layers, MapPin, Edit3, Trash2, ArrowDownRight, ArrowUpRight, Copy, Link2, Rocket, Box } from 'lucide-react';
+import {
+  Train,
+  Layers,
+  MapPin,
+  Edit3,
+  Trash2,
+  ArrowDownRight,
+  ArrowUpRight,
+  Copy,
+  Link2,
+  Rocket,
+  Box,
+  AlertTriangle,
+} from 'lucide-react';
 import { FactorioIcon } from '../../../components/factorio/FactorioIcon';
 import type { HexBlock } from '../types';
+import type { ResourceBalanceItem } from '../core/resource-balance';
 
 interface BlockCardProps {
   block: HexBlock;
   onEdit: (block: HexBlock) => void;
   onDelete: (blockId: string) => void;
   onDuplicate?: (blockId: string) => void;
+  deficitMap?: Map<string, ResourceBalanceItem>;
 }
 
 export const BlockCard: React.FC<BlockCardProps> = ({
@@ -15,6 +30,7 @@ export const BlockCard: React.FC<BlockCardProps> = ({
   onEdit,
   onDelete,
   onDuplicate,
+  deficitMap,
 }) => {
   const totalInputTrains = block.inputs.reduce((sum, f) => sum + f.trainsPerMinute, 0);
   const totalOutputTrains = block.outputs.reduce((sum, f) => sum + f.trainsPerMinute, 0);
@@ -23,6 +39,9 @@ export const BlockCard: React.FC<BlockCardProps> = ({
   const totalInputBays = block.inputs.reduce((sum, f) => sum + f.allocatedBays, 0);
   const totalOutputBays = block.outputs.reduce((sum, f) => sum + f.allocatedBays, 0);
   const totalBays = totalInputBays + totalOutputBays;
+
+  const inputDeficits = block.inputs.filter((inp) => deficitMap?.has(inp.id));
+  const hasDeficits = inputDeficits.length > 0;
 
   const borderColor = block.color || (block.blockType === 'rocket-silo' ? '#a855f7' : '#f97316');
 
@@ -65,7 +84,9 @@ export const BlockCard: React.FC<BlockCardProps> = ({
 
   return (
     <div
-      className="bg-zinc-900/80 border border-zinc-800 hover:border-zinc-700 rounded-xl p-4 flex flex-col justify-between transition-all shadow-md group relative overflow-hidden"
+      className={`bg-zinc-900/80 border hover:border-zinc-700 rounded-xl p-4 flex flex-col justify-between transition-all shadow-md group relative overflow-hidden ${
+        hasDeficits ? 'border-red-900/50' : 'border-zinc-800'
+      }`}
       style={{ borderLeftColor: borderColor, borderLeftWidth: 4 }}
     >
       {/* Top Header */}
@@ -76,7 +97,7 @@ export const BlockCard: React.FC<BlockCardProps> = ({
               <FactorioIcon id={block.iconId} size={32} />
             </div>
             <div>
-              <div className="flex items-center gap-2">
+              <div className="flex items-center gap-2 flex-wrap">
                 <h4 className="font-semibold text-zinc-100 text-sm leading-tight group-hover:text-orange-400 transition">
                   {block.name}
                 </h4>
@@ -90,6 +111,15 @@ export const BlockCard: React.FC<BlockCardProps> = ({
                   <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-cyan-950/80 text-cyan-300 border border-cyan-800">
                     <Box className="w-2.5 h-2.5" />
                     Cargo Pad
+                  </span>
+                )}
+                {hasDeficits && (
+                  <span
+                    className="inline-flex items-center gap-1 text-[10px] font-semibold text-red-300 bg-red-950/70 px-1.5 py-0.2 rounded border border-red-800/70"
+                    title={`${inputDeficits.length} input resource(s) have an active production shortfall on this planet`}
+                  >
+                    <AlertTriangle className="w-2.5 h-2.5 text-amber-400" />
+                    {inputDeficits.length} Shortfall{inputDeficits.length > 1 ? 's' : ''}
                   </span>
                 )}
               </div>
@@ -176,23 +206,40 @@ export const BlockCard: React.FC<BlockCardProps> = ({
               <span>Outputs ({block.outputs.length})</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {block.outputs.map((out) => (
-                <div
-                  key={out.id}
-                  className="flex items-center gap-1.5 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800 text-xs"
-                >
-                  <FactorioIcon id={out.id} size={16} />
-                  <span className="font-mono text-zinc-300">
-                    {out.ratePerSecond >= 1000
-                      ? `${(out.ratePerSecond / 1000).toFixed(1)}k`
-                      : out.ratePerSecond}
-                    /s
-                  </span>
-                  <span className="text-[10px] text-orange-400/90 font-mono">
-                    ({out.trainsPerMinute.toFixed(1)} tr/m)
-                  </span>
-                </div>
-              ))}
+              {block.outputs.map((out) => {
+                const deficit = deficitMap?.get(out.id);
+                return (
+                  <div
+                    key={out.id}
+                    className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-xs ${
+                      deficit
+                        ? 'bg-amber-950/30 border-amber-800/60'
+                        : 'bg-zinc-900 border-zinc-800'
+                    }`}
+                    title={
+                      deficit
+                        ? `World Demand Exceeds Supply! World needs +${deficit.deficitRate}/s more`
+                        : undefined
+                    }
+                  >
+                    <FactorioIcon id={out.id} size={16} />
+                    <span className="font-mono text-zinc-300">
+                      {out.ratePerSecond >= 1000
+                        ? `${(out.ratePerSecond / 1000).toFixed(1)}k`
+                        : out.ratePerSecond}
+                      /s
+                    </span>
+                    <span className="text-[10px] text-orange-400/90 font-mono">
+                      ({out.trainsPerMinute.toFixed(1)} tr/m)
+                    </span>
+                    {deficit && (
+                      <span className="text-[9px] font-bold text-amber-400 ml-0.5">
+                        (+{deficit.deficitRate}/s needed)
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
@@ -205,23 +252,41 @@ export const BlockCard: React.FC<BlockCardProps> = ({
               <span>Inputs ({block.inputs.length})</span>
             </div>
             <div className="flex flex-wrap gap-1.5">
-              {block.inputs.map((inp) => (
-                <div
-                  key={inp.id}
-                  className="flex items-center gap-1.5 bg-zinc-900 px-2 py-0.5 rounded border border-zinc-800 text-xs"
-                >
-                  <FactorioIcon id={inp.id} size={16} />
-                  <span className="font-mono text-zinc-300">
-                    {inp.ratePerSecond >= 1000
-                      ? `${(inp.ratePerSecond / 1000).toFixed(1)}k`
-                      : inp.ratePerSecond}
-                    /s
-                  </span>
-                  <span className="text-[10px] text-zinc-500 font-mono">
-                    ({inp.trainsPerMinute.toFixed(1)} tr/m)
-                  </span>
-                </div>
-              ))}
+              {block.inputs.map((inp) => {
+                const deficit = deficitMap?.get(inp.id);
+                return (
+                  <div
+                    key={inp.id}
+                    className={`flex items-center gap-1.5 px-2 py-0.5 rounded border text-xs ${
+                      deficit
+                        ? 'bg-red-950/40 border-red-800/80 text-red-200'
+                        : 'bg-zinc-900 border-zinc-800'
+                    }`}
+                    title={
+                      deficit
+                        ? `PLANETARY SHORTFALL: Only ${deficit.satisfactionPercent}% satisfied (-${deficit.deficitRate}/s)`
+                        : undefined
+                    }
+                  >
+                    <FactorioIcon id={inp.id} size={16} />
+                    <span className="font-mono text-zinc-300">
+                      {inp.ratePerSecond >= 1000
+                        ? `${(inp.ratePerSecond / 1000).toFixed(1)}k`
+                        : inp.ratePerSecond}
+                      /s
+                    </span>
+                    <span className="text-[10px] text-zinc-500 font-mono">
+                      ({inp.trainsPerMinute.toFixed(1)} tr/m)
+                    </span>
+                    {deficit && (
+                      <span className="flex items-center gap-0.5 text-[9px] font-bold text-amber-400 ml-0.5">
+                        <AlertTriangle className="w-2.5 h-2.5" />
+                        -{deficit.deficitRate}/s
+                      </span>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         )}
