@@ -1,5 +1,5 @@
 import React from 'react';
-import { Train, Layers, MapPin, Edit3, Trash2, ArrowDownRight, ArrowUpRight } from 'lucide-react';
+import { Train, Layers, MapPin, Edit3, Trash2, ArrowDownRight, ArrowUpRight, Copy, Link2, Rocket, Box } from 'lucide-react';
 import { FactorioIcon } from '../../../components/factorio/FactorioIcon';
 import type { HexBlock } from '../types';
 
@@ -7,12 +7,14 @@ interface BlockCardProps {
   block: HexBlock;
   onEdit: (block: HexBlock) => void;
   onDelete: (blockId: string) => void;
+  onDuplicate?: (blockId: string) => void;
 }
 
 export const BlockCard: React.FC<BlockCardProps> = ({
   block,
   onEdit,
   onDelete,
+  onDuplicate,
 }) => {
   const totalInputTrains = block.inputs.reduce((sum, f) => sum + f.trainsPerMinute, 0);
   const totalOutputTrains = block.outputs.reduce((sum, f) => sum + f.trainsPerMinute, 0);
@@ -22,7 +24,7 @@ export const BlockCard: React.FC<BlockCardProps> = ({
   const totalOutputBays = block.outputs.reduce((sum, f) => sum + f.allocatedBays, 0);
   const totalBays = totalInputBays + totalOutputBays;
 
-  const borderColor = block.color || '#f97316';
+  const borderColor = block.color || (block.blockType === 'rocket-silo' ? '#a855f7' : '#f97316');
 
   const handleOpenInAllocator = () => {
     const totalBays =
@@ -74,9 +76,23 @@ export const BlockCard: React.FC<BlockCardProps> = ({
               <FactorioIcon id={block.iconId} size={32} />
             </div>
             <div>
-              <h4 className="font-semibold text-zinc-100 text-sm leading-tight group-hover:text-orange-400 transition">
-                {block.name}
-              </h4>
+              <div className="flex items-center gap-2">
+                <h4 className="font-semibold text-zinc-100 text-sm leading-tight group-hover:text-orange-400 transition">
+                  {block.name}
+                </h4>
+                {block.blockType === 'rocket-silo' && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-purple-950/80 text-purple-300 border border-purple-800">
+                    <Rocket className="w-2.5 h-2.5" />
+                    Silo
+                  </span>
+                )}
+                {block.blockType === 'cargo-landing-pad' && (
+                  <span className="inline-flex items-center gap-0.5 px-1.5 py-0.2 rounded text-[9px] font-bold uppercase bg-cyan-950/80 text-cyan-300 border border-cyan-800">
+                    <Box className="w-2.5 h-2.5" />
+                    Cargo Pad
+                  </span>
+                )}
+              </div>
               <div className="flex items-center gap-2 mt-1">
                 {block.coordinates ? (
                   <span className="inline-flex items-center gap-1 text-[11px] font-mono text-zinc-400 bg-zinc-950 px-2 py-0.5 rounded border border-zinc-800/80">
@@ -86,6 +102,16 @@ export const BlockCard: React.FC<BlockCardProps> = ({
                 ) : (
                   <span className="text-[10px] text-zinc-500 bg-zinc-950/60 px-1.5 py-0.5 rounded">
                     Unplaced
+                  </span>
+                )}
+
+                {block.sharedGroupId && (
+                  <span
+                    className="inline-flex items-center gap-1 text-[10px] font-medium text-purple-300 bg-purple-950/50 px-1.5 py-0.5 rounded border border-purple-800/40"
+                    title="Shared blueprint - linked across duplicate blocks on this world"
+                  >
+                    <Link2 className="w-2.5 h-2.5 text-purple-400" />
+                    Shared
                   </span>
                 )}
 
@@ -101,6 +127,16 @@ export const BlockCard: React.FC<BlockCardProps> = ({
 
           {/* Quick Actions */}
           <div className="flex items-center gap-1 opacity-70 group-hover:opacity-100 transition">
+            {onDuplicate && (
+              <button
+                type="button"
+                onClick={() => onDuplicate(block.id)}
+                className="p-1.5 rounded-lg text-zinc-400 hover:text-purple-400 hover:bg-zinc-800 transition cursor-pointer"
+                title="Duplicate block (creates shared linked copy)"
+              >
+                <Copy className="w-4 h-4" />
+              </button>
+            )}
             <button
               type="button"
               onClick={handleOpenInAllocator}

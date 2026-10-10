@@ -204,6 +204,58 @@ export function createDefaultProject(name: string = 'Space Age 1000 SPM Megabase
     notes: 'Central beaconed laboratory facility consuming all science packs',
   };
 
+  const rocketSiloBlock = {
+    id: 'block-nauvis-rocket-silo',
+    planetId: 'nauvis' as SolidPlanetId,
+    name: 'Legendary Rocket Silo Alpha',
+    iconId: 'rocket-silo',
+    blockType: 'rocket-silo' as const,
+    color: '#a855f7',
+    coordinates: { q: -1, r: 2 },
+    blueprintMultiplier: 1,
+    inputs: [
+      createResourceFlow({
+        id: 'rocket-fuel',
+        name: 'Rocket Fuel',
+        isFluid: false,
+        ratePerSecond: 10,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+      createResourceFlow({
+        id: 'low-density-structure',
+        name: 'Low Density Structure',
+        isFluid: false,
+        ratePerSecond: 10,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+      createResourceFlow({
+        id: 'processing-unit',
+        name: 'Processing Unit',
+        isFluid: false,
+        ratePerSecond: 5,
+        wagonCount: 2,
+        isLegendary: false,
+        allocatedBays: 1,
+      }),
+    ],
+    outputs: [
+      createResourceFlow({
+        id: 'space-science-pack',
+        name: 'Space Science Pack',
+        isFluid: false,
+        ratePerSecond: 16.67,
+        wagonCount: 2,
+        isLegendary: true,
+        allocatedBays: 1,
+      }),
+    ],
+    notes: 'Factorio 2.1 Legendary Rocket Silo complex with 18.28s launch cycle',
+  };
+
   return {
     schemaVersion: '2.1.0',
     id: 'default-space-age-project',
@@ -217,7 +269,7 @@ export function createDefaultProject(name: string = 'Space Age 1000 SPM Megabase
       nauvis: {
         planetId: 'nauvis',
         name: 'Nauvis',
-        blocks: [ironSmelting, copperSmelting, electronicCircuits, advancedCircuits, scienceLab],
+        blocks: [ironSmelting, copperSmelting, electronicCircuits, advancedCircuits, scienceLab, rocketSiloBlock],
         rawIngressNodes: [
           {
             id: 'raw-iron-outpost',

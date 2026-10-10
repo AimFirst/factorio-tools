@@ -99,6 +99,7 @@ export function optimizeBlockLayout(params: {
     if (raw.coordinates) fixedOccupiedKeys.add(hexKey(raw.coordinates));
   }
   for (const hub of spaceHubs) {
+    if (blocks.some((b) => b.id === hub.id)) continue;
     if (hub.coordinates) fixedOccupiedKeys.add(hexKey(hub.coordinates));
   }
 

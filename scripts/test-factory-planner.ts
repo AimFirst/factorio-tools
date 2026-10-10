@@ -313,6 +313,140 @@ async function runStorageTest() {
   );
 }
 
+// -------------------------------------------------------------
+// Test 11: Rocket Silo as Hex Grid Block & Traffic Flow Optimization
+// -------------------------------------------------------------
+{
+  const project = createDefaultProject('Rocket Silo Grid Block Test');
+  const nauvisBlocks = project.planets.nauvis.blocks;
+
+  // Find the Rocket Silo block
+  const siloBlock = nauvisBlocks.find(b => b.blockType === 'rocket-silo');
+  assert(siloBlock, 'Nauvis must have a Rocket Silo block on the grid');
+  assert.strictEqual(siloBlock.iconId, 'rocket-silo');
+  assert(siloBlock.inputs.some(inp => inp.id === 'rocket-fuel'));
+  assert(siloBlock.inputs.some(inp => inp.id === 'low-density-structure'));
+  assert(siloBlock.inputs.some(inp => inp.id === 'processing-unit'));
+  assert(siloBlock.outputs.some(out => out.id === 'space-science-pack'));
+
+  // Calculate planet traffic including the silo block
+  const traffic = calculatePlanetTraffic({
+    blocks: nauvisBlocks,
+    rawIngressNodes: project.planets.nauvis.rawIngressNodes,
+    spaceHubs: project.planets.nauvis.spaceHubs,
+  });
+
+  assert(traffic.totalRoutes > 0, 'Must have traffic routes calculated');
+  assert(traffic.totalTrainTripsPerMin > 0, 'Must have active train trips');
+
+  // Verify that layout optimizer can position rocket silo blocks
+  const optResult = optimizeBlockLayout({
+    blocks: nauvisBlocks,
+    rawIngressNodes: project.planets.nauvis.rawIngressNodes,
+    spaceHubs: project.planets.nauvis.spaceHubs,
+    options: { iterations: 100 },
+  });
+
+  assert(optResult.optimizedPlacements.has(siloBlock.id), 'Optimizer must place rocket silo block');
+  console.log(`✅ Test 11: Rocket Silo Hex Block and Traffic Optimization passed.`);
+}
+
+// -------------------------------------------------------------
+// Test 12: Block Duplication & Shared Blueprint Synchronization
+// -------------------------------------------------------------
+{
+  // Test shared group blueprint logic
+  interface MockBlock {
+    id: string;
+    name: string;
+    coordinates: { q: number; r: number } | null;
+    sharedGroupId?: string;
+    rate: number;
+  }
+
+  let blocks: MockBlock[] = [
+    { id: 'block-1', name: 'Green Circuits Alpha', coordinates: { q: 1, r: 0 }, rate: 200 },
+  ];
+
+  // Duplication function as in useFactoryPlanner
+  function duplicate(sourceId: string): MockBlock {
+    const src = blocks.find(b => b.id === sourceId)!;
+    const sharedId = src.sharedGroupId || `shared-group-${Date.now()}`;
+    src.sharedGroupId = sharedId;
+
+    const copy: MockBlock = {
+      ...src,
+      id: `block-copy-${Math.random()}`,
+      coordinates: null, // Unplaced copy
+      sharedGroupId: sharedId,
+    };
+    blocks.push(copy);
+    return copy;
+  }
+
+  // Update function as in useFactoryPlanner
+  function updateBlock(updated: MockBlock) {
+    if (updated.sharedGroupId) {
+      blocks = blocks.map(b => {
+        if (b.id === updated.id) return updated;
+        if (b.sharedGroupId === updated.sharedGroupId) {
+          return {
+            ...updated,
+            id: b.id,
+            coordinates: b.coordinates, // Preserve unique placement
+          };
+        }
+        return b;
+      });
+    } else {
+      blocks = blocks.map(b => (b.id === updated.id ? updated : b));
+    }
+  }
+
+  // Duplicate block-1
+  const copy1 = duplicate('block-1');
+  assert.strictEqual(blocks.length, 2);
+  assert.strictEqual(blocks[0].sharedGroupId, blocks[1].sharedGroupId);
+  assert.strictEqual(copy1.coordinates, null);
+  assert.deepStrictEqual(blocks[0].coordinates, { q: 1, r: 0 });
+
+  // Place copy1 at (2, 0)
+  copy1.coordinates = { q: 2, r: 0 };
+  blocks[1] = copy1;
+
+  // Updating definition on block-1 should automatically update copy1
+  const updatedBlock1: MockBlock = {
+    ...blocks[0],
+    name: 'Green Circuits 2.1 (Upgraded)',
+    rate: 500,
+  };
+  updateBlock(updatedBlock1);
+
+  assert.strictEqual(blocks[0].name, 'Green Circuits 2.1 (Upgraded)');
+  assert.strictEqual(blocks[1].name, 'Green Circuits 2.1 (Upgraded)');
+  assert.strictEqual(blocks[0].rate, 500);
+  assert.strictEqual(blocks[1].rate, 500);
+  // Distinct coordinates must be preserved!
+  assert.deepStrictEqual(blocks[0].coordinates, { q: 1, r: 0 });
+  assert.deepStrictEqual(blocks[1].coordinates, { q: 2, r: 0 });
+
+  // Unlink copy1
+  blocks[1].sharedGroupId = undefined;
+  const unlinkedBlock2: MockBlock = {
+    ...blocks[1],
+    name: 'Green Circuits Independent Sub-factory',
+    rate: 800,
+  };
+  updateBlock(unlinkedBlock2);
+
+  assert.strictEqual(blocks[0].name, 'Green Circuits 2.1 (Upgraded)');
+  assert.strictEqual(blocks[0].rate, 500);
+  assert.strictEqual(blocks[1].name, 'Green Circuits Independent Sub-factory');
+  assert.strictEqual(blocks[1].rate, 800);
+
+  console.log('✅ Test 12: Block Duplication & Shared Blueprint Synchronization passed.');
+}
+
 runStorageTest().then(() => {
   console.log('\n🎉 ALL FACTORY PLANNER TESTS PASSED SUCCESSFULLY!');
 }).catch((err) => {

@@ -9,6 +9,7 @@ import type {
   StorageAdapter,
 } from '../types.ts';
 import { createDefaultProject } from './starterProject.ts';
+import { createResourceFlow } from '../core/calculations.ts';
 
 const STORAGE_KEY_PREFIX = 'factorio_planner_project_';
 const INDEX_KEY = 'factorio_planner_project_index';
@@ -103,6 +104,9 @@ export class LocalStorageAdapter implements StorageAdapter {
     // Migrate rates to ratePerSecond if only ratePerMinute exists
     for (const planet of Object.values(project.planets || {})) {
       for (const block of planet.blocks || []) {
+        if (!block.blockType) {
+          block.blockType = 'manufacturing';
+        }
         for (const flow of [...(block.inputs || []), ...(block.outputs || [])]) {
           if (flow.ratePerSecond === undefined) {
             flow.ratePerSecond = flow.ratePerMinute ? Number((flow.ratePerMinute / 60).toFixed(2)) : 0;
@@ -117,6 +121,63 @@ export class LocalStorageAdapter implements StorageAdapter {
       for (const hub of planet.spaceHubs || []) {
         if (hub.ratePerSecond === undefined) {
           hub.ratePerSecond = hub.ratePerMinute ? Number((hub.ratePerMinute / 60).toFixed(2)) : 0;
+        }
+        // Synthesize rocket silo block on grid if missing
+        if (
+          hub.type === 'rocket-silo' &&
+          !planet.blocks.some((b) => b.id === hub.id || b.blockType === 'rocket-silo')
+        ) {
+          planet.blocks.push({
+            id: hub.id || `block-${planet.planetId}-rocket-silo`,
+            planetId: planet.planetId,
+            name: hub.name || 'Legendary Rocket Silo',
+            iconId: 'rocket-silo',
+            blockType: 'rocket-silo',
+            color: '#a855f7',
+            coordinates: hub.coordinates || { q: -1, r: 2 },
+            blueprintMultiplier: 1,
+            inputs: [
+              createResourceFlow({
+                id: 'rocket-fuel',
+                name: 'Rocket Fuel',
+                isFluid: false,
+                ratePerSecond: 10,
+                wagonCount: 2,
+                isLegendary: false,
+                allocatedBays: 1,
+              }),
+              createResourceFlow({
+                id: 'low-density-structure',
+                name: 'Low Density Structure',
+                isFluid: false,
+                ratePerSecond: 10,
+                wagonCount: 2,
+                isLegendary: false,
+                allocatedBays: 1,
+              }),
+              createResourceFlow({
+                id: 'processing-unit',
+                name: 'Processing Unit',
+                isFluid: false,
+                ratePerSecond: 5,
+                wagonCount: 2,
+                isLegendary: false,
+                allocatedBays: 1,
+              }),
+            ],
+            outputs: [
+              createResourceFlow({
+                id: hub.cargoResourceId || 'space-science-pack',
+                name: 'Space Science Pack',
+                isFluid: false,
+                ratePerSecond: hub.ratePerSecond ?? 16.67,
+                wagonCount: 2,
+                isLegendary: true,
+                allocatedBays: 1,
+              }),
+            ],
+            notes: 'Factorio 2.1 Legendary Rocket Silo complex',
+          });
         }
       }
     }

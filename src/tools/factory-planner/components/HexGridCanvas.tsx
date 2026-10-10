@@ -13,6 +13,10 @@ import {
   Sparkles,
   Eye,
   EyeOff,
+  Copy,
+  Link2,
+  Rocket,
+  Box,
 } from 'lucide-react';
 import { FactorioIcon } from '../../../components/factorio/FactorioIcon';
 import type { HexBlock, HexCoordinates, RawIngressNode, SpaceHubNode } from '../types.ts';
@@ -32,6 +36,7 @@ interface HexGridCanvasProps {
   onSelectBlock: (block: HexBlock) => void;
   onMoveBlock: (blockId: string, coordinates: HexCoordinates | null) => void;
   onNewBlockAt?: (coordinates: HexCoordinates) => void;
+  onDuplicateBlock?: (blockId: string) => void;
 }
 
 const HEX_RADIUS = 76; // Base size of hexagon
@@ -43,6 +48,7 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
   onSelectBlock,
   onMoveBlock,
   onNewBlockAt,
+  onDuplicateBlock,
 }) => {
   const containerRef = useRef<HTMLDivElement | null>(null);
 
@@ -309,6 +315,14 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
                       {/* Top: Multiplier badge & Icon */}
                       <div className="flex items-center gap-1">
                         <FactorioIcon id={block.iconId} size={28} />
+                        {block.sharedGroupId && (
+                          <span
+                            className="text-[9px] font-mono px-1 py-0.5 bg-purple-950/90 border border-purple-700/80 text-purple-300 rounded flex items-center shadow-xs"
+                            title="Shared linked blueprint"
+                          >
+                            <Link2 className="w-2.5 h-2.5" />
+                          </span>
+                        )}
                         {block.blueprintMultiplier > 1 && (
                           <span className="text-[10px] font-mono px-1 py-0.2 bg-purple-950/80 border border-purple-700/60 text-purple-300 rounded font-bold">
                             {block.blueprintMultiplier}x
@@ -568,14 +582,36 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
 
       {/* Selected Block Quick Actions Card (Bottom-Left) */}
       {selectedBlock && (
-        <div className="absolute bottom-4 left-4 bg-zinc-950/95 border border-zinc-700 rounded-2xl p-4 shadow-2xl backdrop-blur-md w-80 animate-fade-in">
+        <div className="absolute bottom-4 left-4 bg-zinc-950/95 border border-zinc-700 rounded-2xl p-4 shadow-2xl backdrop-blur-md w-84 animate-fade-in">
           <div className="flex items-start justify-between gap-3 mb-2">
             <div className="flex items-center gap-2.5">
               <FactorioIcon id={selectedBlock.iconId} size={32} />
               <div>
-                <h4 className="font-bold text-zinc-100 text-sm">{selectedBlock.name}</h4>
-                <div className="text-[11px] font-mono text-zinc-400">
-                  Hex ({selectedBlock.coordinates?.q}, {selectedBlock.coordinates?.r})
+                <div className="flex items-center gap-1.5">
+                  <h4 className="font-bold text-zinc-100 text-sm">{selectedBlock.name}</h4>
+                  {selectedBlock.blockType === 'rocket-silo' && (
+                    <span className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[9px] font-bold uppercase bg-purple-950/80 text-purple-300 border border-purple-800">
+                      <Rocket className="w-2.5 h-2.5" />
+                      Silo
+                    </span>
+                  )}
+                  {selectedBlock.blockType === 'cargo-landing-pad' && (
+                    <span className="inline-flex items-center gap-0.5 px-1 py-0.2 rounded text-[9px] font-bold uppercase bg-cyan-950/80 text-cyan-300 border border-cyan-800">
+                      <Box className="w-2.5 h-2.5" />
+                      Pad
+                    </span>
+                  )}
+                </div>
+                <div className="flex items-center gap-2 mt-0.5">
+                  <span className="text-[11px] font-mono text-zinc-400">
+                    Hex ({selectedBlock.coordinates?.q}, {selectedBlock.coordinates?.r})
+                  </span>
+                  {selectedBlock.sharedGroupId && (
+                    <span className="inline-flex items-center gap-0.5 text-[10px] text-purple-300 bg-purple-950/60 px-1 py-0.2 rounded border border-purple-800/40">
+                      <Link2 className="w-2.5 h-2.5" />
+                      Shared
+                    </span>
+                  )}
                 </div>
               </div>
             </div>
@@ -627,13 +663,28 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
               Configure
             </button>
 
+            {onDuplicateBlock && (
+              <button
+                type="button"
+                onClick={() => {
+                  onDuplicateBlock(selectedBlock.id);
+                  setSelectedBlockId(null);
+                }}
+                className="flex items-center gap-1 px-2.5 py-1.5 bg-purple-950/60 hover:bg-purple-900/60 text-purple-300 border border-purple-800/60 rounded-lg text-xs font-medium transition cursor-pointer"
+                title="Duplicate this block as a linked shared blueprint"
+              >
+                <Copy className="w-3.5 h-3.5" />
+                Duplicate
+              </button>
+            )}
+
             <button
               type="button"
               onClick={() => {
                 setMovingBlockId(selectedBlock.id);
                 setSelectedBlockId(null);
               }}
-              className="flex items-center gap-1 px-3 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 rounded-lg text-xs font-medium transition cursor-pointer"
+              className="flex items-center gap-1 px-2.5 py-1.5 bg-zinc-900 hover:bg-zinc-800 text-zinc-200 border border-zinc-700 rounded-lg text-xs font-medium transition cursor-pointer"
               title="Relocate this block on the hex grid"
             >
               <Move className="w-3.5 h-3.5" />
@@ -646,7 +697,7 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
                 onMoveBlock(selectedBlock.id, null);
                 setSelectedBlockId(null);
               }}
-              className="px-2.5 py-1.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-zinc-800 rounded-lg text-xs transition cursor-pointer"
+              className="px-2 py-1.5 text-zinc-400 hover:text-zinc-200 hover:bg-zinc-900 border border-zinc-800 rounded-lg text-xs transition cursor-pointer"
               title="Send to unplaced inventory tray"
             >
               Unplace

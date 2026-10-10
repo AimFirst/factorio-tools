@@ -106,6 +106,8 @@ export interface HexBlock {
   blueprintMultiplier: number; // Multiplier for repeated blueprint stamps inside block
   color?: string; // Optional custom border / accent color
   category?: string; // Optional block category tag
+  blockType?: 'manufacturing' | 'rocket-silo' | 'cargo-landing-pad'; // Type of block (manufacturing vs rocket silo / space hub)
+  sharedGroupId?: string; // Links multiple block instances to the same shared blueprint definition
   inputs: BlockResourceFlow[];
   outputs: BlockResourceFlow[];
   notes?: string;

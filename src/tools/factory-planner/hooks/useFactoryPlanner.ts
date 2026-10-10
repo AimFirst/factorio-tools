@@ -115,17 +115,40 @@ export function useFactoryPlanner() {
     [autoSave]
   );
 
-  // Add or update a block
+  // Add or update a block (with automatic shared instance synchronization)
   const upsertBlock = useCallback(
     (planetId: SolidPlanetId, block: HexBlock) => {
       updateProject((prev) => {
         const planet = prev.planets[planetId];
         const existingIdx = planet.blocks.findIndex((b) => b.id === block.id);
-        const newBlocks = [...planet.blocks];
+        let newBlocks = [...planet.blocks];
+
         if (existingIdx >= 0) {
           newBlocks[existingIdx] = block;
         } else {
           newBlocks.push(block);
+        }
+
+        // If this block belongs to a shared blueprint group, synchronize definition across instances
+        if (block.sharedGroupId) {
+          newBlocks = newBlocks.map((b) => {
+            if (b.sharedGroupId === block.sharedGroupId && b.id !== block.id) {
+              return {
+                ...b,
+                name: block.name,
+                iconId: block.iconId,
+                blueprintMultiplier: block.blueprintMultiplier,
+                color: block.color,
+                category: block.category,
+                blockType: block.blockType,
+                inputs: JSON.parse(JSON.stringify(block.inputs)),
+                outputs: JSON.parse(JSON.stringify(block.outputs)),
+                notes: block.notes,
+                // Keeps own id and own coordinates!
+              };
+            }
+            return b;
+          });
         }
 
         return {
@@ -135,6 +158,69 @@ export function useFactoryPlanner() {
             [planetId]: {
               ...planet,
               blocks: newBlocks,
+            },
+          },
+        };
+      });
+    },
+    [updateProject]
+  );
+
+  // Duplicate a block as a shared blueprint instance
+  const duplicateBlock = useCallback(
+    (planetId: SolidPlanetId, blockId: string) => {
+      updateProject((prev) => {
+        const planet = prev.planets[planetId];
+        const sourceBlock = planet.blocks.find((b) => b.id === blockId);
+        if (!sourceBlock) return prev;
+
+        const sharedGroupId = sourceBlock.sharedGroupId || `group-${sourceBlock.id}`;
+        const updatedSourceBlock = { ...sourceBlock, sharedGroupId };
+
+        const newBlock: HexBlock = {
+          ...sourceBlock,
+          id: `block-${planetId}-${Date.now()}-${Math.floor(Math.random() * 1000)}`,
+          sharedGroupId,
+          name: sourceBlock.name,
+          coordinates: null, // Placed in unplaced inventory tray
+          inputs: JSON.parse(JSON.stringify(sourceBlock.inputs)),
+          outputs: JSON.parse(JSON.stringify(sourceBlock.outputs)),
+        };
+
+        const newBlocks = planet.blocks.map((b) =>
+          b.id === blockId ? updatedSourceBlock : b
+        );
+        newBlocks.push(newBlock);
+
+        return {
+          ...prev,
+          planets: {
+            ...prev.planets,
+            [planetId]: {
+              ...planet,
+              blocks: newBlocks,
+            },
+          },
+        };
+      });
+    },
+    [updateProject]
+  );
+
+  // Unlink a block so it becomes unique and independent
+  const unlinkBlock = useCallback(
+    (planetId: SolidPlanetId, blockId: string) => {
+      updateProject((prev) => {
+        const planet = prev.planets[planetId];
+        return {
+          ...prev,
+          planets: {
+            ...prev.planets,
+            [planetId]: {
+              ...planet,
+              blocks: planet.blocks.map((b) =>
+                b.id === blockId ? { ...b, sharedGroupId: undefined } : b
+              ),
             },
           },
         };
@@ -436,6 +522,8 @@ export function useFactoryPlanner() {
     isLoading,
     isSaving,
     upsertBlock,
+    duplicateBlock,
+    unlinkBlock,
     removeBlock,
     moveBlock,
     upsertRawIngress,

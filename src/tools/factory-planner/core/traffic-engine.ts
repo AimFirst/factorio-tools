@@ -93,6 +93,7 @@ export function calculatePlanetTraffic(params: {
 
   // 2. Space Hubs (Landing pads import from orbit as suppliers)
   for (const hub of spaceHubs) {
+    if (blocks.some((b) => b.id === hub.id)) continue;
     const ratePerSecond = hub.ratePerSecond ?? (hub.ratePerMinute ? hub.ratePerMinute / 60 : 0);
     if (hub.type === 'cargo-landing-pad') {
       const list = suppliersByResource.get(hub.cargoResourceId) || [];

@@ -35,6 +35,7 @@ export const FactoryPlanner: React.FC = () => {
     upsertBlock,
     removeBlock,
     moveBlock,
+    duplicateBlock,
     upsertRawIngress,
     upsertSpaceHub,
     upsertInterplanetaryRoute,
@@ -57,6 +58,7 @@ export const FactoryPlanner: React.FC = () => {
   const [viewMode, setViewMode] = useState<'map' | 'cards' | 'split'>('map');
   const [editorOpen, setEditorOpen] = useState(false);
   const [editingBlock, setEditingBlock] = useState<HexBlock | null>(null);
+  const [initialBlockType, setInitialBlockType] = useState<'manufacturing' | 'rocket-silo' | 'cargo-landing-pad'>('manufacturing');
   const [newBlockCoords, setNewBlockCoords] = useState<HexCoordinates | null>(null);
   const [rawModalOpen, setRawModalOpen] = useState(false);
   const [spaceModalOpen, setSpaceModalOpen] = useState(false);
@@ -90,15 +92,20 @@ export const FactoryPlanner: React.FC = () => {
 
   const totalRocketLaunches = spaceHubs.reduce((sum, h) => sum + h.launchesPerMinute, 0);
 
-  const handleOpenNewBlock = (coords?: HexCoordinates) => {
+  const handleOpenNewBlock = (
+    coords?: HexCoordinates,
+    bType: 'manufacturing' | 'rocket-silo' | 'cargo-landing-pad' = 'manufacturing'
+  ) => {
     setEditingBlock(null);
     setNewBlockCoords(coords || null);
+    setInitialBlockType(bType);
     setEditorOpen(true);
   };
 
   const handleEditBlock = (block: HexBlock) => {
     setEditingBlock(block);
     setNewBlockCoords(null);
+    setInitialBlockType(block.blockType || 'manufacturing');
     setEditorOpen(true);
   };
 
@@ -292,7 +299,17 @@ export const FactoryPlanner: React.FC = () => {
 
             <button
               type="button"
-              onClick={() => handleOpenNewBlock()}
+              onClick={() => handleOpenNewBlock(undefined, 'rocket-silo')}
+              className="flex items-center gap-1.5 px-3 py-1.5 bg-purple-900/50 hover:bg-purple-800/60 text-purple-200 border border-purple-700/60 rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer"
+              title="Add a legendary Rocket Silo hex block to optimize its grid placement"
+            >
+              <Rocket className="w-3.5 h-3.5 text-purple-400" />
+              Add Silo
+            </button>
+
+            <button
+              type="button"
+              onClick={() => handleOpenNewBlock(undefined, 'manufacturing')}
               className="flex items-center gap-1.5 px-3.5 py-1.5 bg-orange-600 hover:bg-orange-500 text-white rounded-lg text-xs font-semibold shadow-xs transition cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" />
@@ -310,6 +327,7 @@ export const FactoryPlanner: React.FC = () => {
             onSelectBlock={handleEditBlock}
             onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
             onNewBlockAt={handleOpenNewBlock}
+            onDuplicateBlock={(id) => duplicateBlock(activePlanet, id)}
           />
         )}
 
@@ -346,6 +364,7 @@ export const FactoryPlanner: React.FC = () => {
                     block={block}
                     onEdit={handleEditBlock}
                     onDelete={(id) => removeBlock(activePlanet, id)}
+                    onDuplicate={(id) => duplicateBlock(activePlanet, id)}
                   />
                 ))}
               </div>
@@ -363,6 +382,7 @@ export const FactoryPlanner: React.FC = () => {
                 onSelectBlock={handleEditBlock}
                 onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
                 onNewBlockAt={handleOpenNewBlock}
+                onDuplicateBlock={(id) => duplicateBlock(activePlanet, id)}
               />
             </div>
             <div className="lg:col-span-4 space-y-3 max-h-[680px] overflow-y-auto pr-1">
@@ -375,6 +395,7 @@ export const FactoryPlanner: React.FC = () => {
                   block={block}
                   onEdit={handleEditBlock}
                   onDelete={(id) => removeBlock(activePlanet, id)}
+                  onDuplicate={(id) => duplicateBlock(activePlanet, id)}
                 />
               ))}
             </div>
@@ -495,8 +516,15 @@ export const FactoryPlanner: React.FC = () => {
         onClose={() => setEditorOpen(false)}
         onSave={(block) => upsertBlock(activePlanet, block)}
         onDelete={(id) => removeBlock(activePlanet, id)}
+        onDuplicate={(id) => duplicateBlock(activePlanet, id)}
         initialBlock={editingBlock}
         initialCoordinates={newBlockCoords}
+        initialBlockType={initialBlockType}
+        sharedInstancesCount={
+          editingBlock?.sharedGroupId
+            ? blocks.filter((b) => b.sharedGroupId === editingBlock.sharedGroupId).length
+            : 1
+        }
         planetId={activePlanet}
       />
 
