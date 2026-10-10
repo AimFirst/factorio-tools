@@ -39,6 +39,7 @@ interface HexGridCanvasProps {
   onMoveBlock: (blockId: string, coordinates: HexCoordinates | null) => void;
   onNewBlockAt?: (coordinates: HexCoordinates) => void;
   onDuplicateBlock?: (blockId: string) => void;
+  onEditRawIngress?: (node: RawIngressNode) => void;
   deficitMap?: Map<string, ResourceBalanceItem>;
   onOpenResourceBalance?: () => void;
 }
@@ -53,6 +54,7 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
   onMoveBlock,
   onNewBlockAt,
   onDuplicateBlock,
+  onEditRawIngress,
   deficitMap,
   onOpenResourceBalance,
 }) => {
@@ -192,6 +194,7 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
   const handleHexClick = (hex: HexCoordinates) => {
     const key = hexKey(hex);
     const existingBlock = blockMap.get(key);
+    const existingRaw = rawMap.get(key);
 
     // If we are currently moving or placing a block
     if (movingBlockId) {
@@ -211,6 +214,11 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
 
     if (existingBlock) {
       setSelectedBlockId(existingBlock.id);
+    } else if (existingRaw) {
+      setSelectedBlockId(null);
+      if (onEditRawIngress) {
+        onEditRawIngress(existingRaw);
+      }
     } else {
       // Empty hex clicked
       setSelectedBlockId(null);

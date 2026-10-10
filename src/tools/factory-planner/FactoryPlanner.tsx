@@ -11,9 +11,11 @@ import {
   Columns2,
   Scale,
   AlertTriangle,
+  Edit3,
+  Trash2,
 } from 'lucide-react';
 import { useFactoryPlanner } from './hooks/useFactoryPlanner.ts';
-import { PLANETS_META, type HexBlock, type HexCoordinates } from './types.ts';
+import { PLANETS_META, type HexBlock, type HexCoordinates, type RawIngressNode } from './types.ts';
 import { calculatePlanetaryResourceBalance } from './core/resource-balance.ts';
 import { PlanetSwitcher } from './components/PlanetSwitcher';
 import { ProjectActionsBar } from './components/ProjectActionsBar';
@@ -41,6 +43,7 @@ export const FactoryPlanner: React.FC = () => {
     moveBlock,
     duplicateBlock,
     upsertRawIngress,
+    removeRawIngress,
     upsertSpaceHub,
     upsertInterplanetaryRoute,
     removeInterplanetaryRoute,
@@ -67,6 +70,7 @@ export const FactoryPlanner: React.FC = () => {
   const [resourceBalanceOpen, setResourceBalanceOpen] = useState(false);
   const [newBlockCoords, setNewBlockCoords] = useState<HexCoordinates | null>(null);
   const [rawModalOpen, setRawModalOpen] = useState(false);
+  const [editingOutpost, setEditingOutpost] = useState<RawIngressNode | null>(null);
   const [spaceModalOpen, setSpaceModalOpen] = useState(false);
 
   // Planetary Supply vs Demand & Deficits (accounting for blueprintMultiplier on all blocks)
@@ -151,7 +155,10 @@ export const FactoryPlanner: React.FC = () => {
         activePlanet={activePlanet}
         isSaving={isSaving}
         onNewBlock={handleOpenNewBlock}
-        onAddRawIngress={() => setRawModalOpen(true)}
+        onAddRawIngress={() => {
+          setEditingOutpost(null);
+          setRawModalOpen(true);
+        }}
         onAddSpaceHub={() => setSpaceModalOpen(true)}
         onExportJson={handleExport}
         onImportJson={importProjectJson}
@@ -445,6 +452,10 @@ export const FactoryPlanner: React.FC = () => {
             onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
             onNewBlockAt={handleOpenNewBlock}
             onDuplicateBlock={(id) => duplicateBlock(activePlanet, id)}
+            onEditRawIngress={(node) => {
+              setEditingOutpost(node);
+              setRawModalOpen(true);
+            }}
             deficitMap={balanceReport.deficitMap}
             onOpenResourceBalance={() => setResourceBalanceOpen(true)}
           />
@@ -503,6 +514,10 @@ export const FactoryPlanner: React.FC = () => {
                 onMoveBlock={(id, coords) => moveBlock(activePlanet, id, coords)}
                 onNewBlockAt={handleOpenNewBlock}
                 onDuplicateBlock={(id) => duplicateBlock(activePlanet, id)}
+                onEditRawIngress={(node) => {
+                  setEditingOutpost(node);
+                  setRawModalOpen(true);
+                }}
                 deficitMap={balanceReport.deficitMap}
                 onOpenResourceBalance={() => setResourceBalanceOpen(true)}
               />
@@ -539,7 +554,10 @@ export const FactoryPlanner: React.FC = () => {
             </div>
             <button
               type="button"
-              onClick={() => setRawModalOpen(true)}
+              onClick={() => {
+                setEditingOutpost(null);
+                setRawModalOpen(true);
+              }}
               className="text-xs text-amber-400 hover:text-amber-300 font-medium cursor-pointer"
             >
               + Add Outpost
@@ -555,22 +573,55 @@ export const FactoryPlanner: React.FC = () => {
               {rawIngressNodes.map((node) => (
                 <div
                   key={node.id}
-                  className="flex items-center justify-between p-2.5 bg-zinc-950/70 border border-zinc-800/80 rounded-xl text-xs"
+                  className="group flex items-center justify-between p-2.5 bg-zinc-950/70 border border-zinc-800/80 hover:border-zinc-700/80 rounded-xl text-xs transition"
                 >
-                  <div className="flex items-center gap-2.5">
+                  <div
+                    className="flex items-center gap-2.5 flex-1 min-w-0 cursor-pointer"
+                    onClick={() => {
+                      setEditingOutpost(node);
+                      setRawModalOpen(true);
+                    }}
+                  >
                     <FactorioIcon id={node.resourceId} size={24} />
-                    <div>
-                      <div className="font-medium text-zinc-200">{node.name}</div>
+                    <div className="min-w-0 flex-1">
+                      <div className="font-medium text-zinc-200 truncate group-hover:text-amber-300 transition-colors">
+                        {node.name}
+                      </div>
                       <div className="text-[11px] text-zinc-500 font-mono">
                         {node.ratePerSecond.toLocaleString()}/s ({(node.ratePerSecond * 60).toLocaleString()}/min)
                       </div>
                     </div>
                   </div>
-                  {node.coordinates && (
-                    <span className="font-mono text-[10px] text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded">
-                      ({node.coordinates.q},{node.coordinates.r})
-                    </span>
-                  )}
+                  <div className="flex items-center gap-1.5 ml-2">
+                    {node.coordinates && (
+                      <span className="font-mono text-[10px] text-zinc-500 bg-zinc-900 px-1.5 py-0.5 rounded">
+                        ({node.coordinates.q},{node.coordinates.r})
+                      </span>
+                    )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setEditingOutpost(node);
+                        setRawModalOpen(true);
+                      }}
+                      className="p-1.5 text-zinc-400 hover:text-amber-300 hover:bg-zinc-800/80 rounded-lg transition cursor-pointer"
+                      title="Edit outpost"
+                    >
+                      <Edit3 className="w-3.5 h-3.5" />
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        if (window.confirm(`Delete mining outpost "${node.name}"?`)) {
+                          removeRawIngress(activePlanet, node.id);
+                        }
+                      }}
+                      className="p-1.5 text-zinc-400 hover:text-red-400 hover:bg-red-950/40 rounded-lg transition cursor-pointer"
+                      title="Delete outpost"
+                    >
+                      <Trash2 className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
                 </div>
               ))}
             </div>
@@ -668,8 +719,13 @@ export const FactoryPlanner: React.FC = () => {
 
       <RawIngressModal
         isOpen={rawModalOpen}
-        onClose={() => setRawModalOpen(false)}
+        onClose={() => {
+          setRawModalOpen(false);
+          setEditingOutpost(null);
+        }}
         onSave={(node) => upsertRawIngress(activePlanet, node)}
+        onDelete={(id) => removeRawIngress(activePlanet, id)}
+        initialNode={editingOutpost}
         planetId={activePlanet}
       />
 

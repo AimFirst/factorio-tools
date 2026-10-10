@@ -557,6 +557,62 @@ async function runStorageTest() {
   );
 }
 
+// -------------------------------------------------------------
+// Test 14: Raw Mining Outposts Upsert, Edit & Deletion
+// -------------------------------------------------------------
+{
+  const proj = createDefaultProject();
+  const planet = proj.planets.nauvis;
+  const initialOutpostCount = planet.rawIngressNodes.length;
+
+  // 1. Add outpost
+  const newOutpost = {
+    id: 'raw-nauvis-test-1',
+    resourceId: 'uranium-ore',
+    planetId: 'nauvis' as const,
+    name: 'Rich Uranium Patch',
+    ratePerSecond: 150,
+    ratePerMinute: 9000,
+    coordinates: { q: 3, r: -2 },
+  };
+  planet.rawIngressNodes.push(newOutpost);
+  assert.strictEqual(planet.rawIngressNodes.length, initialOutpostCount + 1);
+
+  // 2. Edit outpost
+  const existingIdx = planet.rawIngressNodes.findIndex((n) => n.id === newOutpost.id);
+  assert(existingIdx >= 0);
+  planet.rawIngressNodes[existingIdx] = {
+    ...planet.rawIngressNodes[existingIdx],
+    name: 'Expanded Rich Uranium Patch',
+    ratePerSecond: 300,
+    ratePerMinute: 18000,
+    notes: 'Upgraded with 16 electric mining drills and speed modules',
+  };
+  assert.strictEqual(planet.rawIngressNodes[existingIdx].name, 'Expanded Rich Uranium Patch');
+  assert.strictEqual(planet.rawIngressNodes[existingIdx].ratePerSecond, 300);
+
+  // 3. Resource balance takes edited outpost into account
+  const balance = calculatePlanetaryResourceBalance({
+    blocks: planet.blocks,
+    rawIngressNodes: planet.rawIngressNodes,
+  });
+  const uraniumItem = balance.items.find((i) => i.resourceId === 'uranium-ore');
+  assert(uraniumItem, 'Uranium must appear in supply');
+  assert.strictEqual(uraniumItem.totalSupply, 300);
+
+  // 4. Remove outpost
+  planet.rawIngressNodes = planet.rawIngressNodes.filter((n) => n.id !== newOutpost.id);
+  assert.strictEqual(planet.rawIngressNodes.length, initialOutpostCount);
+  const balanceAfterDelete = calculatePlanetaryResourceBalance({
+    blocks: planet.blocks,
+    rawIngressNodes: planet.rawIngressNodes,
+  });
+  const uraniumAfter = balanceAfterDelete.items.find((i) => i.resourceId === 'uranium-ore');
+  assert(!uraniumAfter, 'Uranium supply should be 0 or absent after removing outpost');
+
+  console.log('✅ Test 14: Raw Mining Outposts Upsert, Edit & Deletion passed.');
+}
+
 runStorageTest().then(() => {
   console.log('\n🎉 ALL FACTORY PLANNER TESTS PASSED SUCCESSFULLY!');
 }).catch((err) => {
