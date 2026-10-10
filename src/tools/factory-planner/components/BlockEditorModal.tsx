@@ -37,6 +37,8 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
 }) => {
   const [name, setName] = useState('');
   const [iconId, setIconId] = useState('iron-plate');
+  const [isNameManuallyEdited, setIsNameManuallyEdited] = useState(false);
+  const [isIconManuallyEdited, setIsIconManuallyEdited] = useState(false);
   const [blueprintMultiplier, setBlueprintMultiplier] = useState(1);
   const [color, setColor] = useState('#f97316');
   const [notes, setNotes] = useState('');
@@ -53,16 +55,41 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
       setNotes(initialBlock.notes || '');
       setInputs(initialBlock.inputs);
       setOutputs(initialBlock.outputs);
+      setIsNameManuallyEdited(true);
+      setIsIconManuallyEdited(true);
     } else {
-      setName('New Manufacturing Block');
+      setName('');
       setIconId('electronic-circuit');
       setBlueprintMultiplier(1);
       setColor('#f97316');
       setNotes('');
       setInputs([]);
       setOutputs([]);
+      setIsNameManuallyEdited(false);
+      setIsIconManuallyEdited(false);
     }
   }, [initialBlock, isOpen]);
+
+  const handleOutputsChange = (newOutputs: BlockResourceFlow[]) => {
+    setOutputs(newOutputs);
+    // When creating a new city block, default icon and title to first output item unless manually overridden
+    if (!initialBlock) {
+      if (!isNameManuallyEdited) {
+        if (newOutputs.length > 0) {
+          setName(newOutputs[0].name);
+        } else {
+          setName('');
+        }
+      }
+      if (!isIconManuallyEdited) {
+        if (newOutputs.length > 0) {
+          setIconId(newOutputs[0].id);
+        } else {
+          setIconId('electronic-circuit');
+        }
+      }
+    }
+  };
 
   if (!isOpen) return null;
 
@@ -76,7 +103,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
     const block: HexBlock = {
       id: initialBlock?.id || `block-${planetId}-${Date.now()}`,
       planetId,
-      name: name.trim() || 'Manufacturing Block',
+      name: name.trim() || (outputs[0]?.name ?? 'Manufacturing Block'),
       iconId,
       coordinates: initialBlock?.coordinates || initialCoordinates || null,
       blueprintMultiplier: Math.max(1, blueprintMultiplier),
@@ -92,8 +119,25 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
   const handleAnalyzeInAllocator = () => {
     const totalBays =
       inputs.reduce((sum, f) => sum + f.allocatedBays, 0) || Math.max(4, inputs.length);
+    const resolvedName = name.trim() || (outputs[0]?.name ?? 'Custom Block');
+    const blockIdToSave = initialBlock?.id || `block-${planetId}-${Date.now()}`;
+    const blockToSave: HexBlock = {
+      id: blockIdToSave,
+      planetId,
+      name: resolvedName,
+      iconId,
+      coordinates: initialBlock?.coordinates || initialCoordinates || null,
+      blueprintMultiplier: Math.max(1, blueprintMultiplier),
+      color,
+      inputs,
+      outputs,
+      notes: notes.trim(),
+    };
+    // Save block so it's in the project for the allocator to update
+    onSave(blockToSave);
+
     const cfg = {
-      name: `${name.trim() || 'Custom Block'} (City Block)`,
+      name: `${resolvedName} (City Block)`,
       blueprintMultiplier: Math.max(1, blueprintMultiplier),
       totalStations: totalBays,
       trainWagons: inputs[0]?.wagonCount || 2,
@@ -104,14 +148,22 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
         id: inp.id,
         name: inp.name,
         isFluid: inp.isFluid,
-        inputRate: inp.ratePerMinute,
-        unit: 'per-min' as const,
+        inputRate: inp.ratePerSecond,
+        unit: 'per-sec' as const,
         beltType: 'turbo' as const,
-        lockStations: null,
+        lockStations: inp.allocatedBays || null,
       })),
     };
+    const sharedPayload = {
+      sourceBlock: {
+        planetId,
+        blockId: blockIdToSave,
+        blockName: resolvedName,
+      },
+      config: cfg,
+    };
     try {
-      window.localStorage.setItem('factorio_shared_block_for_allocator', JSON.stringify(cfg));
+      window.localStorage.setItem('factorio_shared_block_for_allocator', JSON.stringify(sharedPayload));
       window.dispatchEvent(new CustomEvent('switch-tool', { detail: { toolId: 'station-allocator' } }));
       onClose();
     } catch (e) {
@@ -146,8 +198,11 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
               <input
                 type="text"
                 value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Block Name (e.g. Electronic Circuits)"
+                onChange={(e) => {
+                  setName(e.target.value);
+                  setIsNameManuallyEdited(true);
+                }}
+                placeholder={outputs.length > 0 ? outputs[0].name : "Block Name (e.g. Electronic Circuits)"}
                 className="w-full bg-zinc-900/90 border border-zinc-800 rounded-lg px-3 py-1.5 text-zinc-100 font-semibold text-lg focus:outline-none focus:border-orange-500 transition"
               />
               <div className="flex items-center gap-3 mt-1 text-xs text-zinc-400">
@@ -210,7 +265,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
             title="Produced Outputs"
             type="output"
             flows={outputs}
-            onChange={setOutputs}
+            onChange={handleOutputsChange}
           />
 
           {/* Inputs (Consumption) Table */}
@@ -330,6 +385,7 @@ export const BlockEditorModal: React.FC<BlockEditorModalProps> = ({
         onClose={() => setIconPickerOpen(false)}
         onSelect={(res: FactorioItem | FactorioFluid) => {
           setIconId(res.id);
+          setIsIconManuallyEdited(true);
           setIconPickerOpen(false);
         }}
       />

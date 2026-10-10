@@ -47,7 +47,7 @@ export const SpacePlatformModal: React.FC<SpacePlatformModalProps> = ({
       );
       if (spaceSci) {
         setProduceSpaceScience(true);
-        setSpaceScienceRate(spaceSci.ratePerMinute);
+        setSpaceScienceRate(spaceSci.ratePerSecond);
       } else {
         setProduceSpaceScience(false);
       }
@@ -57,7 +57,7 @@ export const SpacePlatformModal: React.FC<SpacePlatformModalProps> = ({
       );
       if (promSci) {
         setProducePromethiumScience(true);
-        setPromethiumScienceRate(promSci.ratePerMinute);
+        setPromethiumScienceRate(promSci.ratePerSecond);
       } else {
         setProducePromethiumScience(false);
       }
@@ -66,9 +66,9 @@ export const SpacePlatformModal: React.FC<SpacePlatformModalProps> = ({
       setName('Orbital Science Platform');
       setCurrentOrbit('nauvis');
       setProduceSpaceScience(true);
-      setSpaceScienceRate(1000);
+      setSpaceScienceRate(16.67);
       setProducePromethiumScience(false);
-      setPromethiumScienceRate(1000);
+      setPromethiumScienceRate(16.67);
       setNotes('');
     }
   }, [initialPlatform, isOpen]);
@@ -80,13 +80,13 @@ export const SpacePlatformModal: React.FC<SpacePlatformModalProps> = ({
     if (produceSpaceScience && spaceScienceRate > 0) {
       producedScience.push({
         resourceId: 'space-science-pack',
-        ratePerMinute: spaceScienceRate,
+        ratePerSecond: spaceScienceRate,
       });
     }
     if (producePromethiumScience && promethiumScienceRate > 0) {
       producedScience.push({
         resourceId: 'promethium-science-pack',
-        ratePerMinute: promethiumScienceRate,
+        ratePerSecond: promethiumScienceRate,
       });
     }
 
@@ -192,14 +192,14 @@ export const SpacePlatformModal: React.FC<SpacePlatformModalProps> = ({
                   <input
                     type="number"
                     min="0"
-                    step="100"
+                    step="1"
                     value={spaceScienceRate}
                     onChange={(e) =>
                       setSpaceScienceRate(Math.max(0, parseFloat(e.target.value) || 0))
                     }
                     className="w-24 bg-zinc-900 border border-zinc-700 rounded-md px-2 py-1 text-xs text-right font-mono text-zinc-100 focus:outline-none focus:border-purple-500"
                   />
-                  <span className="text-xs text-zinc-400 font-mono">/min</span>
+                  <span className="text-xs text-zinc-400 font-mono">/s</span>
                 </div>
               )}
             </div>
@@ -224,7 +224,7 @@ export const SpacePlatformModal: React.FC<SpacePlatformModalProps> = ({
                   <input
                     type="number"
                     min="0"
-                    step="100"
+                    step="1"
                     value={promethiumScienceRate}
                     onChange={(e) =>
                       setPromethiumScienceRate(
@@ -233,7 +233,7 @@ export const SpacePlatformModal: React.FC<SpacePlatformModalProps> = ({
                     }
                     className="w-24 bg-zinc-900 border border-zinc-700 rounded-md px-2 py-1 text-xs text-right font-mono text-zinc-100 focus:outline-none focus:border-purple-500"
                   />
-                  <span className="text-xs text-zinc-400 font-mono">/min</span>
+                  <span className="text-xs text-zinc-400 font-mono">/s</span>
                 </div>
               )}
             </div>

@@ -31,12 +31,12 @@ export const ResourceFlowTable: React.FC<ResourceFlowTableProps> = ({
     const isFluid = resource.type === 'fluid';
     const wagonCount = 2;
     const isLegendary = false;
-    const ratePerMinute = isFluid ? 12000 : 6000;
+    const ratePerSecond = isFluid ? 200 : 100;
 
     const metrics = updateFlowMetrics({
       id: resource.id,
       isFluid,
-      ratePerMinute,
+      ratePerSecond,
       wagonCount,
       isLegendary,
     });
@@ -45,7 +45,7 @@ export const ResourceFlowTable: React.FC<ResourceFlowTableProps> = ({
       id: resource.id,
       name: resource.name,
       isFluid,
-      ratePerMinute,
+      ratePerSecond,
       wagonCount,
       isLegendary,
       trainCapacity: metrics.trainCapacity,
@@ -65,7 +65,7 @@ export const ResourceFlowTable: React.FC<ResourceFlowTableProps> = ({
       const metrics = updateFlowMetrics({
         id: merged.id,
         isFluid: merged.isFluid,
-        ratePerMinute: merged.ratePerMinute,
+        ratePerSecond: merged.ratePerSecond,
         wagonCount: merged.wagonCount,
         isLegendary: merged.isLegendary,
       });
@@ -142,8 +142,7 @@ export const ResourceFlowTable: React.FC<ResourceFlowTableProps> = ({
             <thead>
               <tr className="border-b border-zinc-800 text-zinc-400 text-[11px] uppercase tracking-wider">
                 <th className="py-2 px-2">Resource</th>
-                <th className="py-2 px-2">Rate (/min)</th>
-                <th className="py-2 px-2">Rate (/sec)</th>
+                <th className="py-2 px-2">Rate (/s)</th>
                 <th className="py-2 px-2">Wagons</th>
                 <th className="py-2 px-2 text-center">Quality</th>
                 <th className="py-2 px-2">Train Cap</th>
@@ -154,7 +153,6 @@ export const ResourceFlowTable: React.FC<ResourceFlowTableProps> = ({
             </thead>
             <tbody className="divide-y divide-zinc-800/50">
               {flows.map((flow, index) => {
-                const ratePerSec = flow.ratePerMinute / 60;
                 return (
                   <tr key={flow.id} className="hover:bg-zinc-800/30 transition-colors">
                     {/* Icon & Name */}
@@ -170,28 +168,26 @@ export const ResourceFlowTable: React.FC<ResourceFlowTableProps> = ({
                       </div>
                     </td>
 
-                    {/* Rate per Min */}
-                    <td className="py-2 px-2">
-                      <input
-                        type="number"
-                        min="0"
-                        step="100"
-                        value={flow.ratePerMinute}
-                        onChange={(e) =>
-                          handleUpdateFlow(index, {
-                            ratePerMinute: Math.max(0, parseFloat(e.target.value) || 0),
-                          })
-                        }
-                        className="w-24 bg-zinc-950 border border-zinc-800 rounded px-2 py-1 text-zinc-200 font-mono text-xs focus:outline-none focus:border-orange-500"
-                      />
-                    </td>
-
                     {/* Rate per Sec */}
-                    <td className="py-2 px-2 font-mono text-zinc-400">
-                      {ratePerSec < 10
-                        ? ratePerSec.toFixed(2)
-                        : Math.round(ratePerSec).toLocaleString()}
-                      /s
+                    <td className="py-2 px-2">
+                      <div className="flex items-center gap-1.5">
+                        <input
+                          type="number"
+                          min="0"
+                          step="any"
+                          value={flow.ratePerSecond}
+                          onChange={(e) =>
+                            handleUpdateFlow(index, {
+                              ratePerSecond: Math.max(0, parseFloat(e.target.value) || 0),
+                            })
+                          }
+                          className="w-20 bg-zinc-950 border border-zinc-800 rounded px-2 py-1 text-zinc-200 font-mono text-xs focus:outline-none focus:border-orange-500"
+                        />
+                        <span className="text-[10px] text-zinc-500 font-mono">/s</span>
+                      </div>
+                      <div className="text-[10px] text-zinc-500 font-mono mt-0.5">
+                        {(flow.ratePerSecond * 60).toLocaleString()} /min
+                      </div>
                     </td>
 
                     {/* Wagons */}

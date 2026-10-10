@@ -5,7 +5,10 @@ import {
   Sliders, 
   RotateCcw,
   Sparkles,
-  ArrowRightLeft
+  ArrowRightLeft,
+  Check,
+  Link,
+  ArrowLeft
 } from 'lucide-react';
 import type { ResourceDemandEntry, CityBlockConfig } from './types';
 import { allocateStations, type StationDemandInput } from '../../lib/apportionment';
@@ -16,19 +19,50 @@ import { ResourceDemandTable } from './ResourceDemandTable';
 import { StationBayVisualizer } from './StationBayVisualizer';
 import { PresetManager, DEFAULT_PRESETS } from './PresetManager';
 import type { FactorioItem, FactorioFluid } from '../../data/generated/types';
+import { defaultStorage } from '../factory-planner/storage/LocalStorageAdapter';
+import { updateFlowMetrics } from '../factory-planner/core/calculations';
+import type { SolidPlanetId, HexBlock, BlockResourceFlow } from '../factory-planner/types';
+
+interface LinkedBlockContext {
+  planetId: SolidPlanetId;
+  blockId: string;
+  blockName: string;
+}
 
 export const StationAllocator: React.FC = () => {
   // Config state initialized with default Electronic Circuit / Processing unit setup
   const [config, setConfig] = useState<CityBlockConfig>(DEFAULT_PRESETS[0]);
   const [isSelectorOpen, setIsSelectorOpen] = useState(false);
+  const [linkedBlock, setLinkedBlock] = useState<LinkedBlockContext | null>(null);
+  const [availableBlocks, setAvailableBlocks] = useState<
+    { id: string; name: string; planetId: SolidPlanetId }[]
+  >([]);
+
+  // Load available blocks from current factory planner project for seamless selection
+  useEffect(() => {
+    defaultStorage.getOrCreateInitialProject().then((proj) => {
+      const list: { id: string; name: string; planetId: SolidPlanetId }[] = [];
+      for (const [planetId, planetData] of Object.entries(proj.planets)) {
+        for (const b of planetData.blocks) {
+          list.push({ id: b.id, name: b.name, planetId: planetId as SolidPlanetId });
+        }
+      }
+      setAvailableBlocks(list);
+    }).catch(console.error);
+  }, []);
 
   // Check for block dispatched from Multi-World Factory Planner
   useEffect(() => {
     try {
       const shared = window.localStorage.getItem('factorio_shared_block_for_allocator');
       if (shared) {
-        const parsed = JSON.parse(shared) as CityBlockConfig;
-        setConfig(parsed);
+        const parsed = JSON.parse(shared);
+        if (parsed.sourceBlock && parsed.config) {
+          setLinkedBlock(parsed.sourceBlock);
+          setConfig(parsed.config);
+        } else {
+          setConfig(parsed as CityBlockConfig);
+        }
         window.localStorage.removeItem('factorio_shared_block_for_allocator');
       }
     } catch (e) {
@@ -113,6 +147,156 @@ export const StationAllocator: React.FC = () => {
     });
   };
 
+  const handleSelectBlockToLink = async (blockId: string) => {
+    if (!blockId) {
+      setLinkedBlock(null);
+      return;
+    }
+    try {
+      const proj = await defaultStorage.getOrCreateInitialProject();
+      for (const [planetId, planetData] of Object.entries(proj.planets)) {
+        const found = planetData.blocks.find((b: HexBlock) => b.id === blockId);
+        if (found) {
+          setLinkedBlock({
+            planetId: planetId as SolidPlanetId,
+            blockId: found.id,
+            blockName: found.name,
+          });
+          const totalBays =
+            found.inputs.reduce((sum: number, f: BlockResourceFlow) => sum + f.allocatedBays, 0) || Math.max(4, found.inputs.length);
+          setConfig({
+            name: `${found.name} (City Block)`,
+            blueprintMultiplier: found.blueprintMultiplier || 1,
+            totalStations: totalBays,
+            trainWagons: found.inputs[0]?.wagonCount || 2,
+            isLegendaryQuality: found.inputs[0]?.isLegendary || false,
+            beltStackLevel: 4,
+            allocationMode: 'train-throughput',
+            entries: found.inputs.map((inp: BlockResourceFlow) => ({
+              id: inp.id,
+              name: inp.name,
+              isFluid: inp.isFluid,
+              inputRate: inp.ratePerSecond,
+              unit: 'per-sec',
+              beltType: 'turbo',
+              lockStations: inp.allocatedBays || null,
+            })),
+          });
+          break;
+        }
+      }
+    } catch (e) {
+      console.error('Failed to link block', e);
+    }
+  };
+
+  const handleApplyToPlanner = async () => {
+    if (!linkedBlock) return;
+    try {
+      const proj = await defaultStorage.getOrCreateInitialProject();
+      const planetData = proj.planets[linkedBlock.planetId];
+      if (!planetData) {
+        console.warn('Planet data not found in project');
+        return;
+      }
+      const targetIndex = planetData.blocks.findIndex((b: HexBlock) => b.id === linkedBlock.blockId);
+      if (targetIndex === -1) {
+        console.warn('Target block not found in project');
+        return;
+      }
+
+      const block = { ...planetData.blocks[targetIndex] };
+      block.blueprintMultiplier = config.blueprintMultiplier;
+
+      // Update existing inputs based on allocator apportionment results & config entries
+      const updatedInputs = block.inputs.map((inp: BlockResourceFlow) => {
+        const entry = config.entries.find((e) => e.id === inp.id);
+        const result = apportionment.allocations.find((r) => r.id === inp.id);
+
+        // Respect overridden/locked stations, or computed apportionment
+        const allocatedBays =
+          entry?.lockStations ?? (result?.allocatedStations || inp.allocatedBays || 1);
+
+        // Convert entry input rate if modified in allocator
+        let ratePerSecond = inp.ratePerSecond;
+        if (entry) {
+          if (entry.unit === 'per-sec') {
+            ratePerSecond = entry.inputRate;
+          } else if (entry.unit === 'per-min') {
+            ratePerSecond = Number((entry.inputRate / 60).toFixed(2));
+          } else if (entry.unit === 'belts') {
+            const beltSpeed = getEffectiveBeltSpeed(entry.beltType, config.beltStackLevel);
+            ratePerSecond = Number((entry.inputRate * beltSpeed).toFixed(2));
+          }
+        }
+
+        const wagonCount = config.trainWagons;
+        const isLegendary = config.isLegendaryQuality;
+
+        const metrics = updateFlowMetrics({
+          id: inp.id,
+          isFluid: inp.isFluid,
+          ratePerSecond,
+          wagonCount,
+          isLegendary,
+        });
+
+        return {
+          ...inp,
+          ratePerSecond,
+          wagonCount,
+          isLegendary,
+          allocatedBays,
+          trainCapacity: metrics.trainCapacity,
+          trainsPerMinute: metrics.trainsPerMinute,
+        };
+      });
+
+      // Any new resources added inside the allocator:
+      for (const entry of config.entries) {
+        if (!updatedInputs.some((inp: BlockResourceFlow) => inp.id === entry.id)) {
+          const result = apportionment.allocations.find((r) => r.id === entry.id);
+          const allocatedBays = entry.lockStations ?? (result?.allocatedStations || 1);
+          let ratePerSecond = entry.inputRate;
+          if (entry.unit === 'per-min') {
+            ratePerSecond = Number((entry.inputRate / 60).toFixed(2));
+          } else if (entry.unit === 'belts') {
+            const beltSpeed = getEffectiveBeltSpeed(entry.beltType, config.beltStackLevel);
+            ratePerSecond = Number((entry.inputRate * beltSpeed).toFixed(2));
+          }
+          const metrics = updateFlowMetrics({
+            id: entry.id,
+            isFluid: entry.isFluid,
+            ratePerSecond,
+            wagonCount: config.trainWagons,
+            isLegendary: config.isLegendaryQuality,
+          });
+          updatedInputs.push({
+            id: entry.id,
+            name: entry.name,
+            isFluid: entry.isFluid,
+            ratePerSecond,
+            wagonCount: config.trainWagons,
+            isLegendary: config.isLegendaryQuality,
+            allocatedBays,
+            trainCapacity: metrics.trainCapacity,
+            trainsPerMinute: metrics.trainsPerMinute,
+          });
+        }
+      }
+
+      block.inputs = updatedInputs;
+      planetData.blocks[targetIndex] = block;
+      proj.planets[linkedBlock.planetId] = planetData;
+
+      await defaultStorage.saveProject(proj);
+      window.dispatchEvent(new CustomEvent('planner-refresh'));
+      window.dispatchEvent(new CustomEvent('switch-tool', { detail: { toolId: 'factory-planner' } }));
+    } catch (e) {
+      console.error('Failed to sync allocator back to planner', e);
+    }
+  };
+
   return (
     <div className="space-y-6 max-w-7xl mx-auto pb-12">
       {/* Tool Introduction & Control Bar */}
@@ -133,7 +317,28 @@ export const StationAllocator: React.FC = () => {
           </div>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="flex flex-wrap items-center gap-2">
+          {availableBlocks.length > 0 && (
+            <div className="flex items-center gap-1.5 bg-[#1e222a] px-2.5 py-1.5 rounded-lg border border-[#2d333f]">
+              <Link className="w-3.5 h-3.5 text-amber-400" />
+              <select
+                value={linkedBlock?.blockId || ''}
+                onChange={(e) => handleSelectBlockToLink(e.target.value)}
+                className="bg-transparent text-slate-200 text-xs focus:outline-none cursor-pointer"
+                title="Link this station configuration to a city block in the Factory Planner"
+              >
+                <option value="" className="bg-[#1e222a] text-slate-400">
+                  Select City Block to Link...
+                </option>
+                {availableBlocks.map((b) => (
+                  <option key={b.id} value={b.id} className="bg-[#1e222a] text-slate-200">
+                    {b.name} ({b.planetId})
+                  </option>
+                ))}
+              </select>
+            </div>
+          )}
+
           <PresetManager
             currentConfig={config}
             onLoadConfig={(loaded) => setConfig(loaded)}
@@ -149,6 +354,62 @@ export const StationAllocator: React.FC = () => {
           </button>
         </div>
       </div>
+
+      {/* City Block Integrated Link Banner */}
+      {linkedBlock && (
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-4 rounded-xl bg-gradient-to-r from-orange-950/70 via-amber-950/40 to-[#14171d] border-2 border-orange-500/70 shadow-2xl animate-fade-in">
+          <div className="flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-orange-500/20 border border-orange-500/50 flex items-center justify-center text-orange-400 shadow-inner">
+              <Train className="w-5 h-5" />
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <span className="text-[11px] uppercase font-bold tracking-wider text-orange-400">
+                  Connected City Block
+                </span>
+                <span className="text-[10px] px-2 py-0.5 rounded-full bg-zinc-800 text-zinc-300 capitalize font-medium">
+                  {linkedBlock.planetId} World
+                </span>
+              </div>
+              <h2 className="text-base font-bold text-white tracking-tight">
+                {linkedBlock.blockName}
+              </h2>
+              <p className="text-xs text-zinc-400">
+                Selecting {config.totalStations} bays or locking station bay counts will directly update this block in the Multi-World Planner.
+              </p>
+            </div>
+          </div>
+
+          <div className="flex items-center gap-2.5">
+            <button
+              onClick={handleApplyToPlanner}
+              className="flex items-center gap-2 px-4 py-2.5 rounded-xl bg-gradient-to-r from-orange-500 to-amber-500 hover:from-orange-600 hover:to-amber-600 text-slate-950 font-bold text-xs shadow-lg shadow-orange-500/20 transition cursor-pointer"
+            >
+              <Check className="w-4 h-4" />
+              Apply to City Block & Return
+            </button>
+            <button
+              onClick={() => {
+                window.dispatchEvent(
+                  new CustomEvent('switch-tool', { detail: { toolId: 'factory-planner' } })
+                );
+              }}
+              className="flex items-center gap-1.5 px-3 py-2.5 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-zinc-300 text-xs border border-zinc-700 transition cursor-pointer"
+              title="Return to Factory Planner without applying changes"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              Return
+            </button>
+            <button
+              onClick={() => setLinkedBlock(null)}
+              className="px-2.5 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-zinc-400 text-xs border border-zinc-800 transition cursor-pointer"
+              title="Unlink block"
+            >
+              Unlink
+            </button>
+          </div>
+        </div>
+      )}
 
       {/* Global City Block Parameters */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">

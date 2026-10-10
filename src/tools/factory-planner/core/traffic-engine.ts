@@ -24,7 +24,8 @@ export interface TrafficRoute {
   targetId: string;
   targetName: string;
   targetCoords: HexCoordinates | null;
-  ratePerMinute: number;
+  ratePerSecond: number;
+  ratePerMinute?: number;
   trainsPerMinute: number;
   hexDistance: number;
   transitCost: number; // trainsPerMinute * hexDistance
@@ -54,7 +55,7 @@ export function calculatePlanetTraffic(params: {
     id: string;
     name: string;
     coords: HexCoordinates | null;
-    ratePerMinute: number;
+    ratePerSecond: number;
     wagonCount: number;
     isLegendary: boolean;
     isFluid: boolean;
@@ -64,7 +65,7 @@ export function calculatePlanetTraffic(params: {
     id: string;
     name: string;
     coords: HexCoordinates | null;
-    ratePerMinute: number;
+    ratePerSecond: number;
     wagonCount: number;
     isLegendary: boolean;
     isFluid: boolean;
@@ -77,11 +78,12 @@ export function calculatePlanetTraffic(params: {
   for (const raw of rawIngressNodes) {
     const list = suppliersByResource.get(raw.resourceId) || [];
     const isFluid = !!getFluid(raw.resourceId);
+    const ratePerSecond = raw.ratePerSecond ?? (raw.ratePerMinute ? raw.ratePerMinute / 60 : 0);
     list.push({
       id: raw.id,
       name: raw.name,
       coords: raw.coordinates,
-      ratePerMinute: raw.ratePerMinute,
+      ratePerSecond,
       wagonCount: 2,
       isLegendary: false,
       isFluid,
@@ -91,6 +93,7 @@ export function calculatePlanetTraffic(params: {
 
   // 2. Space Hubs (Landing pads import from orbit as suppliers)
   for (const hub of spaceHubs) {
+    const ratePerSecond = hub.ratePerSecond ?? (hub.ratePerMinute ? hub.ratePerMinute / 60 : 0);
     if (hub.type === 'cargo-landing-pad') {
       const list = suppliersByResource.get(hub.cargoResourceId) || [];
       const isFluid = !!getFluid(hub.cargoResourceId);
@@ -98,7 +101,7 @@ export function calculatePlanetTraffic(params: {
         id: hub.id,
         name: hub.name,
         coords: hub.coordinates,
-        ratePerMinute: hub.ratePerMinute,
+        ratePerSecond,
         wagonCount: 2,
         isLegendary: false,
         isFluid,
@@ -112,7 +115,7 @@ export function calculatePlanetTraffic(params: {
         id: hub.id,
         name: hub.name,
         coords: hub.coordinates,
-        ratePerMinute: hub.ratePerMinute,
+        ratePerSecond,
         wagonCount: 2,
         isLegendary: false,
         isFluid,
@@ -125,11 +128,12 @@ export function calculatePlanetTraffic(params: {
   for (const b of blocks) {
     for (const out of b.outputs) {
       const list = suppliersByResource.get(out.id) || [];
+      const ratePerSecond = out.ratePerSecond ?? (out.ratePerMinute ? out.ratePerMinute / 60 : 0);
       list.push({
         id: b.id,
         name: b.name,
         coords: b.coordinates,
-        ratePerMinute: out.ratePerMinute,
+        ratePerSecond,
         wagonCount: out.wagonCount,
         isLegendary: out.isLegendary,
         isFluid: out.isFluid,
@@ -139,11 +143,12 @@ export function calculatePlanetTraffic(params: {
 
     for (const inp of b.inputs) {
       const list = consumersByResource.get(inp.id) || [];
+      const ratePerSecond = inp.ratePerSecond ?? (inp.ratePerMinute ? inp.ratePerMinute / 60 : 0);
       list.push({
         id: b.id,
         name: b.name,
         coords: b.coordinates,
-        ratePerMinute: inp.ratePerMinute,
+        ratePerSecond,
         wagonCount: inp.wagonCount,
         isLegendary: inp.isLegendary,
         isFluid: inp.isFluid,
@@ -166,7 +171,7 @@ export function calculatePlanetTraffic(params: {
       continue;
     }
 
-    const totalSupplied = suppliers.reduce((s, x) => s + x.ratePerMinute, 0);
+    const totalSupplied = suppliers.reduce((s, x) => s + x.ratePerSecond, 0);
 
     const isFluid = suppliers[0]?.isFluid ?? consumers[0]?.isFluid ?? false;
     const itemData = getItem(resourceId);
@@ -187,13 +192,14 @@ export function calculatePlanetTraffic(params: {
       for (const con of consumers) {
         if (sup.id === con.id) continue; // Skip self
 
-        // Flow amount
-        const proportion = sup.ratePerMinute / Math.max(1, totalSupplied);
-        const flowRate = Math.min(sup.ratePerMinute, con.ratePerMinute * proportion);
+        // Flow amount in units per second
+        const proportion = sup.ratePerSecond / Math.max(0.0001, totalSupplied);
+        const flowRatePerSec = Math.min(sup.ratePerSecond, con.ratePerSecond * proportion);
 
-        if (flowRate <= 0) continue;
+        if (flowRatePerSec <= 0) continue;
 
-        const trainsPerMin = flowRate / trainCap;
+        // trainsPerMinute = (unitsPerSecond * 60) / trainCapacity
+        const trainsPerMin = (flowRatePerSec * 60) / trainCap;
 
         let dist = 1;
         let transitCost = 0;
@@ -214,7 +220,8 @@ export function calculatePlanetTraffic(params: {
           targetId: con.id,
           targetName: con.name,
           targetCoords: con.coords,
-          ratePerMinute: flowRate,
+          ratePerSecond: flowRatePerSec,
+          ratePerMinute: flowRatePerSec * 60,
           trainsPerMinute: trainsPerMin,
           hexDistance: dist,
           transitCost,

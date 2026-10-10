@@ -53,7 +53,11 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
   const totalSilosRequired = routes.reduce((sum, r) => sum + r.silosRequired, 0);
   const totalOrbitalScience = platforms.reduce(
     (sum, p) =>
-      sum + p.producedScience.reduce((s, sci) => s + sci.ratePerMinute, 0),
+      sum +
+      p.producedScience.reduce(
+        (s, sci) => s + (sci.ratePerSecond ?? (sci.ratePerMinute ? sci.ratePerMinute / 60 : 0)),
+        0
+      ),
     0
   );
 
@@ -102,7 +106,7 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
         sourceHubName: 'Vulcanus Foundry Silo',
         targetHubName: 'Nauvis Central Landing Pad',
         resourceId: 'metallurgic-science-pack',
-        ratePerMinute: 1000,
+        ratePerSecond: 16.67,
       },
       {
         id: `route-std-gleba-${Date.now()}`,
@@ -111,7 +115,7 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
         sourceHubName: 'Gleba Bio-Silo Pad',
         targetHubName: 'Nauvis Central Landing Pad',
         resourceId: 'agricultural-science-pack',
-        ratePerMinute: 1000,
+        ratePerSecond: 16.67,
       },
       {
         id: `route-std-fulgora-${Date.now()}`,
@@ -120,7 +124,7 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
         sourceHubName: 'Fulgora EM Nexus',
         targetHubName: 'Nauvis Central Landing Pad',
         resourceId: 'electromagnetic-science-pack',
-        ratePerMinute: 1000,
+        ratePerSecond: 16.67,
       },
       {
         id: `route-std-aquilo-${Date.now()}`,
@@ -129,14 +133,14 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
         sourceHubName: 'Aquilo Cryo Silo',
         targetHubName: 'Nauvis Central Landing Pad',
         resourceId: 'cryogenic-science-pack',
-        ratePerMinute: 1000,
+        ratePerSecond: 16.67,
       },
     ];
 
     standardRoutes.forEach((sr) => {
       const calc = calculateInterplanetaryRoute({
         cargoResourceId: sr.resourceId,
-        ratePerMinute: sr.ratePerMinute,
+        ratePerSecond: sr.ratePerSecond,
       });
       onUpsertRoute({
         ...sr,
@@ -245,8 +249,8 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
               Orbital Science
             </div>
             <div className="text-xl font-bold font-mono text-cyan-400 mt-0.5">
-              {totalOrbitalScience.toLocaleString()}
-              <span className="text-xs text-zinc-500 font-normal ml-1">/min</span>
+              {totalOrbitalScience.toFixed(1)}
+              <span className="text-xs text-zinc-500 font-normal ml-1">/s</span>
             </div>
           </div>
 
@@ -473,7 +477,7 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
                             </span>
                           </div>
                           <span className="font-mono font-semibold text-purple-300">
-                            {sci.ratePerMinute.toLocaleString()}/m
+                            {(sci.ratePerSecond ?? (sci.ratePerMinute ? sci.ratePerMinute / 60 : 0)).toFixed(1)}/s
                           </span>
                         </div>
                       ))}
@@ -645,8 +649,8 @@ export const InterplanetaryManager: React.FC<InterplanetaryManagerProps> = ({
 
                       <div className="text-right">
                         <div className="font-mono font-bold text-sm text-purple-300">
-                          {route.ratePerMinute.toLocaleString()}
-                          <span className="text-zinc-500 text-xs font-normal ml-0.5">/m</span>
+                          {route.ratePerSecond.toLocaleString()}
+                          <span className="text-zinc-500 text-xs font-normal ml-0.5">/s</span>
                         </div>
                         <div className="text-[10px] text-zinc-500">
                           {route.weightPerItemKg.toFixed(2)} kg/item

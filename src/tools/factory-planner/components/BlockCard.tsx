@@ -39,14 +39,22 @@ export const BlockCard: React.FC<BlockCardProps> = ({
         id: inp.id,
         name: inp.name,
         isFluid: inp.isFluid,
-        inputRate: inp.ratePerMinute,
-        unit: 'per-min' as const,
+        inputRate: inp.ratePerSecond,
+        unit: 'per-sec' as const,
         beltType: 'turbo' as const,
-        lockStations: null,
+        lockStations: inp.allocatedBays || null,
       })),
     };
+    const sharedPayload = {
+      sourceBlock: {
+        planetId: block.planetId,
+        blockId: block.id,
+        blockName: block.name,
+      },
+      config: cfg,
+    };
     try {
-      window.localStorage.setItem('factorio_shared_block_for_allocator', JSON.stringify(cfg));
+      window.localStorage.setItem('factorio_shared_block_for_allocator', JSON.stringify(sharedPayload));
       window.dispatchEvent(new CustomEvent('switch-tool', { detail: { toolId: 'station-allocator' } }));
     } catch (e) {
       console.error('Failed to link to station allocator', e);
@@ -139,10 +147,10 @@ export const BlockCard: React.FC<BlockCardProps> = ({
                 >
                   <FactorioIcon id={out.id} size={16} />
                   <span className="font-mono text-zinc-300">
-                    {out.ratePerMinute >= 1000
-                      ? `${(out.ratePerMinute / 1000).toFixed(1)}k`
-                      : out.ratePerMinute}
-                    /m
+                    {out.ratePerSecond >= 1000
+                      ? `${(out.ratePerSecond / 1000).toFixed(1)}k`
+                      : out.ratePerSecond}
+                    /s
                   </span>
                   <span className="text-[10px] text-orange-400/90 font-mono">
                     ({out.trainsPerMinute.toFixed(1)} tr/m)
@@ -168,10 +176,10 @@ export const BlockCard: React.FC<BlockCardProps> = ({
                 >
                   <FactorioIcon id={inp.id} size={16} />
                   <span className="font-mono text-zinc-300">
-                    {inp.ratePerMinute >= 1000
-                      ? `${(inp.ratePerMinute / 1000).toFixed(1)}k`
-                      : inp.ratePerMinute}
-                    /m
+                    {inp.ratePerSecond >= 1000
+                      ? `${(inp.ratePerSecond / 1000).toFixed(1)}k`
+                      : inp.ratePerSecond}
+                    /s
                   </span>
                   <span className="text-[10px] text-zinc-500 font-mono">
                     ({inp.trainsPerMinute.toFixed(1)} tr/m)

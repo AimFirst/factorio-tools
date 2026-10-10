@@ -20,7 +20,7 @@ export const RawIngressModal: React.FC<RawIngressModalProps> = ({
 }) => {
   const [name, setName] = useState('Ore Outpost Depot');
   const [resourceId, setResourceId] = useState('iron-ore');
-  const [ratePerMinute, setRatePerMinute] = useState(24000);
+  const [ratePerSecond, setRatePerSecond] = useState(400);
   const [selectorOpen, setSelectorOpen] = useState(false);
 
   if (!isOpen) return null;
@@ -31,7 +31,7 @@ export const RawIngressModal: React.FC<RawIngressModalProps> = ({
       resourceId,
       planetId,
       name: name.trim() || 'Raw Ingress Depot',
-      ratePerMinute: Math.max(0, ratePerMinute),
+      ratePerSecond: Math.max(0, ratePerSecond),
       coordinates: null,
     };
     onSave(node);
@@ -88,18 +88,18 @@ export const RawIngressModal: React.FC<RawIngressModalProps> = ({
 
           <div>
             <label className="block text-xs font-semibold text-zinc-400 mb-1">
-              Supply Rate (/min)
+              Supply Rate (/s)
             </label>
             <input
               type="number"
               min="0"
-              step="1000"
-              value={ratePerMinute}
-              onChange={(e) => setRatePerMinute(Math.max(0, parseFloat(e.target.value) || 0))}
+              step="10"
+              value={ratePerSecond}
+              onChange={(e) => setRatePerSecond(Math.max(0, parseFloat(e.target.value) || 0))}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-100 font-mono text-sm focus:outline-none focus:border-orange-500"
             />
             <div className="text-[11px] text-zinc-500 mt-1 font-mono">
-              = {(ratePerMinute / 60).toFixed(1)}/sec
+              = {(ratePerSecond * 60).toLocaleString()} /min
             </div>
           </div>
         </div>

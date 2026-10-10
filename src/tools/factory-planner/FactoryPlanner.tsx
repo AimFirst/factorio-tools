@@ -418,7 +418,7 @@ export const FactoryPlanner: React.FC = () => {
                     <div>
                       <div className="font-medium text-zinc-200">{node.name}</div>
                       <div className="text-[11px] text-zinc-500 font-mono">
-                        {node.ratePerMinute.toLocaleString()}/min ({(node.ratePerMinute / 60).toFixed(0)}/s)
+                        {node.ratePerSecond.toLocaleString()}/s ({(node.ratePerSecond * 60).toLocaleString()}/min)
                       </div>
                     </div>
                   </div>
@@ -472,6 +472,7 @@ export const FactoryPlanner: React.FC = () => {
                         </span>
                       </div>
                       <div className="text-[11px] text-purple-400/90 font-mono">
+                        {hub.ratePerSecond ? `${hub.ratePerSecond.toLocaleString()}/s • ` : ''}
                         {hub.launchesPerMinute.toFixed(2)} launches/min
                       </div>
                     </div>

@@ -354,7 +354,9 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
                         {raw.name}
                       </span>
                       <span className="text-[9px] font-mono text-zinc-400 bg-zinc-950/80 px-1 rounded">
-                        {(raw.ratePerMinute / 1000).toFixed(0)}k/m
+                        {raw.ratePerSecond >= 1000
+                          ? `${(raw.ratePerSecond / 1000).toFixed(1)}k/s`
+                          : `${raw.ratePerSecond}/s`}
                       </span>
                     </div>
                   </foreignObject>
@@ -716,7 +718,8 @@ export const HexGridCanvas: React.FC<HexGridCanvasProps> = ({
             <div className="font-semibold text-zinc-100 flex items-center gap-1.5">
               <span>{hoveredRoute.resourceName}</span>
               <span className="text-[10px] text-zinc-400 font-mono">
-                ({hoveredRoute.trainsPerMinute.toFixed(2)} tr/m)
+                ({hoveredRoute.ratePerSecond ? `${hoveredRoute.ratePerSecond.toFixed(1)}/s • ` : ''}
+                {hoveredRoute.trainsPerMinute.toFixed(2)} tr/m)
               </span>
             </div>
             <div className="text-[11px] text-zinc-400 flex items-center gap-1">

@@ -68,8 +68,20 @@ export function useFactoryPlanner() {
       }
     }
     init();
+
+    const handlePlannerRefresh = async () => {
+      try {
+        const loaded = await defaultStorage.getOrCreateInitialProject();
+        setProject(loaded);
+      } catch (e) {
+        console.error('Failed to refresh planner project', e);
+      }
+    };
+    window.addEventListener('planner-refresh', handlePlannerRefresh);
+
     return () => {
       isMounted = false;
+      window.removeEventListener('planner-refresh', handlePlannerRefresh);
     };
   }, []);
 

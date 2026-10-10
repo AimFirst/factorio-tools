@@ -23,14 +23,14 @@ export const SpaceHubModal: React.FC<SpaceHubModalProps> = ({
   const [name, setName] = useState('Legendary Rocket Silo');
   const [cargoResourceId, setCargoResourceId] = useState('space-science-pack');
   const [target, setTarget] = useState('Orbital Cargo Platform');
-  const [ratePerMinute, setRatePerMinute] = useState(1000);
+  const [ratePerSecond, setRatePerSecond] = useState(20);
   const [selectorOpen, setSelectorOpen] = useState(false);
 
   if (!isOpen) return null;
 
   const siloMetrics = calculateSiloLaunches({
     cargoResourceId,
-    ratePerMinute,
+    ratePerSecond,
   });
 
   const handleSave = () => {
@@ -43,7 +43,7 @@ export const SpaceHubModal: React.FC<SpaceHubModalProps> = ({
       isLegendarySilo: true,
       targetPlatformOrPlanet: target.trim(),
       cargoResourceId,
-      ratePerMinute,
+      ratePerSecond,
       launchesPerMinute: siloMetrics.launchesPerMinute,
     };
     onSave(hub);
@@ -149,16 +149,19 @@ export const SpaceHubModal: React.FC<SpaceHubModalProps> = ({
           {/* Rate */}
           <div>
             <label className="block text-xs font-semibold text-zinc-400 mb-1">
-              Throughput Rate (/min)
+              Throughput Rate (/s)
             </label>
             <input
               type="number"
               min="0"
-              step="100"
-              value={ratePerMinute}
-              onChange={(e) => setRatePerMinute(Math.max(0, parseFloat(e.target.value) || 0))}
+              step="1"
+              value={ratePerSecond}
+              onChange={(e) => setRatePerSecond(Math.max(0, parseFloat(e.target.value) || 0))}
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-100 font-mono text-sm focus:outline-none focus:border-orange-500"
             />
+            <div className="text-[11px] text-zinc-500 mt-1 font-mono">
+              = {(ratePerSecond * 60).toLocaleString()} /min
+            </div>
           </div>
 
           {/* Factorio 2.1 Legendary Silo Stats Preview */}

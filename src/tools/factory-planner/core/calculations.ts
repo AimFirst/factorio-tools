@@ -1,6 +1,6 @@
 /**
  * Calculation helpers for Factorio 2.1 Factory Blocks:
- * - Train capacity & trips/min
+ * - Train capacity & trips/min based on units per second (ratePerSecond)
  * - Rocket silo launches/min (Legendary quality)
  * - Required train bays
  */
@@ -14,13 +14,20 @@ import type { BlockResourceFlow } from '../types.ts';
 export function updateFlowMetrics(flow: {
   id: string;
   isFluid: boolean;
-  ratePerMinute: number;
+  ratePerSecond?: number;
+  ratePerMinute?: number;
   wagonCount: number;
   isLegendary: boolean;
 }): {
+  ratePerSecond: number;
   trainCapacity: number;
   trainsPerMinute: number;
 } {
+  const ratePerSecond =
+    flow.ratePerSecond !== undefined
+      ? flow.ratePerSecond
+      : (flow.ratePerMinute ?? 0) / 60;
+
   const cap = calculateTrainCapacity({
     resourceId: flow.id,
     isFluid: flow.isFluid,
@@ -29,9 +36,11 @@ export function updateFlowMetrics(flow: {
   });
 
   const trainCapacity = Math.max(1, cap.totalCapacity);
-  const trainsPerMinute = flow.ratePerMinute / trainCapacity;
+  // (ratePerSecond * 60) = ratePerMinute
+  const trainsPerMinute = (ratePerSecond * 60) / trainCapacity;
 
   return {
+    ratePerSecond,
     trainCapacity,
     trainsPerMinute,
   };
@@ -44,21 +53,30 @@ export function updateFlowMetrics(flow: {
  */
 export function calculateSiloLaunches(params: {
   cargoResourceId: string;
-  ratePerMinute: number;
+  ratePerSecond?: number;
+  ratePerMinute?: number;
 }): {
+  ratePerSecond: number;
   launchesPerMinute: number;
   weightPerItemKg: number;
   capacityPerRocket: number;
 } {
+  const ratePerSecond =
+    params.ratePerSecond !== undefined
+      ? params.ratePerSecond
+      : (params.ratePerMinute ?? 0) / 60;
+
   const item = getItem(params.cargoResourceId);
   // Factorio prototypes store weight in grams (e.g. 1000 = 1.0 kg, 2000 = 2.0 kg)
   const weightGrams = item?.weight ?? 1000;
   const weightPerItemKg = weightGrams / 1000;
   // Rocket holds 1,000 kg (1,000,000 grams) total payload
   const capacityPerRocket = Math.max(1, Math.floor(1000 / weightPerItemKg));
-  const launchesPerMinute = params.ratePerMinute / capacityPerRocket;
+  const ratePerMinute = ratePerSecond * 60;
+  const launchesPerMinute = ratePerMinute / capacityPerRocket;
 
   return {
+    ratePerSecond,
     launchesPerMinute,
     weightPerItemKg,
     capacityPerRocket,
@@ -75,24 +93,28 @@ export const LEGENDARY_SILO_MAX_LAUNCHES_PER_MIN = 1.0;
  */
 export function calculateInterplanetaryRoute(params: {
   cargoResourceId: string;
-  ratePerMinute: number;
+  ratePerSecond?: number;
+  ratePerMinute?: number;
 }): {
+  ratePerSecond: number;
   weightPerItemKg: number;
   capacityPerRocket: number;
   launchesPerMinute: number;
   silosRequired: number;
 } {
-  const siloCalc = calculateSiloLaunches({
-    cargoResourceId: params.cargoResourceId,
-    ratePerMinute: params.ratePerMinute,
-  });
+  const siloCalc = calculateSiloLaunches(params);
 
   const silosRequired = Math.max(
     1,
-    Math.ceil(siloCalc.launchesPerMinute / LEGENDARY_SILO_MAX_LAUNCHES_PER_MIN)
+    Math.ceil(
+      Number(
+        (siloCalc.launchesPerMinute / LEGENDARY_SILO_MAX_LAUNCHES_PER_MIN - 1e-7).toFixed(6)
+      )
+    )
   );
 
   return {
+    ratePerSecond: siloCalc.ratePerSecond,
     weightPerItemKg: siloCalc.weightPerItemKg,
     capacityPerRocket: siloCalc.capacityPerRocket,
     launchesPerMinute: siloCalc.launchesPerMinute,
@@ -107,7 +129,8 @@ export function createResourceFlow(params: {
   id: string;
   name: string;
   isFluid: boolean;
-  ratePerMinute: number;
+  ratePerSecond?: number;
+  ratePerMinute?: number;
   wagonCount?: number;
   isLegendary?: boolean;
   allocatedBays?: number;
@@ -117,6 +140,7 @@ export function createResourceFlow(params: {
   const metrics = updateFlowMetrics({
     id: params.id,
     isFluid: params.isFluid,
+    ratePerSecond: params.ratePerSecond,
     ratePerMinute: params.ratePerMinute,
     wagonCount,
     isLegendary,
@@ -126,7 +150,7 @@ export function createResourceFlow(params: {
     id: params.id,
     name: params.name,
     isFluid: params.isFluid,
-    ratePerMinute: params.ratePerMinute,
+    ratePerSecond: metrics.ratePerSecond,
     wagonCount,
     isLegendary,
     trainCapacity: metrics.trainCapacity,

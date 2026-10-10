@@ -85,11 +85,12 @@ export interface BlockResourceFlow {
   id: string; // Factorio item/fluid ID (e.g. 'electronic-circuit')
   name: string;
   isFluid: boolean;
-  ratePerMinute: number; // Consumed or produced units per minute
+  ratePerSecond: number; // Consumed or produced units per second
+  ratePerMinute?: number; // Optional legacy compatibility alias
   wagonCount: number; // Wagons per train (e.g. 2 for 1-2 train)
   isLegendary: boolean; // Legendary wagons and item stack multiplier
   trainCapacity: number; // Calculated capacity per train
-  trainsPerMinute: number; // ratePerMinute / trainCapacity
+  trainsPerMinute: number; // (ratePerSecond * 60) / trainCapacity
   allocatedBays: number; // Dedicated loading or unloading bays
 }
 
@@ -119,7 +120,8 @@ export interface RawIngressNode {
   resourceId: string;
   planetId: SolidPlanetId;
   name: string;
-  ratePerMinute: number;
+  ratePerSecond: number;
+  ratePerMinute?: number;
   coordinates: HexCoordinates | null;
   notes?: string;
 }
@@ -137,7 +139,8 @@ export interface SpaceHubNode {
   isLegendarySilo: true; // Rocket silos in Factorio 2.1 are modeled legendary (+150% speed)
   targetPlatformOrPlanet: string;
   cargoResourceId: string;
-  ratePerMinute: number;
+  ratePerSecond: number;
+  ratePerMinute?: number;
   launchesPerMinute: number; // Computed based on 1,000 kg cargo rocket payload
 }
 
@@ -152,7 +155,8 @@ export interface SpacePlatform {
   currentOrbit: SolidPlanetId | 'solar-system-edge' | 'shattered-planet';
   producedScience: Array<{
     resourceId: 'space-science-pack' | 'promethium-science-pack';
-    ratePerMinute: number;
+    ratePerSecond: number;
+    ratePerMinute?: number;
   }>;
   notes?: string;
 }
@@ -175,7 +179,8 @@ export interface InterplanetaryRoute {
   sourceHubName?: string;
   targetHubName?: string;
   resourceId: string;
-  ratePerMinute: number;
+  ratePerSecond: number;
+  ratePerMinute?: number;
   weightPerItemKg: number;
   capacityPerRocket: number;
   launchesPerMinute: number;

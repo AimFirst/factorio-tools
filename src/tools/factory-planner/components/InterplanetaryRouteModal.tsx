@@ -37,7 +37,7 @@ export const InterplanetaryRouteModal: React.FC<InterplanetaryRouteModalProps> =
   const [sourceHubName, setSourceHubName] = useState('Rocket Silo Complex');
   const [targetHubName, setTargetHubName] = useState('Cargo Landing Pad');
   const [resourceId, setResourceId] = useState('metallurgic-science-pack');
-  const [ratePerMinute, setRatePerMinute] = useState(1000);
+  const [ratePerSecond, setRatePerSecond] = useState(20);
   const [notes, setNotes] = useState('');
   const [selectorOpen, setSelectorOpen] = useState(false);
 
@@ -48,7 +48,7 @@ export const InterplanetaryRouteModal: React.FC<InterplanetaryRouteModalProps> =
       setSourceHubName(initialRoute.sourceHubName || 'Rocket Silo Complex');
       setTargetHubName(initialRoute.targetHubName || 'Cargo Landing Pad');
       setResourceId(initialRoute.resourceId);
-      setRatePerMinute(initialRoute.ratePerMinute);
+      setRatePerSecond(initialRoute.ratePerSecond);
       setNotes(initialRoute.notes || '');
     } else {
       setSourcePlanet('vulcanus');
@@ -56,7 +56,7 @@ export const InterplanetaryRouteModal: React.FC<InterplanetaryRouteModalProps> =
       setSourceHubName('Vulcanus Silo Complex');
       setTargetHubName('Nauvis Central Landing Pad');
       setResourceId('metallurgic-science-pack');
-      setRatePerMinute(1000);
+      setRatePerSecond(20);
       setNotes('Legendary Rocket Silo delivery');
     }
   }, [initialRoute, isOpen]);
@@ -65,7 +65,7 @@ export const InterplanetaryRouteModal: React.FC<InterplanetaryRouteModalProps> =
 
   const metrics = calculateInterplanetaryRoute({
     cargoResourceId: resourceId,
-    ratePerMinute,
+    ratePerSecond,
   });
 
   const handleSave = () => {
@@ -76,7 +76,7 @@ export const InterplanetaryRouteModal: React.FC<InterplanetaryRouteModalProps> =
       sourceHubName: sourceHubName.trim() || 'Rocket Silo Complex',
       targetHubName: targetHubName.trim() || 'Cargo Landing Pad',
       resourceId,
-      ratePerMinute,
+      ratePerSecond,
       weightPerItemKg: metrics.weightPerItemKg,
       capacityPerRocket: metrics.capacityPerRocket,
       launchesPerMinute: metrics.launchesPerMinute,
@@ -191,18 +191,21 @@ export const InterplanetaryRouteModal: React.FC<InterplanetaryRouteModalProps> =
 
           <div>
             <label className="block text-xs font-semibold text-zinc-400 mb-1">
-              Throughput Rate (/min)
+              Throughput Rate (/s)
             </label>
             <input
               type="number"
-              min="1"
-              step="100"
-              value={ratePerMinute}
+              min="0.1"
+              step="1"
+              value={ratePerSecond}
               onChange={(e) =>
-                setRatePerMinute(Math.max(1, parseFloat(e.target.value) || 0))
+                setRatePerSecond(Math.max(0.1, parseFloat(e.target.value) || 0))
               }
               className="w-full bg-zinc-900 border border-zinc-800 rounded-lg px-3 py-2 text-zinc-100 font-mono text-sm focus:outline-none focus:border-purple-500"
             />
+            <div className="text-[11px] text-zinc-500 mt-1 font-mono">
+              = {(ratePerSecond * 60).toLocaleString()} /min
+            </div>
           </div>
         </div>
 

@@ -92,6 +92,52 @@ export class LocalStorageAdapter implements StorageAdapter {
     this.setItem(ACTIVE_PROJECT_KEY, updatedProject.id);
   }
 
+  private normalizeLoadedProject(project: FactoryPlannerProject): FactoryPlannerProject {
+    if (!project.interplanetaryRoutes) {
+      project.interplanetaryRoutes = [];
+    }
+    if (!project.spacePlatforms) {
+      project.spacePlatforms = [];
+    }
+
+    // Migrate rates to ratePerSecond if only ratePerMinute exists
+    for (const planet of Object.values(project.planets || {})) {
+      for (const block of planet.blocks || []) {
+        for (const flow of [...(block.inputs || []), ...(block.outputs || [])]) {
+          if (flow.ratePerSecond === undefined) {
+            flow.ratePerSecond = flow.ratePerMinute ? Number((flow.ratePerMinute / 60).toFixed(2)) : 0;
+          }
+        }
+      }
+      for (const raw of planet.rawIngressNodes || []) {
+        if (raw.ratePerSecond === undefined) {
+          raw.ratePerSecond = raw.ratePerMinute ? Number((raw.ratePerMinute / 60).toFixed(2)) : 0;
+        }
+      }
+      for (const hub of planet.spaceHubs || []) {
+        if (hub.ratePerSecond === undefined) {
+          hub.ratePerSecond = hub.ratePerMinute ? Number((hub.ratePerMinute / 60).toFixed(2)) : 0;
+        }
+      }
+    }
+
+    for (const route of project.interplanetaryRoutes || []) {
+      if (route.ratePerSecond === undefined) {
+        route.ratePerSecond = route.ratePerMinute ? Number((route.ratePerMinute / 60).toFixed(2)) : 0;
+      }
+    }
+
+    for (const platform of project.spacePlatforms || []) {
+      for (const sci of platform.producedScience || []) {
+        if (sci.ratePerSecond === undefined) {
+          sci.ratePerSecond = sci.ratePerMinute ? Number((sci.ratePerMinute / 60).toFixed(2)) : 0;
+        }
+      }
+    }
+
+    return project;
+  }
+
   async loadProject(id: string): Promise<FactoryPlannerProject | null> {
     const data = this.getItem(`${STORAGE_KEY_PREFIX}${id}`);
     if (!data) {
@@ -99,13 +145,7 @@ export class LocalStorageAdapter implements StorageAdapter {
     }
     try {
       const parsed = JSON.parse(data) as FactoryPlannerProject;
-      if (!parsed.interplanetaryRoutes) {
-        parsed.interplanetaryRoutes = [];
-      }
-      if (!parsed.spacePlatforms) {
-        parsed.spacePlatforms = [];
-      }
-      return parsed;
+      return this.normalizeLoadedProject(parsed);
     } catch (e) {
       console.error(`Failed to parse project ${id}`, e);
       return null;
@@ -162,13 +202,7 @@ export class LocalStorageAdapter implements StorageAdapter {
     if (!parsed.schemaVersion || !parsed.planets) {
       throw new Error('Invalid Factorio Planner Project JSON format.');
     }
-    if (!parsed.interplanetaryRoutes) {
-      parsed.interplanetaryRoutes = [];
-    }
-    if (!parsed.spacePlatforms) {
-      parsed.spacePlatforms = [];
-    }
-    return parsed;
+    return this.normalizeLoadedProject(parsed);
   }
 }
 

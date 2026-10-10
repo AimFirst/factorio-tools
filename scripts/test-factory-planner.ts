@@ -78,19 +78,19 @@ console.log('🧪 Testing Factorio 2.1 Hexagonal Factory Planner Engine...\n');
 // Test 3: Block Flow Metrics (Items & Fluids)
 // -------------------------------------------------------------
 {
-  // 12,000 Electronic Circuits/min with 2 standard wagons
+  // 200 Electronic Circuits/sec (= 12,000/min) with 2 standard wagons
   // Electronic circuit stack size = 200, 2 wagons * 40 slots * 200 = 16,000 items/train
   const flow = createResourceFlow({
     id: 'electronic-circuit',
     name: 'Electronic Circuit',
     isFluid: false,
-    ratePerMinute: 12000,
+    ratePerSecond: 200,
     wagonCount: 2,
     isLegendary: false,
   });
 
   assert.strictEqual(flow.trainCapacity, 16000);
-  assert.strictEqual(flow.trainsPerMinute, 12000 / 16000); // 0.75 trains/min
+  assert.strictEqual(flow.trainsPerMinute, (200 * 60) / 16000); // 0.75 trains/min
   console.log(`✅ Test 3: Resource Flow Metrics passed (Train cap: ${flow.trainCapacity}, Trains/min: ${flow.trainsPerMinute}).`);
 }
 
@@ -98,16 +98,16 @@ console.log('🧪 Testing Factorio 2.1 Hexagonal Factory Planner Engine...\n');
 // Test 4: Legendary Rocket Silo Launches (Factorio 2.1)
 // -------------------------------------------------------------
 {
-  // 1,000 space science packs/min. Weight = 1.0 kg/item. Rocket capacity = 1000 items (1000 kg).
+  // 16.67 space science packs/sec (= 1,000/min). Weight = 1.0 kg/item. Rocket capacity = 1000 items (1000 kg).
   const silo = calculateSiloLaunches({
     cargoResourceId: 'space-science-pack',
-    ratePerMinute: 1000,
+    ratePerSecond: 16.666666666666668,
   });
 
   assert.strictEqual(silo.weightPerItemKg, 1.0);
   assert.strictEqual(silo.capacityPerRocket, 1000);
-  assert.strictEqual(silo.launchesPerMinute, 1.0);
-  console.log(`✅ Test 4: Legendary Rocket Silo Math passed (${silo.launchesPerMinute} launch/min for 1000 space science packs).`);
+  assert.strictEqual(Math.round(silo.launchesPerMinute), 1);
+  console.log(`✅ Test 4: Legendary Rocket Silo Math passed (${silo.launchesPerMinute.toFixed(2)} launch/min for 16.67 space science packs/s).`);
 }
 
 // -------------------------------------------------------------
@@ -246,24 +246,24 @@ async function runStorageTest() {
 // Test 9: Space Age Interplanetary Logistics & Platforms
 // -------------------------------------------------------------
 {
-  // 1. Standard science route calculation
+  // 1. Standard science route calculation (16.67/sec = 1,000/min)
   const sciRoute = calculateInterplanetaryRoute({
     cargoResourceId: 'metallurgic-science-pack',
-    ratePerMinute: 1000,
+    ratePerSecond: 16.666666666666668,
   });
   assert.strictEqual(sciRoute.weightPerItemKg, 1.0);
   assert.strictEqual(sciRoute.capacityPerRocket, 1000);
-  assert.strictEqual(sciRoute.launchesPerMinute, 1.0);
+  assert.strictEqual(Math.round(sciRoute.launchesPerMinute), 1);
   assert.strictEqual(sciRoute.silosRequired, 1);
 
-  // 2. Heavy raw resource route calculation (Iron Ore: 2.0 kg per item)
+  // 2. Heavy raw resource route calculation (Iron Ore: 2.0 kg per item, 33.33/sec = 2,000/min)
   const heavyRoute = calculateInterplanetaryRoute({
     cargoResourceId: 'iron-ore',
-    ratePerMinute: 2000,
+    ratePerSecond: 33.333333333333336,
   });
   assert.strictEqual(heavyRoute.weightPerItemKg, 2.0);
   assert.strictEqual(heavyRoute.capacityPerRocket, 500); // 1,000 kg / 2.0 kg = 500 items/rocket
-  assert.strictEqual(heavyRoute.launchesPerMinute, 4.0); // 2000 / 500 = 4 launches/min
+  assert.strictEqual(Math.round(heavyRoute.launchesPerMinute), 4); // 2000 / 500 = 4 launches/min
   assert.strictEqual(heavyRoute.silosRequired, 4); // 4 launches / 1.0 per silo = 4 silos
 
   // 3. Default Project Interplanetary Routes check
